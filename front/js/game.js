@@ -1,3 +1,5 @@
+var socket = io('/api/game');
+
 // Sélectionnez la div wrapper
 const wrapper = document.querySelector('.wrapper');
 const cells = [];
@@ -9,6 +11,12 @@ let murAPose = new Array(3);
 let firstTurn = true;
 hideAntiCheat();
 hideValider();
+
+let newMove = {
+    player: '',
+    type: '',
+    position: ''
+};
 
 // Générez les 81 div et ajoutez-les à la div wrapper
 for (var i = 1; i <= 289; i++) {
@@ -515,8 +523,19 @@ function movePlayer(cellIndex) {
         // Mettre à jour la position du joueur actif
         if (activePlayer === 'playerA') {
             player1Position = cellIndex;
+            newMove.player = 'playerA';
+            newMove.type = 'move';
+            newMove.position = player1Position;
+
+            socket.emit('newMove', newMove);
+
         } else {
             player2Position = cellIndex;
+            newMove.player = 'playerB';
+            newMove.type = 'move';
+            newMove.position = player2Position;
+
+            socket.emit('newMove', newMove);
         }
 
         // Ajouter le joueur actif à sa nouvelle position
