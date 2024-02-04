@@ -3,15 +3,17 @@ function computeMove(gameState) {
     let pos = gameState.player.position;
     let possibleMoves = [];
     // Check if moving left is possible.
-    if (pos > 20) possibleMoves.push(pos-10);
+    var validMoves = getValidMoves(pos);
+    if ((pos%17) >= 2) possibleMoves.push(pos-2);
     // Check if moving right is possible.
-    if (pos < 90) possibleMoves.push(pos+10);
+    if ((pos%17)!= 16) possibleMoves.push(pos+2);
     // Check if moving down is possible.
-    if (pos % 10 !== 1) possibleMoves.push(pos-1);
+    if (pos < 255) possibleMoves.push(pos+ 34);
     // Check if moving up is possible.
-    if (pos % 10 !== 9) possibleMoves.push(pos+1);
+    if (pos > 16) possibleMoves.push(pos-34);
 
     // Get a random integer between 0 and possibleMoves.length-1
     let moveIndex = Math.floor(Math.random()*possibleMoves.length);
+    movePlayer(possibleMoves[moveIndex]);
     return possibleMoves[moveIndex];
 }
