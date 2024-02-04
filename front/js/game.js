@@ -1,5 +1,20 @@
-var socket = io('/api/game');
+let bot = false;
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
 
+// Récupérer la valeur du paramètre 'bot' dans l'URL
+var botParam = getUrlParameter('bot');
+
+// Vérifier si le paramètre 'bot' est égal à 'true'
+if (botParam === 'true') {
+    // Modifier la variable bot à true
+    bot = true;
+}
+var socket = io('/api/game');
 // Sélectionnez la div wrapper
 const wrapper = document.querySelector('.wrapper');
 const cells = [];
@@ -11,6 +26,8 @@ let murAPose = new Array(3);
 let firstTurn = true;
 hideAntiCheat();
 hideValider();
+
+console.log(bot);
 
 let newMove = {
     player: '',
@@ -620,8 +637,10 @@ function changeActivePlayer() {
     checkCrossing(player1Position, player2Position);
     tour--;
     console.log(tour);
-
-    if(tour === 199){
+    if(activePlayer == "playerB" && bot){
+        computeMove(player2Position);
+    }
+    else if(tour === 199){
         firstTurn = true;
         const bottomRows = document.querySelectorAll('.bot-row');
         bottomRows.forEach(row => row.classList.add('first-turn'));
