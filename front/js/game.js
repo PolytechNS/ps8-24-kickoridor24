@@ -1,18 +1,18 @@
-let bot = false;
-function getUrlParameter(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    var results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-}
+function getCookie(name){
+    if(document.cookie.length == 0)
+        return null;
 
-// Récupérer la valeur du paramètre 'bot' dans l'URL
-var botParam = getUrlParameter('bot');
+    var regSepCookie = new RegExp('(; )', 'g');
+    var cookies = document.cookie.split(regSepCookie);
 
-// Vérifier si le paramètre 'bot' est égal à 'true'
-if (botParam === 'true') {
-    // Modifier la variable bot à true
-    bot = true;
+    for(var i = 0; i < cookies.length; i++){
+        var regInfo = new RegExp('=', 'g');
+        var infos = cookies[i].split(regInfo);
+        if(infos[0] == name){
+            return unescape(infos[1]);
+        }
+    }
+    return null;
 }
 var socket = io('/api/game');
 // Sélectionnez la div wrapper
@@ -27,7 +27,6 @@ let firstTurn = true;
 hideAntiCheat();
 hideValider();
 
-console.log(bot);
 
 let newMove = {
     player: '',
@@ -638,7 +637,7 @@ function changeActivePlayer() {
     tour--;
     console.log(tour);
     murAPose = new Array(3);
-    if(activePlayer == "playerB" && bot){
+    if(activePlayer == "playerB" && getCookie("typeDePartie")=="bot"){
         computeMove(player2Position);
     }
     else if(tour === 199){

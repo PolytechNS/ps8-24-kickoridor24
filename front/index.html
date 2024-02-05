@@ -6,9 +6,22 @@
 </head>
 
 <body>
-    <a href="/game.html"><button>JOUER</button></a>
-    <a href="/game.html?bot=true"><button>JOUER avec le bot aléatoire</button></a>
+    <a href="/game.html" onclick="setCookie('typeDePartie','1v1local',7)"><button>JOUER</button></a>
+    <a href="/game.html" onclick="setCookie('typeDePartie','bot',7)"><button>JOUER avec le bot aléatoire</button></a>
 
 </body>
+<script>
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            // Ajoute 7 jours à la date actuelle
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
 
+    }
+
+</script>
 </html>
