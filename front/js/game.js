@@ -152,6 +152,16 @@ function rotationWall(cellIndex) {
 }
 
 function handleWall(cellIndex) {
+    const row = Math.floor(cellIndex / 17);
+    const col = cellIndex % 17;
+
+    const clickedCell = cells[cellIndex];
+    const rightCell = cells[cellIndex + 1];
+    const leftCell = cells[cellIndex - 1];
+
+    var bougerMur = removeWallTmp(clickedCell);
+    if (bougerMur && activePlayer === 'playerA') nbWallPlayerA++;
+    else if (bougerMur && activePlayer === 'playerB') nbWallPlayerB++;
     if (isClickedCell) {
         cells.forEach(cell => cell.classList.remove('possible-move'));
         isClickedCell = false;
@@ -166,12 +176,7 @@ function handleWall(cellIndex) {
         return;
     }
 
-    const row = Math.floor(cellIndex / 17);
-    const col = cellIndex % 17;
 
-    const clickedCell = cells[cellIndex];
-    const rightCell = cells[cellIndex + 1];
-    const leftCell = cells[cellIndex - 1];
 
     const upCell = cells[cellIndex - 17];
     const downCell = cells[cellIndex + 17];
@@ -179,9 +184,6 @@ function handleWall(cellIndex) {
         return rotationWall(cellIndex);
     }
 
-        var bougerMur = removeWallTmp(clickedCell);
-        if (bougerMur && activePlayer === 'playerA') nbWallPlayerA++;
-        else if (bougerMur && activePlayer === 'playerB') nbWallPlayerB++;
 
     var poser = false;
     //pour placer a l'horizontale
