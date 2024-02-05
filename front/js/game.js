@@ -637,6 +637,7 @@ function changeActivePlayer() {
     checkCrossing(player1Position, player2Position);
     tour--;
     console.log(tour);
+    murAPose = new Array(3);
     if(activePlayer == "playerB" && bot){
         computeMove(player2Position);
     }
@@ -654,6 +655,7 @@ function changeActivePlayer() {
         console.log(tour);
         bottomRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
     }
+
 }
 function checkNoMove(){
 
