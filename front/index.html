@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="css/menu.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
+
 <body>
 <div class="header">
     <img id="home" src="images/home.png">
@@ -16,11 +17,11 @@
 </div>
 
 <div class="container">
-    <div class="PlayBot" onclick="redirectToGame()">
+    <div class="PlayBot" onclick="redirectToGame('typeDePartie','bot',7)">
         <h2 class="btnJouer"> JOUER CONTRE UN BOT</h2>
     </div>
 
-    <div class="PLay1v1" onclick="redirectToGame()">
+    <div class="PLay1v1" onclick="redirectToGame('typeDePartie','1v1local',7)">
         <h2 class="btn"> JOUER EN 1V1 LOCAL</h2>
     </div>
 </div>
@@ -32,3 +33,4 @@
 </html>
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>
+
