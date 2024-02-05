@@ -3,10 +3,10 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    margin: 6px; /* Ajoutez cette ligne pour réinitialiser la marge par défaut du corps */
+    margin: 6px;
     display: flex;
     flex-direction: column;
-    min-height: 97vh; /* Assurez-vous que le contenu occupe au moins la hauteur complète de la vue */
+    min-height: 97vh;
 }
 
 .header {
@@ -71,28 +71,16 @@ body {
     margin-left: 5px;
 }
 
-.playBot, .play1v1 {
-    background-color: #E4E5E7;
-    font-family: 'Roboto Condensed', sans-serif;
-    font-size: 1.2em;
-    /*changer couleur du texte*/
-    color: #eb4f61;
-    width: 24%;
-    height: 34%;
-    margin: 0.5em;
-    box-shadow: 0 3px 3px 0 #676767;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-
+#kickoridor2 {
+    width: 32.5%;
+    margin-bottom: 5px;
+    margin-left: 5px;
 }
 
-.playBot:hover, .play1v1:hover {
-    background-color: #eb4f61;
-    color: #E4E5E7;
-    box-shadow: 0 3px 3px 0 #676767;
-    /*afficher le curseur pointer*/
-    cursor: pointer;
+#vingt2{
+    width: 6.75%;
+    margin-bottom: 5px;
+    margin-left: 5px;
 }
 
 .btnJouer{
