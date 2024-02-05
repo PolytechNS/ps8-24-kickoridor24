@@ -31,8 +31,8 @@ body {
 .message{
     position: absolute;
     /*placer le message au milieu de la page*/
-    top: 75%;
-    left: 49.3%;
+    top: 70%;
+    left: 49.4%;
     transform: translate(-50%, -50%);
     background-color: #1b418c;
     color: white;
