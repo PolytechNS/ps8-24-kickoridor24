@@ -1,27 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Kick'Oridor 24</title>
+    <meta charset="utf-8">
+    <title>Kick'Oridor - Menu</title>
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
 
 <body>
-    <a href="/game.html" onclick="setCookie('typeDePartie','1v1local',7)"><button>JOUER</button></a>
-    <a href="/game.html" onclick="setCookie('typeDePartie','bot',7)"><button>JOUER avec le bot aléatoire</button></a>
+<div class="header">
+    <img id="home" src="images/home.png">
+    <img id="kickoridor" src="images/kickoridor.png">
+    <img id="vingt" src="images/24.png">
+    <div class="se-connecter" onclick="redirectToLogin()">
+        <h2 class="btn"> Se connecter</h2>
+    </div>
+</div>
 
+<div class="container">
+    <div class="PlayBot" onclick="redirectToGame('typeDePartie','bot',7)">
+        <h2 class="btnJouer"> JOUER CONTRE UN BOT</h2>
+    </div>
+
+    <div class="PLay1v1" onclick="redirectToGame('typeDePartie','1v1local',7)">
+        <h2 class="btn"> JOUER EN 1V1 LOCAL</h2>
+    </div>
+</div>
+
+<div class="footer">
+    <img id="param" src="images/param.png">
+</div>
 </body>
-<script>
-    function setCookie(name, value, days) {
-        var expires = "";
-        if (days) {
-            var date = new Date();
-            // Ajoute 7 jours à la date actuelle
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + (value || "") + expires + "; path=/";
-
-    }
-
-</script>
 </html>
+<script src="js/socket.io.js"></script>
+<script src="js/menu.js"></script>
+
