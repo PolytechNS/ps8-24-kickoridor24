@@ -23,12 +23,14 @@
 
     <div class="login">
         <h2 class="btnJouer"> Se connecter</h2>
-        <input type="text" id="username" placeholder="Nom d'utilisateur">
-        <input type="password" id="password" placeholder="Mot de passe">
-        <div class="valider">
-            <button id="login" onclick="login()">Se connecter</button>
-            <button id="signup" onclick="redirectToSignup()">S'inscrire</button>
-        </div>
+        <form id="loginForm">
+            <input type="text" id="username" name="username" required placeholder="Nom d'utilisateur"><br><br>
+            <input type="password" id="password" name="password" required placeholder="Mot de passe"><br><br>
+            <div class="valider">
+                <button type="submit" id="login">Se connecter</button>
+                <button id="signup" onclick="redirectToSignup()">S'inscrire</button>
+            </div>
+        </form>
     </div>
 </div>
 
