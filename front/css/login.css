@@ -96,7 +96,6 @@ body {
     display: flex;
     /*placer les div au centre horizontalement et verticalement*/
     align-items: center;
-    min-height: 47vh;
     margin-top: 5%;
     justify-content: center;
     flex-direction: column;
@@ -116,7 +115,6 @@ body {
     justify-content: space-around;
     background-color: #E4E5E7;
     width: 30%;
-    height: 80%;
     border-radius: 10px;
     box-shadow: 0 3px 3px 0 #676767;
     font-family: 'Roboto Condensed', sans-serif;
@@ -144,8 +142,7 @@ input {
     display: flex;
     justify-content: space-around;
     width: 100%;
-    margin-bottom: 4%;
-
+    margin-bottom: 8%;
 }
 
 #signup, #login{
