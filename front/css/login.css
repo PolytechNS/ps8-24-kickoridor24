@@ -96,7 +96,7 @@ body {
     display: flex;
     /*placer les div au centre horizontalement et verticalement*/
     align-items: center;
-    min-height: 55vh;
+    min-height: 47vh;
     margin-top: 5%;
     justify-content: center;
     flex-direction: column;
@@ -124,10 +124,15 @@ body {
     color: #676767;
 }
 
-#username, #password {
+#loginForm {
+    margin-top: 1%;
     width: 80%;
-    height: 15%;
-    margin: 0.5em;
+    margin-bottom: -5%
+}
+
+input {
+    width: 100%;
+    height: 22%;
     border-radius: 5px;
     border: 1px solid #676767;
     padding: 0.5em;
@@ -136,10 +141,10 @@ body {
 }
 
 .valider{
-    margin-bottom: 1%;
     display: flex;
     justify-content: space-around;
-    width: 80%;
+    width: 100%;
+    margin-bottom: 4%;
 
 }
 

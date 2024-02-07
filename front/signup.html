@@ -20,26 +20,19 @@
         <img id="kickoridor2" src="images/kickoridor.png">
         <img id="vingt2" src="images/24.png">
     </div>
-
-    <div id="sign">
+    <div class="sign">
+        <h2 class="btnJouer"> S'inscrire</h2>
         <form id="signupForm">
-            <label for="username">Nom d'utilisateur:</label>
-            <input type="text" id="username" name="username" required><br><br>
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required><br><br>
-
-            <label for="password">Mot de passe:</label>
-            <input type="password" id="password" name="password" required><br><br>
-
-            <label for="confirmPassword">Confirmer le mot de passe:</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>
-
-            <button type="submit">S'inscrire</button>
+            <input type="text" id="username" name="username" required placeholder="Nom d'utilisateur"><br><br>
+            <input type="email" id="email" name="email" required placeholder="Email"><br><br>
+            <input type="password" id="password" name="password" required placeholder="Mot de passe"><br><br>
+            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirmer le mot de passe"><br><br>
+            <div class="valider">
+                <button type="submit" id="signup">S'inscrire</button>
+                <button id="login" onclick="redirectToLogin()">Se connecter</button>
+            </div>
         </form>
     </div>
-
-
 </div>
 
 <div class="footer">
