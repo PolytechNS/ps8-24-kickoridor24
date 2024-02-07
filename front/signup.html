@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="header">
-    <img id="home" src="images/home.png">
+    <img id="home" src="images/home.png" onclick="redirectToMenu()">
     <img id="kickoridor" src="images/kickoridor.png">
     <img id="vingt" src="images/24.png">
     <div class="se-connecter" onclick="redirectToLogin()">
@@ -27,7 +27,10 @@
         <input type="text" id="username" placeholder="Nom d'utilisateur">
         <input type="password" id="password" placeholder="Mot de passe">
         <input type="password" id="passwordConf" placeholder="Confirmer le Mot de passe">
+        <div class="valider">
         <button id="signup">S'inscrire</button>
+            <button id="login" onclick="redirectToLogin()">Se connecter </button>
+        </div>
     </div>
 
 </div>
@@ -39,3 +42,5 @@
 </html>
 <script src="js/socket.io.js"></script>
 <script src="js/signup.js"></script>
+<script src="js/menu.js"></script>
+```

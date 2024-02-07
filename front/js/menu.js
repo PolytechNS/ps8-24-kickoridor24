@@ -5,3 +5,7 @@ function redirectToGame() {
 function redirectToLogin() {
     window.location.href = "login.html";
 }
+
+function redirectToMenu() {
+    window.location.href = "index.html";
+}

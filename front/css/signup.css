@@ -29,7 +29,7 @@ body {
     justify-content: flex-end;
     height: 9%;
     margin-top: auto; /* Ajoutez cette ligne pour forcer le pied de page en bas */
-    margin-bottom: -10px; /* Ajoutez cette ligne pour forcer le pied de page en bas */
+    margin-bottom: -28px; /* Ajoutez cette ligne pour forcer le pied de page en bas */
 }
 
 .se-connecter {
@@ -63,6 +63,7 @@ body {
     width: 2.5%;
     margin-bottom: 5px;
     margin-left: 5px;
+    cursor: pointer;
 }
 
 #vingt{
@@ -96,7 +97,7 @@ body {
     /*placer les div au centre horizontalement et verticalement*/
     align-items: center;
     min-height: 55vh;
-    margin-top: 5%;
+    margin-top: 2%;
     justify-content: center;
     flex-direction: column;
 }
@@ -115,7 +116,7 @@ body {
     justify-content: space-around;
     background-color: #E4E5E7;
     width: 30%;
-    height: 80%;
+    height: 95%;
     border-radius: 10px;
     box-shadow: 0 3px 3px 0 #676767;
     font-family: 'Roboto Condensed', sans-serif;
@@ -132,4 +133,16 @@ input {
     padding: 0.5em;
     font-family: 'Roboto Condensed', sans-serif;
     font-size: 1em;
+}
+
+.valider{
+    margin-bottom: 3%;
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+
+}
+
+#signup, #login{
+    width: 40%;
 }
