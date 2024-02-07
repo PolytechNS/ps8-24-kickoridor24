@@ -21,17 +21,22 @@
         <img id="vingt2" src="images/24.png">
     </div>
 
-    <div class="signup">
-        <h2 class="btnJouer">S'inscrire</h2>
-        <input type="text" id="mail" placeholder="Adresse mail">
-        <input type="text" id="username" placeholder="Nom d'utilisateur">
-        <input type="password" id="password" placeholder="Mot de passe">
-        <input type="password" id="passwordConf" placeholder="Confirmer le Mot de passe">
-        <div class="valider">
-        <button id="signup">S'inscrire</button>
-            <button id="login" onclick="redirectToLogin()">Se connecter </button>
-        </div>
-    </div>
+    <form id="signupForm">
+        <label for="username">Nom d'utilisateur:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Mot de passe:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="confirmPassword">Confirmer le mot de passe:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>
+
+        <button type="submit">S'inscrire</button>
+    </form>
+>>>>>>> 48d1a27 (add form for send information of singup and get request in apijs)
 
 </div>
 

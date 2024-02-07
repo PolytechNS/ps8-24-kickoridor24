@@ -1,26 +1,36 @@
-document.getElementById("signup").addEventListener("click", function(e) {
-    var mail = document.getElementById("mail").value;
-    var password = document.getElementById("password").value;
-    var passwordConf = document.getElementById("passwordConf").value;
-    var username = document.getElementById("username").value;
+document.getElementById('signupForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-    console.log(mail,passwordConf,password,username);
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
 
-    if (password != passwordConf) {
-        console.log("Passwords don't match");
+    if (password !== confirmPassword) {
+        alert('Les mots de passe ne correspondent pas.');
         return;
-    }else {
-        const date = {
-            mail: mail,
-            password: password,
-            username: username
-        }
-        fetch('/api/signup', {
+    }
+
+    const formData = new FormData(event.target);
+    const formDataJSON = {};
+
+    formData.forEach((value, key) => {
+        formDataJSON[key] = value;
+    });
+
+    try {
+        const response = await fetch('/api/signup', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(date),
-        })
+            body: JSON.stringify(formDataJSON)
+        });
+
+        if (!response.ok) {
+            throw new Error('Une erreur est survenue lors de l\'inscription');
+        }
+
+        alert('Inscription réussie !');
+    } catch (error) {
+        alert(error.message);
     }
 });

@@ -1,8 +1,33 @@
 // Main method, exported at the end of the file. It's the one that will be called when a REST request is received.
+const {client} = require("../index");
+
 function manageRequest(request, response) {
-    response.statusCode = 200;
-    response.end(`Thanks for calling ${request.url}`);
+    /*response.statusCode = 200;
+    response.end(`Thanks for calling ${request.url}`);*/
+
+    if (request.method === "POST" && request.url === "/api/signup") {
+        addCors(response);
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", () => {
+            try {
+                const data = JSON.parse(body);
+                console.log(data);
+                response.end("ok");
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }
 }
+
+
+
+
 
 /* This method is a helper in case you stumble upon CORS problems. It shouldn't be used as-is:
 ** Access-Control-Allow-Methods should only contain the authorized method for the url that has been targeted
