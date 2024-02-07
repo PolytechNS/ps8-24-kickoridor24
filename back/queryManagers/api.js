@@ -1,5 +1,6 @@
 // Main method, exported at the end of the file. It's the one that will be called when a REST request is received.
 const {client} = require("../index");
+const jwt = require("jsonwebtoken");
 
 function manageRequest(request, response) {
     /*response.statusCode = 200;
@@ -12,9 +13,12 @@ function manageRequest(request, response) {
             body += chunk.toString();
         });
         request.on("end", () => {
+            let token;
             try {
                 const data = JSON.parse(body);
-                console.log(data);
+                token = generateAccessToken(data);
+                console.log(token);
+                console.log(verifyAccessToken(token));
                 response.end("ok");
             } catch (error) {
                 console.error(error.message);
@@ -22,6 +26,30 @@ function manageRequest(request, response) {
                 response.end("Invalid JSON");
             }
         });
+    }
+}
+
+function generateAccessToken(data) {
+    const payload = {
+        username: data.username,
+        email: data.email,
+        password: data.password
+    };
+
+    const secret = 'kc-blue-wall';
+
+    return jwt.sign(payload, secret);
+}
+
+
+function verifyAccessToken(token) {
+    const secret = 'kc-blue-wall';
+
+    try {
+        const decoded = jwt.verify(token, secret);
+        return { success: true, data: decoded };
+    } catch (error) {
+        return { success: false, error: error.message };
     }
 }
 
