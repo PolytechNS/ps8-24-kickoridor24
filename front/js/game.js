@@ -1,17 +1,32 @@
 var socket = io('/api/game');
+class cellule{
+    constructor(id,classes,visibilite) {
+        this.class = classes;
+        this.id =id;
+        this.visibility =visibilite;
+    }
+}
 
 // Sélectionnez la div wrapper
 const wrapper = document.querySelector('.wrapper');
-const cells = [];
+var cells = [];
 let activePlayer = 'playerA';
 var nbWallPlayerA = 10;
 var nbWallPlayerB = 10;
 let isClickedCell = false;
 let murAPose = new Array(3);
 let firstTurn = true;
+let player1Position = 8;
+let player2Position = 280;
+
+var tour = 200;
+var dernierTourB = false;
 hideAntiCheat();
 hideValider();
+if(getCookie("TypeDePartie") === "enLigne")
+    hideSauvegarder();
 
+hideForfaitB();
 let newMove = {
     player: '',
     type: '',
@@ -53,10 +68,11 @@ for (var i = 1; i <= 289; i++) {
     wrapper.appendChild(newDiv);
 
 }
+//if(getCookie("TypeDePartie") === "resumeGame"){
 
 
-let player1Position = 8;
-let player2Position = 280;
+document.querySelector('#nbWallPlayerA').innerText = "Murs restant : " + nbWallPlayerA;
+document.querySelector('#nbWallPlayerB').innerText = "Murs restant : " + nbWallPlayerB;
 cells[player1Position].classList.add('playerA');
 cells[player2Position].classList.add('playerB');
 
@@ -70,8 +86,7 @@ activateFog();
 changeVisibilityPlayer(false, player1Position, "playerA");
 changeVisibilityPlayer(false, player2Position, "playerB");
 
-var tour = 200;
-var dernierTourB = false;
+
 
 cells.forEach((cell, index) => {
     if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col'))
@@ -620,7 +635,15 @@ function changeActivePlayer() {
     checkCrossing(player1Position, player2Position);
     tour--;
     console.log(tour);
-
+    loadGame();
+    if(activePlayer === "playerA"){
+        showForfaitA();
+        hideForfaitB();
+    }
+    else{
+        showForfaitB();
+        hideForfaitA();
+    }
     if(tour === 199){
         firstTurn = true;
         const bottomRows = document.querySelectorAll('.bot-row');
@@ -824,4 +847,62 @@ function dijkstra(player,cellule,tab) {
         }
         return Math.min.apply(null, tmpTab);
     }
+}
+function hideSauvegarder(){
+    document.querySelector('.sauvegarder').style.display = 'none';
+}
+function hideForfaitA(){
+    document.querySelector('#forfaitA').style.display = 'none';
+}
+
+function hideForfaitB(){
+    document.querySelector('#forfaitB').style.display = 'none';
+}
+function showForfaitA(){
+    document.querySelector('#forfaitA').style.display = 'grid';
+}
+
+function showForfaitB(){
+    document.querySelector('#forfaitB').style.display = 'grid';
+}
+function declarerForfait(){
+    //TODO
+}
+
+function sauvegarderLaPartie(){
+    console.log("sauvegarde");
+}
+function construireEtatPartie(){
+    var tab = [];
+    for(var i =0;i<cells.length;i++){
+        tab.push(new cellule(cells[i].getAttribute('id'),cells[i].classList,cells[i].getAttribute('visibility')))
+    }
+    return tab;
+}
+function loadGame(){
+    var tab = construireEtatPartie();
+    loadBoard(tab);
+    player1Position = 34;
+    activePlayer = "playerB";
+    tour = 199;
+    firstTurn = false;
+    nbWallPlayerB = 10;
+
+}
+
+function loadBoard(tab){
+    cells = new Array();
+    while (wrapper.firstChild)
+        wrapper.removeChild(wrapper.firstChild);
+   // console.log(tab);
+    for(var i =0;i<tab.length;i++){
+        var newDiv = document.createElement('div');
+        newDiv.classList = tab[i].class;
+        newDiv.setAttribute('id',tab[i].id);
+        if(tab[i].visibility != undefined)
+            newDiv.setAttribute('visibility',tab[i].visibility);
+        cells.push(newDiv);
+        wrapper.appendChild(newDiv);
+    }
+
 }
