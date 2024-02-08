@@ -44,6 +44,36 @@ function handleBDD(request, response){
                 response.end("Invalid JSON");
             }
         });
+    }else if (request.method === "POST" && request.url === "/api/login") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", () => {
+            try {
+                const data = JSON.parse(body);
+                const user = findUser(data);
+                console.log("user : " + user);
+                if(user){
+                    const token = verifyAccessToken(user.token);
+                    console.log(token);
+                    if(token.data.password === data.password) {
+                        response.statusCode = 200;
+                        response.end(JSON.stringify({token: user.token}));
+                    }else{
+                        response.statusCode = 401;
+                        response.end("Invalid password");
+                    }
+                }else{
+                    response.statusCode = 404;
+                    response.end("User not found");
+                }
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
     }
 
 }
@@ -55,6 +85,17 @@ async function saveUser(data) {
         await client.db("kickoridor").collection("users").insertOne(data, function (err, res) {
             if (err) throw err;
             console.log("1 document inserted");
+        });
+    } finally {
+        await client.close();
+    }
+}
+
+async function findUser(data) {
+    try {
+        await client.connect();
+        return await client.db("kickoridor").collection("users").findOne({
+            username: data.username
         });
     } finally {
         await client.close();

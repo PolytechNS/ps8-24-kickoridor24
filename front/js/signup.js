@@ -30,6 +30,7 @@ document.getElementById('signupForm').addEventListener('submit', async (event) =
         }
 
         alert('Inscription réussie !');
+        window.location.href = 'login.html';
     } catch (error) {
         alert(error.message);
     }
