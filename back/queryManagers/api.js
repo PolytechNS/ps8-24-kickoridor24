@@ -1,57 +1,16 @@
 // Main method, exported at the end of the file. It's the one that will be called when a REST request is received.
-const {client} = require("../index");
-const jwt = require("jsonwebtoken");
+const bddQuery = require("../logic/bdd");
 
 function manageRequest(request, response) {
-    /*response.statusCode = 200;
-    response.end(`Thanks for calling ${request.url}`);*/
+    response.statusCode = 200;
+    response.end(`Thanks for calling ${request.url}`);
 
-    if (request.method === "POST" && request.url === "/api/signup") {
-        addCors(response);
-        let body = "";
-        request.on("data", chunk => {
-            body += chunk.toString();
-        });
-        request.on("end", () => {
-            let token;
-            try {
-                const data = JSON.parse(body);
-                token = generateAccessToken(data);
-                console.log(token);
-                console.log(verifyAccessToken(token));
-                response.end("ok");
-            } catch (error) {
-                console.error(error.message);
-                response.statusCode = 400;
-                response.end("Invalid JSON");
-            }
-        });
+    if (request.method === "POST") {
+        bddQuery.manage(request, response);
     }
 }
 
-function generateAccessToken(data) {
-    const payload = {
-        username: data.username,
-        email: data.email,
-        password: data.password
-    };
 
-    const secret = 'kc-blue-wall';
-
-    return jwt.sign(payload, secret);
-}
-
-
-function verifyAccessToken(token) {
-    const secret = 'kc-blue-wall';
-
-    try {
-        const decoded = jwt.verify(token, secret);
-        return { success: true, data: decoded };
-    } catch (error) {
-        return { success: false, error: error.message };
-    }
-}
 
 
 
