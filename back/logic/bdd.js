@@ -34,10 +34,8 @@ async function handleBDD(request, response){
                 }
                 saveUser(dataToSend).then(r => {
                     response.statusCode = 200;
-                    response.end(JSON.stringify({ token: token }));
-
+                    response.end("ok");
                 });
-                response.end("ok");
             } catch (error) {
                 console.error(error.message);
                 response.statusCode = 400;
@@ -53,7 +51,7 @@ async function handleBDD(request, response){
             try {
                 const data = JSON.parse(body);
                 const user = await findUser(data)
-                if (user) {
+                if (user != null) {
                     const token = verifyAccessToken(user.token);
                     if (token.data.password === data.password) {
                         response.statusCode = 200;
@@ -62,11 +60,10 @@ async function handleBDD(request, response){
                         response.statusCode = 401;
                         response.end("Invalid password");
                     }
-                } else {
+                }else{
                     response.statusCode = 404;
                     response.end("User not found");
                 }
-                console.log("Response in bdd.js: " + response.body);
             } catch (error) {
                 console.error(error.message);
                 response.statusCode = 400;

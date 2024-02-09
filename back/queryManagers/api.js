@@ -1,12 +1,10 @@
 // Main method, exported at the end of the file. It's the one that will be called when a REST request is received.
 const bddQuery = require("../logic/bdd");
 
-function manageRequest(request, response) {
+async function manageRequest(request, response) {
     if (request.method === "POST") {
         addCors(response);
-        bddQuery.manage(request, response).then(r =>
-            response.end(r));
-        console.log("Response in api.js: " + response.body);
+        await bddQuery.manage(request, response)
     }
 }
 

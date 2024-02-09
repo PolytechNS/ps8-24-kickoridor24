@@ -23,7 +23,7 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
 
         if (!response.ok) {
             alert('Connexion échouée !')
-        }else{
+        }else if(response.ok){
             alert('Connexion réussie !');
             window.location.href = 'index.html';
         }
