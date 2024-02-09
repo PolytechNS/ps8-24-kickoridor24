@@ -13,7 +13,7 @@ const client = new MongoClient(uri,  {
     }
 );
 
-function handleBDD(request, response){
+async function handleBDD(request, response){
     if(request.method === "POST" && request.url === "/api/signup"){
         let body = "";
         request.on("data", chunk => {
@@ -49,25 +49,24 @@ function handleBDD(request, response){
         request.on("data", chunk => {
             body += chunk.toString();
         });
-        request.on("end", () => {
+        request.on("end", async () => {
             try {
                 const data = JSON.parse(body);
-                const user = findUser(data);
-                console.log("user : " + user);
-                if(user){
+                const user = await findUser(data)
+                if (user) {
                     const token = verifyAccessToken(user.token);
-                    console.log(token);
-                    if(token.data.password === data.password) {
+                    if (token.data.password === data.password) {
                         response.statusCode = 200;
-                        response.end(JSON.stringify({token: user.token}));
-                    }else{
+                        response.end("ok");
+                    } else {
                         response.statusCode = 401;
                         response.end("Invalid password");
                     }
-                }else{
+                } else {
                     response.statusCode = 404;
                     response.end("User not found");
                 }
+                console.log("Response in bdd.js: " + response.body);
             } catch (error) {
                 console.error(error.message);
                 response.statusCode = 400;

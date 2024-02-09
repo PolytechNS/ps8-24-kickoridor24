@@ -22,11 +22,11 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         });
 
         if (!response.ok) {
-            throw new Error('Une erreur est survenue lors de la connexion');
+            alert('Connexion échouée !')
+        }else{
+            alert('Connexion réussie !');
+            window.location.href = 'index.html';
         }
-
-        alert('Connexion réussie !');
-        window.location.href = 'index.html';
     } catch (error) {
         alert(error.message);
     }

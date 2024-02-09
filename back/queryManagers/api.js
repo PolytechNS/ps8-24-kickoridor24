@@ -2,11 +2,11 @@
 const bddQuery = require("../logic/bdd");
 
 function manageRequest(request, response) {
-    response.statusCode = 200;
-    response.end(`Thanks for calling ${request.url}`);
-
     if (request.method === "POST") {
-        bddQuery.manage(request, response);
+        addCors(response);
+        bddQuery.manage(request, response).then(r =>
+            response.end(r));
+        console.log("Response in api.js: " + response.body);
     }
 }
 
