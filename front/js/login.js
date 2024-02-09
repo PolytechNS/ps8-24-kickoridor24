@@ -24,6 +24,7 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         if (!response.ok) {
             alert('Connexion échouée !')
         }else if(response.ok){
+            document.cookie = "username=" + formDataJSON.username + ";expires=Sat, 10 Feb 2024 23:59:59 UTC;path=/";
             alert('Connexion réussie !');
             window.location.href = 'index.html';
         }
@@ -31,3 +32,11 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         alert(error.message);
     }
 });
+
+function getUsername(){
+    let username = document.cookie.split("username=")[1];
+    if(username !== undefined){
+        return username.split(";")[0];
+    }
+    return null;
+}
