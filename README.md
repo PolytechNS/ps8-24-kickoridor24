@@ -13,18 +13,12 @@ Both folders contain a README with more details.
 
 * [Node.js](https://nodejs.org/) should be installed.
 * The repo should have been cloned.
+* [Docker compose](https://docs.docker.com/compose/install/) should be installed.
 
 ---
 
-## First launch
-
-Not much in there, just launch `npm install` to install the dependencies for the server.
-
-Note that this command should be run again every time you install / delete a package.
-
----
 
 ## All runs
 
-Run `npm start`. That's it, unless you need other scripts to run before or while the server is launched,
+Run `docker-compose up --build`. That's it, unless you need other scripts to run before or while the server is launched,
 but then you (probably?) know what you are doing.
