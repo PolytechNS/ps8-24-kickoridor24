@@ -1,8 +1,18 @@
 // Main method, exported at the end of the file. It's the one that will be called when a REST request is received.
-function manageRequest(request, response) {
-    response.statusCode = 200;
-    response.end(`Thanks for calling ${request.url}`);
+const bddQuery = require("../logic/bdd");
+
+async function manageRequest(request, response) {
+    if (request.method === "POST") {
+        addCors(response);
+        await bddQuery.manage(request, response)
+    }
 }
+
+
+
+
+
+
 
 /* This method is a helper in case you stumble upon CORS problems. It shouldn't be used as-is:
 ** Access-Control-Allow-Methods should only contain the authorized method for the url that has been targeted
