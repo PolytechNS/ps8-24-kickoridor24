@@ -74,6 +74,17 @@ header {
     margin-bottom: 1.1vh;
 }
 
+.se-connecter {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 0.8em;
+    color: #E4E5E7;
+    height: 84%;
+    margin-left: 27%;
+    margin-bottom: 0.5%;
+    background-color: #9f9f9f;
+    cursor: pointer;
+}
+
 .footer {
     background-image: url('../images/footer.png');
     background-position: right;
@@ -156,8 +167,13 @@ header {
     cursor: pointer;
 }
 
+
+.btn{
+    margin: 0.4em 0.3em 0.3em 0.3em;
+}
+
 .btnJouer{
-    margin: 0.3em 0 0 0.3em;
+    margin: 0.3em 0.3em 0.3em 0.3em;
 }
 
 .container {
