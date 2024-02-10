@@ -70,6 +70,35 @@ async function handleBDD(request, response){
                 response.end("Invalid JSON");
             }
         });
+    }else if(request.method === "POST" && request.url === "/api/game"){
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", () => {
+            let token;
+            try {
+                const data = JSON.parse(body);
+                const dataToHash = {
+                    board: data.board,
+                    tour: data.tour,
+                    typeDePartie : data.typeDePartie
+                }
+                token = generateAccessToken(dataToHash);
+                const dataToSend = {
+                    username: data.username,
+                    token: token
+                }
+                saveGameState(dataToSend).then(r => {
+                    response.statusCode = 200;
+                    response.end("ok");
+                });
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
     }
 
 }
@@ -86,11 +115,32 @@ async function saveUser(data) {
         await client.close();
     }
 }
-
 async function findUser(data) {
     try {
         await client.connect();
         return await client.db("kickoridor").collection("users").findOne({
+            username: data.username
+        });
+    } finally {
+        await client.close();
+    }
+}
+
+async function saveGameState(data) {
+    try {
+        await client.connect();
+        await client.db("kickoridor").collection("gameState").insertOne(data, function (err, res) {
+            if (err) throw err;
+            console.log("1 document inserted");
+        });
+    } finally {
+        await client.close();
+    }
+}
+async function findGameState(data) {
+    try {
+        await client.connect();
+        return await client.db("kickoridor").collection("gameState").findOne({
             username: data.username
         });
     } finally {

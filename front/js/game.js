@@ -6,7 +6,14 @@ class cellule{
         this.visibility =visibilite;
     }
 }
-
+class gameState{
+    constructor(username,board,tour,typeDePartie) {
+        this.username = username;
+        this.board = board;
+        this.tour = tour;
+        this.typeDePartie = typeDePartie;
+    }
+}
 // Sélectionnez la div wrapper
 const wrapper = document.querySelector('.wrapper');
 var cells = [];
@@ -21,6 +28,9 @@ let player2Position = 280;
 
 var tour = 200;
 var dernierTourB = false;
+if(getCookie("typeDePartie") ==="1v1local"){
+    loadGame();
+}
 hideAntiCheat();
 hideValider();
 if(getCookie("TypeDePartie") === "enLigne")
@@ -634,7 +644,6 @@ function changeActivePlayer() {
 
     tour--;
     console.log(tour);
-    loadGame();
     activateFog();
     checkCrossing(player1Position, player2Position);
     if(activePlayer === "playerA"){
@@ -870,42 +879,66 @@ function declarerForfait(){
     //TODO
 }
 
-function sauvegarderLaPartie(){
-    console.log("sauvegarde");
-    
-}
-function construireEtatPartie(){
-    var tab = [];
-    for(var i =0;i<cells.length;i++){
-        tab.push(new cellule(cells[i].getAttribute('id'),cells[i].classList,cells[i].getAttribute('visibility')))
-    }
-    return tab;
-}
-function loadGame(){
-    console.log("loadgame");
+async function sauvegarderLaPartie() {
+
     var tab = construireEtatPartie();
-    loadBoard(tab);
-    player1Position = 8;
-    activePlayer = "playerA";
-    tour = 200;
-    firstTurn = true;
-    nbWallPlayerB = 10;
-
-}
-
-function loadBoard(tab){
-    cells = new Array();
-    while (wrapper.firstChild)
-        wrapper.removeChild(wrapper.firstChild);
-   // console.log(tab);
-    for(var i =0;i<tab.length;i++){
-        var newDiv = document.createElement('div');
-        newDiv.classList = tab[i].class;
-        newDiv.setAttribute('id',tab[i].id);
-        if(tab[i].visibility != undefined)
-            newDiv.setAttribute('visibility',tab[i].visibility);
-        cells.push(newDiv);
-        wrapper.appendChild(newDiv);
+    var etat = new gameState("user",tab, tour,getCookie("typeDePartie"));
+    const formDataJSON = {};
+    formDataJSON["username"] = etat.username;
+    formDataJSON["board"] = etat.board;
+    formDataJSON["tour"] = etat.tour;
+    formDataJSON["typeDePartie"] = etat.typeDePartie;
+    try {
+        const response = await fetch('/api/game', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        });
+        if (!response.ok) {
+            throw new Error('Une erreur est survenue lors de la sauvegarde de la partie.');
+        }
+        alert('Partie sauvegardée !');
+        window.location.href = 'index.html';
+    } catch (e) {
+        alert(error.message);
     }
 
 }
+
+    function construireEtatPartie() {
+        var tab = [];
+        for (var i = 0; i < cells.length; i++) {
+            tab.push(new cellule(cells[i].getAttribute('id'), cells[i].classList, cells[i].getAttribute('visibility')))
+        }
+        return tab;
+    }
+
+    function loadGame() {
+        console.log("loadgame");
+        //méthode pour récup dans la bdd avec le username
+        //init des valeurs basiques : type de partie, tour
+        //méthode pour build le board + les variables restantes.
+        var tab = construireEtatPartie();
+        loadBoard(tab);
+
+
+    }
+
+    function loadBoard(tab) {
+        cells = new Array();
+        while (wrapper.firstChild)
+            wrapper.removeChild(wrapper.firstChild);
+        // console.log(tab);
+        for (var i = 0; i < tab.length; i++) {
+            var newDiv = document.createElement('div');
+            newDiv.classList = tab[i].class;
+            newDiv.setAttribute('id', tab[i].id);
+            if (tab[i].visibility != undefined)
+                newDiv.setAttribute('visibility', tab[i].visibility);
+            cells.push(newDiv);
+            wrapper.appendChild(newDiv);
+        }
+
+    }
