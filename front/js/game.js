@@ -28,15 +28,10 @@ let player2Position = 280;
 
 var tour = 200;
 var dernierTourB = false;
-if(getCookie("typeDePartie") ==="1v1local"){
-    loadGame();
-}
-hideAntiCheat();
-hideValider();
-if(getCookie("TypeDePartie") === "enLigne")
-    hideSauvegarder();
+var lanePlayerA;
+var lanePlayerB;
 
-hideForfaitB();
+
 let newMove = {
     player: '',
     type: '',
@@ -78,47 +73,65 @@ for (var i = 1; i <= 289; i++) {
     wrapper.appendChild(newDiv);
 
 }
-//if(getCookie("TypeDePartie") === "resumeGame"){
 
-
-document.querySelector('#nbWallPlayerA').innerText = "Murs restants : " + nbWallPlayerA;
-document.querySelector('#nbWallPlayerB').innerText = "Murs restants : " + nbWallPlayerB;
-cells[player1Position].classList.add('playerA');
-cells[player2Position].classList.add('playerB');
-
-hideAntiCheat();
-hideValider();
-var lanePlayerA = document.getElementsByClassName('top-row');
-var lanePlayerB = document.getElementsByClassName('bot-row');
-
-dijkstraVisitedNode = [];
-activateFog();
-changeVisibilityPlayer(false, player1Position, "playerA");
-changeVisibilityPlayer(false, player2Position, "playerB");
-
-
-
-cells.forEach((cell, index) => {
-    if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col'))
-        cell.addEventListener('click', () => handleWall(index));
-    else
-        cell.addEventListener('click', () => movePlayer(index));
-});
-
-if(tour === 200){
-    const topRows = document.querySelectorAll('.top-row');
-    topRows.forEach(row => row.classList.add('first-turn'));
-
-    // Afficher le message pour le premier tour
-    const message = document.createElement('div');
-    message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
-    message.classList.add('message');
-    wrapper.appendChild(message);
-    //si une case de top-row est cliquée alors on move le joueur
-    topRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
-    console.log(tour);
+if(getCookie("typeDePartie") ==="resumeGame"){
+  loadGame();
 }
+function setUpGame() {
+    hideAntiCheat();
+    hideValider();
+    if(getCookie("typeDePartie") === "enLigne")
+        hideSauvegarder();
+    if(activePlayer=="playerA") {
+        hideForfaitB();
+        showForfaitA();
+    }
+    else{
+        hideForfaitA();
+        showForfaitB();
+    }
 
+    document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
+    document.querySelector('#nbWallPlayerA').innerText = "Murs restants : " + nbWallPlayerA;
+    document.querySelector('#nbWallPlayerB').innerText = "Murs restants : " + nbWallPlayerB;
+    cells[player1Position].classList.add('playerA');
+    cells[player2Position].classList.add('playerB');
+
+    hideAntiCheat();
+    hideValider();
+     lanePlayerA = document.getElementsByClassName('top-row');
+     lanePlayerB = document.getElementsByClassName('bot-row');
+
+    dijkstraVisitedNode = [];
+    activateFog();
+    changeVisibilityPlayer(false, player1Position, "playerA");
+    changeVisibilityPlayer(false, player2Position, "playerB");
+
+
+    cells.forEach((cell, index) => {
+        if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col'))
+            cell.addEventListener('click', () => handleWall(index));
+        else
+            cell.addEventListener('click', () => movePlayer(index));
+    });
+
+    if (tour === 200) {
+        const topRows = document.querySelectorAll('.top-row');
+        topRows.forEach(row => row.classList.add('first-turn'));
+
+        // Afficher le message pour le premier tour
+        const message = document.createElement('div');
+        message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
+        message.classList.add('message');
+        wrapper.appendChild(message);
+        //si une case de top-row est cliquée alors on move le joueur
+        topRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
+        console.log(tour);
+    }
+    checkTour199();
+    checkCrossing(player1Position,player2Position);
+}
+setUpGame();
 function removeWallTmp(){
 
     var bougerMur = false;
@@ -580,7 +593,7 @@ function movePlayer(cellIndex) {
 function movePlyerFirstTurn(cellIndex) {
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du haut et si c'est au tour du joueur A
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du bas et si c'est au tour du joueur B
-    if (activePlayer === 'playerA' && cellIndex >= 0 && cellIndex <= 16) {
+    if (activePlayer === 'playerA' && cellIndex >= 0 && cellIndex <= 16 && cells[cellIndex].classList.contains('first-turn')) {
         cells[player1Position].classList.remove('playerA');
         player1Position = cellIndex;
         cells[player1Position].classList.add('playerA');
@@ -591,7 +604,8 @@ function movePlyerFirstTurn(cellIndex) {
         changeVisibilityPlayer(false, player1Position, "playerA");
         firstTurn = false;
 
-    } else if (activePlayer === 'playerB' && cellIndex >= 272 && cellIndex <= 288) {
+    } else if (activePlayer === 'playerB' && cellIndex >= 272 && cellIndex <= 288 && cells[cellIndex].classList.contains('first-turn')) {
+        console.log("hahaha");
         cells[player2Position].classList.remove('playerB');
         player2Position = cellIndex;
         cells[player2Position].classList.add('playerB');
@@ -630,10 +644,10 @@ function checkCrossing(playerAPosition, playerBPosition) {
         location.reload(true);
     } else if (gagneA) {
         alert("Player A a gagné !");
-        location.reload(true);
+        window.location.href = 'index.html';
     } else if (gagneB) {
         alert("Player B a gagné !");
-        location.reload(true);
+        window.location.href = 'index.html';
     }
 }
 
@@ -654,20 +668,7 @@ function changeActivePlayer() {
         showForfaitB();
         hideForfaitA();
     }
-    if(tour === 199){
-        firstTurn = true;
-        const bottomRows = document.querySelectorAll('.bot-row');
-        bottomRows.forEach(row => row.classList.add('first-turn'));
-
-        // Afficher le message pour le premier tour
-        const message = document.createElement('div');
-        message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
-        message.classList.add('message');
-        wrapper.appendChild(message);
-        //si une case de top-row est cliquée alors on move le joueur
-        console.log(tour);
-        bottomRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
-    }
+    checkTour199();
 }
 function checkNoMove(){
 
@@ -880,16 +881,18 @@ function declarerForfait(){
 }
 
 async function sauvegarderLaPartie() {
-
+    if(murAPose[0]!= undefined)
+        annulerWall();
+    cells.forEach(cell => cell.classList.remove('possible-move'));
     var tab = construireEtatPartie();
-    var etat = new gameState("user",tab, tour,getCookie("typeDePartie"));
+    var etat = new gameState(getUsername(),tab, tour,getCookie("typeDePartie"));
     const formDataJSON = {};
     formDataJSON["username"] = etat.username;
     formDataJSON["board"] = etat.board;
     formDataJSON["tour"] = etat.tour;
     formDataJSON["typeDePartie"] = etat.typeDePartie;
     try {
-        const response = await fetch('/api/game', {
+        const response = await fetch('/api/gameSave', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -915,30 +918,111 @@ async function sauvegarderLaPartie() {
         return tab;
     }
 
-    function loadGame() {
+    async function loadGame() {
+
+        console.log(getUsername());
         console.log("loadgame");
-        //méthode pour récup dans la bdd avec le username
-        //init des valeurs basiques : type de partie, tour
-        //méthode pour build le board + les variables restantes.
-        var tab = construireEtatPartie();
-        loadBoard(tab);
+       var etatPartie = await retrieveGameBDD(getUsername());
 
 
+       tour = etatPartie["tour"];
+       if(tour == 200 || tour==199){
+           firstTurn = true;
+       }
+       if(tour%2 == 0){
+           activePlayer = "playerA";
+       }else{
+           activePlayer = "playerB";
+       }
+
+        loadBoard(etatPartie["board"]);
+
+        console.log("fin");
+        //setCookie("typeDePartie",etatPartie["typeDePartie"],7);
+        setUpGame();
+
+}
+function checkTour199(){
+    if(tour === 199){
+        firstTurn = true;
+        const bottomRows = document.querySelectorAll('.bot-row');
+        bottomRows.forEach(row => row.classList.add('first-turn'));
+
+        // Afficher le message pour le premier tour
+        const message = document.createElement('div');
+        message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
+        message.classList.add('message');
+        wrapper.appendChild(message);
+        //si une case de top-row est cliquée alors on move le joueur
+        console.log(tour);
+        bottomRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
+    }
+}
+    async function retrieveGameBDD(username){
+        const formDataJSON = {};
+        formDataJSON["username"] = username;
+        console.log(formDataJSON["username"]);
+        try {
+            const response = await fetch('/api/gameRetrieve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataJSON)
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur de réseau ou HTTP: ' + response.status);
+                }
+
+                return response.json(); // Convertit la réponse en JSON
+            })
+                .then(data => {
+
+                    return data;
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des données:', error);
+                });
+            return response;
+        } catch (e) {
+            alert(e.message);
+        }
     }
 
     function loadBoard(tab) {
+        var wallA = 0;
+        var wallB = 0;
+
         cells = new Array();
         while (wrapper.firstChild)
             wrapper.removeChild(wrapper.firstChild);
-        // console.log(tab);
+
         for (var i = 0; i < tab.length; i++) {
             var newDiv = document.createElement('div');
-            newDiv.classList = tab[i].class;
-            newDiv.setAttribute('id', tab[i].id);
-            if (tab[i].visibility != undefined)
-                newDiv.setAttribute('visibility', tab[i].visibility);
+            const classes = Object.values(tab[i]["class"]);
+            classes.forEach(className => {
+                newDiv.classList.add(className);
+            });
+            if(classes.includes("playerA")||classes.includes("playerAFog")){
+                player1Position = i;
+            }
+            if(classes.includes("playerB") ||classes.includes("playerBFog")){
+                player2Position = i;
+            }
+            if(classes.includes("wallA")){
+                wallA++;
+            }
+            if(classes.includes("wallB")){
+                wallB++;
+            }
+
+            newDiv.setAttribute('id', tab[i]["id"]);
+            if (tab[i]["visibility"] != null)
+                newDiv.setAttribute('visibility', tab[i]["visibility"]);
             cells.push(newDiv);
             wrapper.appendChild(newDiv);
         }
+        nbWallPlayerA = 10 - (wallA/3);
+        nbWallPlayerB = 10 - (wallB/3);
 
     }
