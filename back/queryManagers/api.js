@@ -1,29 +1,14 @@
 // Main method, exported at the end of the file. It's the one that will be called when a REST request is received.
-const {client} = require("../index");
+const bddQuery = require("../logic/bdd");
 
-function manageRequest(request, response) {
-    /*response.statusCode = 200;
-    response.end(`Thanks for calling ${request.url}`);*/
-
-    if (request.method === "POST" && request.url === "/api/signup") {
+async function manageRequest(request, response) {
+    if (request.method === "POST") {
         addCors(response);
-        let body = "";
-        request.on("data", chunk => {
-            body += chunk.toString();
-        });
-        request.on("end", () => {
-            try {
-                const data = JSON.parse(body);
-                console.log(data);
-                response.end("ok");
-            } catch (error) {
-                console.error(error.message);
-                response.statusCode = 400;
-                response.end("Invalid JSON");
-            }
-        });
+        await bddQuery.manage(request, response)
     }
 }
+
+
 
 
 

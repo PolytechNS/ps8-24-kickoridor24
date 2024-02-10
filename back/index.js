@@ -8,50 +8,22 @@ const apiQuery = require('./queryManagers/api.js')
 ** will be called whenever a new request arrives to the server.
  */
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
-
-
-const uri = 'mongodb://localhost:27017';
-
-const client = new MongoClient(uri,  {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
-        }
-    }
-);
-
-async function run() {
-    try {
-        // Connect the client to the server (optional starting in v4.7)
-        await client.connect();
-        // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-    }
-}
-run().catch(console.dir);
-
-const server = http.createServer(function (request, response) {
+const server = http.createServer(async function (request, response) {
     // First, let's check the URL to see if it's a REST request or a file request.
     // We will remove all cases of "../" in the url for security purposes.
-    let filePath = request.url.split("/").filter(function(elem) {
+    let filePath = request.url.split("/").filter(function (elem) {
         return elem !== "..";
     });
 
     try {
         // If the URL starts by /api, then it's a REST request (you can change that if you want).
         if (filePath[1] === "api") {
-            apiQuery.manage(request, response);
+            await apiQuery.manage(request, response);
             // If it doesn't start by /api, then it's a request for a file.
         } else {
             fileQuery.manage(request, response);
         }
-    } catch(error) {
+    } catch (error) {
         console.log(`error while processing ${request.url}: ${error}`)
         response.statusCode = 400;
         response.end(`Something in your request (${request.url}) is strange...`);

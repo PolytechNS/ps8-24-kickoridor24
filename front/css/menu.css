@@ -3,20 +3,75 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    margin: 6px; /* Ajoutez cette ligne pour réinitialiser la marge par défaut du corps */
+    width: 100%;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    min-height: 97vh; /* Assurez-vous que le contenu occupe au moins la hauteur complète de la vue */
+    min-height: 97vh;
 }
 
-.header {
-    background-image: url('../images/header.png');
-    background-size: contain;
-    background-repeat: no-repeat;
+header {
+    position: relative;
+    margin: 6px;
+    height: 50px;
+    width: 862px;
+}
+
+.cnt-header {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    height: 9%;
+    justify-content: space-between;
+    margin-right: 7vh;
+    height: 100%;
+    padding: 0 50px 0 0;
+}
+
+.bg-header {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 10px;
+    padding: 0 15px 9px;
+}
+.nav img {
+    height: 50%;
+}
+
+.connection {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    padding: 0 15px 9px;
+    margin-top: 7px;
+}
+
+.logo {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 4px;
+}
+
+.name {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 1.1em;
+    color: #212121;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.1vh;
 }
 
 .footer {
@@ -29,19 +84,27 @@ body {
     justify-content: flex-end;
     height: 9%;
     margin-top: auto; /* Ajoutez cette ligne pour forcer le pied de page en bas */
-    margin-bottom: -10px; /* Ajoutez cette ligne pour forcer le pied de page en bas */
+    margin-bottom: -1.25%; /* Ajoutez cette ligne pour forcer le pied de page en bas */
 }
 
-.se-connecter {
+.connexion {
     font-family: 'Roboto Condensed', sans-serif;
-    font-size: 0.8em;
+    font-size: 1.1em;
     color: #E4E5E7;
     height: 84%;
-    margin-left: 27%;
-    margin-bottom: 0.5%;
+    margin-bottom: 1.1vh;
+    margin-right: 0.5vh;
     background-color: #9f9f9f;
     cursor: pointer;
 }
+
+.btn{
+    margin-left: 1.5vh;
+    margin-right: 1.5vh;
+    margin-top: 1.4vh;
+    font-size: 1.2em;
+}
+
 
 #param {
     width: 3%;
@@ -60,9 +123,6 @@ body {
 }
 
 #home {
-    width: 2.5%;
-    margin-bottom: 5px;
-    margin-left: 5px;
     cursor: pointer;
 }
 
@@ -98,10 +158,6 @@ body {
 
 .btnJouer{
     margin: 0.3em 0 0 0.3em;
-}
-
-.btn{
-    margin: 0.4em 0.3em 0 0.3em;
 }
 
 .container {
