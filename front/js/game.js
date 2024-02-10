@@ -71,8 +71,8 @@ for (var i = 1; i <= 289; i++) {
 //if(getCookie("TypeDePartie") === "resumeGame"){
 
 
-document.querySelector('#nbWallPlayerA').innerText = "Murs restant : " + nbWallPlayerA;
-document.querySelector('#nbWallPlayerB').innerText = "Murs restant : " + nbWallPlayerB;
+document.querySelector('#nbWallPlayerA').innerText = "Murs restants : " + nbWallPlayerA;
+document.querySelector('#nbWallPlayerB').innerText = "Murs restants : " + nbWallPlayerB;
 cells[player1Position].classList.add('playerA');
 cells[player2Position].classList.add('playerB');
 
@@ -631,11 +631,12 @@ function changeActivePlayer() {
     activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
     document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
     showAntiCheat();
-    activateFog();
-    checkCrossing(player1Position, player2Position);
+
     tour--;
     console.log(tour);
     loadGame();
+    activateFog();
+    checkCrossing(player1Position, player2Position);
     if(activePlayer === "playerA"){
         showForfaitA();
         hideForfaitB();
@@ -871,6 +872,7 @@ function declarerForfait(){
 
 function sauvegarderLaPartie(){
     console.log("sauvegarde");
+    
 }
 function construireEtatPartie(){
     var tab = [];
@@ -880,12 +882,13 @@ function construireEtatPartie(){
     return tab;
 }
 function loadGame(){
+    console.log("loadgame");
     var tab = construireEtatPartie();
     loadBoard(tab);
-    player1Position = 34;
-    activePlayer = "playerB";
-    tour = 199;
-    firstTurn = false;
+    player1Position = 8;
+    activePlayer = "playerA";
+    tour = 200;
+    firstTurn = true;
     nbWallPlayerB = 10;
 
 }
