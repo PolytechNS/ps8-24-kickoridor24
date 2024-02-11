@@ -1,3 +1,4 @@
+
 function redirectToGame(name, value, days) {
     setCookie(name,value,days);
     window.location.href = "game.html";

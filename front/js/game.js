@@ -1,4 +1,21 @@
+function getCookie(name){
+    if(document.cookie.length == 0)
+        return null;
+
+    var regSepCookie = new RegExp('(; )', 'g');
+    var cookies = document.cookie.split(regSepCookie);
+
+    for(var i = 0; i < cookies.length; i++){
+        var regInfo = new RegExp('=', 'g');
+        var infos = cookies[i].split(regInfo);
+        if(infos[0] == name){
+            return unescape(infos[1]);
+        }
+    }
+    return null;
+}
 var socket = io('/api/game');
+
 class cellule{
     constructor(id,classes,visibilite) {
         this.class = classes;
@@ -14,6 +31,7 @@ class gameState{
         this.typeDePartie = typeDePartie;
     }
 }
+
 // Sélectionnez la div wrapper
 const wrapper = document.querySelector('.wrapper');
 var cells = [];
@@ -31,6 +49,7 @@ var dernierTourB = false;
 var lanePlayerA;
 var lanePlayerB;
 var partieChargee = false;
+
 
 let newMove = {
     player: '',
@@ -179,6 +198,16 @@ function rotationWall(cellIndex) {
 }
 
 function handleWall(cellIndex) {
+    const row = Math.floor(cellIndex / 17);
+    const col = cellIndex % 17;
+
+    const clickedCell = cells[cellIndex];
+    const rightCell = cells[cellIndex + 1];
+    const leftCell = cells[cellIndex - 1];
+
+    var bougerMur = removeWallTmp(clickedCell);
+    if (bougerMur && activePlayer === 'playerA') nbWallPlayerA++;
+    else if (bougerMur && activePlayer === 'playerB') nbWallPlayerB++;
     if (isClickedCell) {
         cells.forEach(cell => cell.classList.remove('possible-move'));
         isClickedCell = false;
@@ -193,12 +222,7 @@ function handleWall(cellIndex) {
         return;
     }
 
-    const row = Math.floor(cellIndex / 17);
-    const col = cellIndex % 17;
 
-    const clickedCell = cells[cellIndex];
-    const rightCell = cells[cellIndex + 1];
-    const leftCell = cells[cellIndex - 1];
 
     const upCell = cells[cellIndex - 17];
     const downCell = cells[cellIndex + 17];
@@ -206,9 +230,6 @@ function handleWall(cellIndex) {
         return rotationWall(cellIndex);
     }
 
-        var bougerMur = removeWallTmp(clickedCell);
-        if (bougerMur && activePlayer === 'playerA') nbWallPlayerA++;
-        else if (bougerMur && activePlayer === 'playerB') nbWallPlayerB++;
 
     var poser = false;
     //pour placer a l'horizontale
@@ -675,6 +696,7 @@ function changeActivePlayer() {
 
     tour--;
     console.log(tour);
+
     activateFog();
     checkCrossing(player1Position, player2Position);
     if(activePlayer === "playerA"){
@@ -685,7 +707,12 @@ function changeActivePlayer() {
         showForfaitB();
         hideForfaitA();
     }
+    murAPose = new Array(3);
+    if(activePlayer == "playerB" && getCookie("typeDePartie")=="bot"){
+        computeMove(player2Position);
+    }
     checkTour201();
+
 }
 function checkNoMove(){
 
@@ -822,27 +849,32 @@ function activateFog() {
 function wallPlacable(){
     dijkstraVisitedNode = [];
     var tab ={};
-    for(var i =0;i<cells.length;i=i+2){
+    for(var i =0;i<cells.length;i=i+2) {
+        if (!cells[i].classList.contains('odd-row') && !cells[i].classList.contains('odd-col')) {
 
         var tmp = [];
-        if(cells[i-1] != undefined && (!cells[i-1].classList.value.match(/\bwall[AB]\b/) && !cells[i-1].classList.contains('wallTMP'))){//il n'y a pas de mur a gauche
+        if (cells[i - 1] != undefined && (!cells[i - 1].classList.value.match(/\bwall[AB]\b/) && !cells[i - 1].classList.contains('wallTMP'))) {//il n'y a pas de mur a gauche
 
-            tmp.push((i+1)-2);
+            tmp.push((i + 1) - 2);
         }
-        if(cells[i+1] != undefined && (!cells[i+1].classList.value.match(/\bwall[AB]\b/) && !cells[i+1].classList.contains('wallTMP'))){//il n'y a pas de mur a droite
-            tmp.push((i+1)+2);
+        if (cells[i + 1] != undefined && (!cells[i + 1].classList.value.match(/\bwall[AB]\b/) && !cells[i + 1].classList.contains('wallTMP'))) {//il n'y a pas de mur a droite
+            tmp.push((i + 1) + 2);
         }
-        if(cells[i-17] != undefined && (!cells[i-17].classList.value.match(/\bwall[AB]\b/) && !cells[i-17].classList.contains('wallTMP'))){//il n'y a pas de mur au dessus
-            tmp.push((i+1)-34);
+        if (cells[i - 17] != undefined && (!cells[i - 17].classList.value.match(/\bwall[AB]\b/) && !cells[i - 17].classList.contains('wallTMP'))) {//il n'y a pas de mur au dessus
+            tmp.push((i + 1) - 34);
         }
-        if(cells[i+17] != undefined && (!cells[i+17].classList.value.match(/\bwall[AB]\b/)&& !cells[i+17].classList.contains('wallTMP'))){//il n'y a pas de mur en dessous
-            tmp.push(i+1+34);
+        if (cells[i + 17] != undefined && (!cells[i + 17].classList.value.match(/\bwall[AB]\b/) && !cells[i + 17].classList.contains('wallTMP'))) {//il n'y a pas de mur en dessous
+            tmp.push(i + 1 + 34);
         }
-        tab[""+(i+1)]=tmp;
+        tab["" + (i + 1)] = tmp;
     }
+    }
+    console.log(tab);
    var res1 = dijkstra("playerA",player1Position+1,tab);
+    //console.log("dijkstra pour A : " +res1);
     dijkstraVisitedNode = [];
     var res2 = dijkstra("playerB",player2Position+1,tab)
+    //console.log("dijkstra pour B : " +res2);
     var res = Math.max(res1, res2);
     return  res;
 }
@@ -860,7 +892,7 @@ function dijkstra(player,cellule,tab) {
     if (player === 'playerB') {
 
         if (lanePlayerAArray.includes(document.getElementById('' + cellule))) {
-
+            console.log("cellulle ok " +cellule);
             return 0;
         }
     }
