@@ -34,9 +34,9 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
 });
 
 function getUsername(){
-    let username = document.cookie.split("username=")[1];
+    let username =getCookie("username");
     if(username !== undefined){
-        return username.split(";")[0];
+        return username;
     }
     return null;
 }
