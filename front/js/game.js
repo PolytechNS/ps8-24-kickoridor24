@@ -78,6 +78,7 @@ if(getCookie("typeDePartie") ==="resumeGame"){
   loadGame();
 }
 function setUpGame() {
+
     hideAntiCheat();
     hideValider();
     if(getCookie("typeDePartie") === "enLigne")
@@ -123,6 +124,9 @@ function setUpGame() {
         const message = document.createElement('div');
         message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
         message.classList.add('message');
+        message.style.position = 'fixed';
+        message.style.top = '50%';
+        message.style.left = '50%';
         wrapper.appendChild(message);
         //si une case de top-row est cliquée alors on move le joueur
         topRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
@@ -538,6 +542,8 @@ function getValidMoves(position) {
 }
 
 function movePlayer(cellIndex) {
+    if(firstTurn)
+        return;
     if(murAPose[0]!=undefined){
         annulerWall();
     }
@@ -658,6 +664,7 @@ function victoire(txt){
         supprimerAnciennePartie(getUsername());
     window.location.href = 'index.html';
 }
+
 
 function changeActivePlayer() {
     activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
@@ -979,6 +986,9 @@ function checkTour201(){
         const message = document.createElement('div');
         message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
         message.classList.add('message');
+        message.style.position = 'fixed';
+        message.style.top = '50%';
+        message.style.left = '50%';
         wrapper.appendChild(message);
         //si une case de top-row est cliquée alors on move le joueur
         console.log(tour);
