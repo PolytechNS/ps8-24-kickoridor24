@@ -85,7 +85,7 @@ function setUpGame() {
 
     hideAntiCheat();
     hideValider();
-    if(getCookie("typeDePartie") === "enLigne")
+    if(getCookie("typeDePartie") === "enLigne" ||getCookie("username") == null)
         hideSauvegarder();
     if(activePlayer=="playerA") {
         hideForfaitB();
@@ -192,6 +192,22 @@ function handleWall(cellIndex) {
     const rightCell = cells[cellIndex + 1];
     const leftCell = cells[cellIndex - 1];
 
+
+
+    if((tour === 202 && firstTurn) || (tour === 201 && firstTurn)){
+        alert("Vous ne pouvez pas poser de mur au premier tour !");
+        return;
+    }
+
+
+
+    const upCell = cells[cellIndex - 17];
+    const downCell = cells[cellIndex + 17];
+
+    if(clickedCell.classList.contains("rotation")){
+        console.log("log");
+        return rotationWall(cellIndex);
+    }
     var bougerMur = removeWallTmp(clickedCell);
     if (bougerMur && activePlayer === 'playerA') nbWallPlayerA++;
     else if (bougerMur && activePlayer === 'playerB') nbWallPlayerB++;
@@ -203,20 +219,8 @@ function handleWall(cellIndex) {
         alert("Vous n'avez plus de murs !")
         return;
     }
-
-    if((tour === 202 && firstTurn) || (tour === 201 && firstTurn)){
-        alert("Vous ne pouvez pas poser de mur au premier tour !");
-        return;
-    }
-
-
-
-    const upCell = cells[cellIndex - 17];
-    const downCell = cells[cellIndex + 17];
-    if(clickedCell.classList.contains("wallTMP") && clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col')){
-        return rotationWall(cellIndex);
-    }
-
+    console.log(clickedCell.classList.length);
+    console.log("log2");
 
     var poser = false;
     //pour placer a l'horizontale
@@ -552,7 +556,6 @@ function getValidMoves(position) {
 function movePlayer(cellIndex) {
 
     if(firstTurn){
-        console.log("move");
         return;
     }
     if(murAPose[0]!=undefined){
@@ -623,7 +626,7 @@ function movePlyerFirstTurn(cellIndex) {
         firstTurn = false;
         changeActivePlayer();
     } else if (activePlayer === 'playerB' && cellIndex >= 272 && cellIndex <= 288 && cells[cellIndex].classList.contains('first-turn')) {
-        console.log("hahaha");
+
         cells[player2Position].classList.remove('playerB');
         player2Position = cellIndex;
         cells[player2Position].classList.add('playerB');
@@ -699,7 +702,11 @@ function changeActivePlayer() {
     }
     murAPose = new Array(3);
     if(activePlayer == "playerB" && getCookie("typeDePartie")=="bot"){
-        computeMove(player2Position);
+        if(tour>=200){
+            changeActivePlayer();
+        }else {
+            computeMove(player2Position);
+        }
     }
     checkTour201();
 
@@ -770,6 +777,7 @@ function validerWall() {
     changeVisibility(rightCell, leftCell, activePlayer, horizontale);
     changeActivePlayer();
     hideValider();
+    socket.emit
 }
 
 function annulerWall() {
@@ -882,7 +890,7 @@ function dijkstra(player,cellule,tab) {
     if (player === 'playerB') {
 
         if (lanePlayerAArray.includes(document.getElementById('' + cellule))) {
-            console.log("cellulle ok " +cellule);
+
             return 0;
         }
     }
@@ -978,7 +986,6 @@ async function supprimerAnciennePartie(user){
 
     async function loadGame() {
 
-        console.log(getUsername());
         console.log("loadgame");
        var etatPartie = await retrieveGameBDD(getUsername());
 
@@ -997,8 +1004,8 @@ async function supprimerAnciennePartie(user){
 
         loadBoard(etatPartie["board"]);
 
-        console.log("fin");
-        //setCookie("typeDePartie",etatPartie["typeDePartie"],7);
+
+        setCookie("typeDePartie",etatPartie["typeDePartie"],7);
         setUpGame();
         partieChargee = true;
 }

@@ -159,7 +159,7 @@ header {
 
 }
 
-.playBot:hover, .play1v1:hover {
+.Play:hover {
     background-color: #eb4f61;
     color: #E4E5E7;
     box-shadow: 0 3px 3px 0 #676767;
