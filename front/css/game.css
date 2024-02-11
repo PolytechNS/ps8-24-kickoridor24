@@ -293,6 +293,28 @@ button {
 
 
 
+.sauvegarder{
 
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 1.5em;
+    text-align: center;
+    margin-top: 0;
+    width: 100%;
+}
+.sauvegarder button{
+    background-color: #28bdc9;
+    width: 100%;
+}
+.forfait{
 
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 1.2em;
+    text-align: center;
+    margin-top: 0;
+    width: 100%;
+}
+.forfait button{
+    background-color: #F67E8C;
+    width: 100%;
+}
 

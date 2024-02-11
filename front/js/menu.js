@@ -1,14 +1,3 @@
-function setCookie(name, value, days) {
-    var expires = "";
-    if (days) {
-        var date = new Date();
-        // Ajoute 7 jours à la date actuelle
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "") + expires + "; path=/";
-
-}
 
 function redirectToGame(name, value, days) {
     setCookie(name,value,days);
@@ -16,10 +5,39 @@ function redirectToGame(name, value, days) {
 }
 
 function redirectToLogin() {
-    document.cookie = "username=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/";
+    setCookie("username","",-1);
+
     window.location.href = "login.html";
 }
 
 function redirectToMenu() {
     window.location.href = "index.html";
 }
+
+async function checkResumegame(){
+    var div =  document.getElementById("resumeGameButton");
+ if(getCookie("username") != null){
+     const formDataJSON = {};
+     formDataJSON["username"] = getCookie("username");
+     try {
+         const response = await fetch('/api/gameRetrieve', {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json'
+             },
+             body: JSON.stringify(formDataJSON)
+         }).then(response => {
+             if (!response.ok) {
+               // div.onclick = null;
+                 div.style.opacity = 0.5;
+                 div.style.backgroundColor = "#ccc"; // Change la couleur de fond en gris clair
+                 div.style.pointerEvents = "none";
+             }});}catch (e) {
+
+     }
+ }else{
+
+     div.style.display = 'none';
+ }
+}
+checkResumegame();

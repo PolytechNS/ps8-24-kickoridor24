@@ -24,7 +24,7 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         if (!response.ok) {
             alert('Connexion échouée !')
         }else if(response.ok){
-            document.cookie = "username=" + formDataJSON.username + ";expires=Sat, 10 Feb 2024 23:59:59 UTC;path=/";
+            setCookie("username",formDataJSON.username,7);
             alert('Connexion réussie !');
             window.location.href = 'index.html';
         }
