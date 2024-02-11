@@ -128,7 +128,7 @@ function setUpGame() {
     changeVisibilityPlayer(false, player2Position, "playerB");
 
     if(tour<=200)
-        document.getElementById('nbTour').textContent = `Tour : n°${tour-1}`;
+        document.getElementById('nbTour').textContent = `Tour : n°${tour}`;
 
     cells.forEach((cell, index) => {
         if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col'))
