@@ -13,17 +13,25 @@
 </div>
 <div class="center">
     <h2 id="currentPlayer">Tour : playerA</h2>
+    <h2 id="nbTour">Tour : n°200</h2>
 </div>
 
 <div class="container">
     <div class="profilA">
         <h3>Player A</h3>
         <p id="nbWallPlayerA">Murs restant : 10</p>
+        <div class="sauvegarder">
+            <button class="sauvegarderButton" onclick="sauvegarderLaPartie()">Sauvegarder</button>
+        </div>
+        <div class="forfait" id="forfaitA">
+            <button class="forfaitButton" onclick="declarerForfait()">Déclarer forfait</button>
+        </div>
         <div id="validerA" class="valider">
             <p>VALIDER</p>
             <button class="okButton" onclick="validerWall()">ok</button>
-            <button class="notokButton" onclick="annulerWall()">PAS ok</button>
+            <button class="notokButton" onclick="annulerWall()">annuler</button>
         </div>
+
     </div>
     <div class="anti-cheat">
         <h2>ANTI CHEAT</h2>
@@ -34,10 +42,13 @@
     <div class="profilB">
         <h3>Player B</h3>
         <p id="nbWallPlayerB">Murs restant : 10</p>
+        <div class="forfait" id="forfaitB">
+            <button class="forfaitButton" onclick="declarerForfait()">Déclarer forfait</button>
+        </div>
         <div id="validerB" class="valider">
             <p>VALIDER</p>
             <button class="okButton" onclick="validerWall()">ok</button>
-            <button class="notokButton" onclick="annulerWall()">PAS ok</button>
+            <button class="notokButton" onclick="annulerWall()">annuler</button>
         </div>
     </div>
 
@@ -47,9 +58,14 @@
 </div>
 </body>
 </html>
+
+
+<script src="js/cookie.js"></script>
+
+<script src="js/authentification.js"></script>
 <script src="js/ai.js"></script>
 <script src="js/socket.io.js"></script>
 <script src="js/game.js"></script>
 <script src="js/menu.js"></script>
-<script src="js/authentification.js"></script>
+
 

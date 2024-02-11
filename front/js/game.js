@@ -1,31 +1,39 @@
-function getCookie(name){
-    if(document.cookie.length == 0)
-        return null;
 
-    var regSepCookie = new RegExp('(; )', 'g');
-    var cookies = document.cookie.split(regSepCookie);
-
-    for(var i = 0; i < cookies.length; i++){
-        var regInfo = new RegExp('=', 'g');
-        var infos = cookies[i].split(regInfo);
-        if(infos[0] == name){
-            return unescape(infos[1]);
-        }
-    }
-    return null;
-}
 var socket = io('/api/game');
+
+class cellule{
+    constructor(id,classes,visibilite) {
+        this.class = classes;
+        this.id =id;
+        this.visibility =visibilite;
+    }
+}
+class gameState{
+    constructor(username,board,tour,typeDePartie) {
+        this.username = username;
+        this.board = board;
+        this.tour = tour;
+        this.typeDePartie = typeDePartie;
+    }
+}
+
 // Sélectionnez la div wrapper
 const wrapper = document.querySelector('.wrapper');
-const cells = [];
+var cells = [];
 let activePlayer = 'playerA';
 var nbWallPlayerA = 10;
 var nbWallPlayerB = 10;
 let isClickedCell = false;
 let murAPose = new Array(3);
 let firstTurn = true;
-hideAntiCheat();
-hideValider();
+let player1Position = 8;
+let player2Position = 280;
+
+var tour = 202;
+var dernierTourB = false;
+var lanePlayerA;
+var lanePlayerB;
+var partieChargee = false;
 
 
 let newMove = {
@@ -70,46 +78,71 @@ for (var i = 1; i <= 289; i++) {
 
 }
 
-
-let player1Position = 8;
-let player2Position = 280;
-cells[player1Position].classList.add('playerA');
-cells[player2Position].classList.add('playerB');
-
-hideAntiCheat();
-hideValider();
-var lanePlayerA = document.getElementsByClassName('top-row');
-var lanePlayerB = document.getElementsByClassName('bot-row');
-
-dijkstraVisitedNode = [];
-activateFog();
-changeVisibilityPlayer(false, player1Position, "playerA");
-changeVisibilityPlayer(false, player2Position, "playerB");
-
-var tour = 200;
-var dernierTourB = false;
-
-cells.forEach((cell, index) => {
-    if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col'))
-        cell.addEventListener('click', () => handleWall(index));
-    else
-        cell.addEventListener('click', () => movePlayer(index));
-});
-
-if(tour === 200){
-    const topRows = document.querySelectorAll('.top-row');
-    topRows.forEach(row => row.classList.add('first-turn'));
-
-    // Afficher le message pour le premier tour
-    const message = document.createElement('div');
-    message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
-    message.classList.add('message');
-    wrapper.appendChild(message);
-    //si une case de top-row est cliquée alors on move le joueur
-    topRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
- //   console.log(tour);
+if(getCookie("typeDePartie") ==="resumeGame"){
+  loadGame();
 }
+function setUpGame() {
 
+    hideAntiCheat();
+    hideValider();
+    if(getCookie("typeDePartie") === "enLigne")
+        hideSauvegarder();
+    if(activePlayer=="playerA") {
+        hideForfaitB();
+        showForfaitA();
+    }
+    else{
+        hideForfaitA();
+        showForfaitB();
+    }
+
+    document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
+    document.querySelector('#nbWallPlayerA').innerText = "Murs restants : " + nbWallPlayerA;
+    document.querySelector('#nbWallPlayerB').innerText = "Murs restants : " + nbWallPlayerB;
+    cells[player1Position].classList.add('playerA');
+    cells[player2Position].classList.add('playerB');
+
+    hideAntiCheat();
+    hideValider();
+     lanePlayerA = document.getElementsByClassName('top-row');
+     lanePlayerB = document.getElementsByClassName('bot-row');
+
+    dijkstraVisitedNode = [];
+    activateFog();
+    changeVisibilityPlayer(false, player1Position, "playerA");
+    changeVisibilityPlayer(false, player2Position, "playerB");
+
+    if(tour<=200)
+        document.getElementById('nbTour').textContent = `Tour : n°${tour}`;
+
+    cells.forEach((cell, index) => {
+        if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col'))
+            cell.addEventListener('click', () => handleWall(index));
+        else
+            cell.addEventListener('click', () => movePlayer(index));
+    });
+
+    if (tour === 202) {
+        const topRows = document.querySelectorAll('.top-row');
+        topRows.forEach(row => row.classList.add('first-turn'));
+
+        // Afficher le message pour le premier tour
+        const message = document.createElement('div');
+        message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
+        message.classList.add('message');
+        message.style.position = 'fixed';
+        message.style.top = '50%';
+        message.style.left = '50%';
+        wrapper.appendChild(message);
+        //si une case de top-row est cliquée alors on move le joueur
+        topRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
+        console.log(tour);
+
+    }
+    checkTour201();
+    checkCrossing(player1Position,player2Position);
+}
+setUpGame();
 function removeWallTmp(){
 
     var bougerMur = false;
@@ -171,7 +204,7 @@ function handleWall(cellIndex) {
         return;
     }
 
-    if((tour === 200 && firstTurn) || (tour === 199 && firstTurn)){
+    if((tour === 202 && firstTurn) || (tour === 201 && firstTurn)){
         alert("Vous ne pouvez pas poser de mur au premier tour !");
         return;
     }
@@ -517,6 +550,11 @@ function getValidMoves(position) {
 }
 
 function movePlayer(cellIndex) {
+
+    if(firstTurn){
+        console.log("move");
+        return;
+    }
     if(murAPose[0]!=undefined){
         annulerWall();
     }
@@ -573,7 +611,7 @@ function movePlayer(cellIndex) {
 function movePlyerFirstTurn(cellIndex) {
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du haut et si c'est au tour du joueur A
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du bas et si c'est au tour du joueur B
-    if (activePlayer === 'playerA' && cellIndex >= 0 && cellIndex <= 16) {
+    if (activePlayer === 'playerA' && cellIndex >= 0 && cellIndex <= 16 && cells[cellIndex].classList.contains('first-turn')) {
         cells[player1Position].classList.remove('playerA');
         player1Position = cellIndex;
         cells[player1Position].classList.add('playerA');
@@ -583,8 +621,9 @@ function movePlyerFirstTurn(cellIndex) {
         message.parentNode.removeChild(message);
         changeVisibilityPlayer(false, player1Position, "playerA");
         firstTurn = false;
-
-    } else if (activePlayer === 'playerB' && cellIndex >= 272 && cellIndex <= 288) {
+        changeActivePlayer();
+    } else if (activePlayer === 'playerB' && cellIndex >= 272 && cellIndex <= 288 && cells[cellIndex].classList.contains('first-turn')) {
+        console.log("hahaha");
         cells[player2Position].classList.remove('playerB');
         player2Position = cellIndex;
         cells[player2Position].classList.add('playerB');
@@ -594,8 +633,9 @@ function movePlyerFirstTurn(cellIndex) {
         message.parentNode.removeChild(message);
         changeVisibilityPlayer(false, player2Position, "playerB");
         firstTurn = false;
-
+        changeActivePlayer();
     }
+
 }
 
 function checkCrossing(playerAPosition, playerBPosition) {
@@ -619,43 +659,49 @@ function checkCrossing(playerAPosition, playerBPosition) {
         }
     }
     if ((gagneA && gagneB) || tour === 0) {
-        alert("match nul !");
-        location.reload(true);
+        victoire("match nul !");
+
     } else if (gagneA) {
-        alert("Player A a gagné !");
-        location.reload(true);
+        victoire("Player A a gagné !");
+
     } else if (gagneB) {
-        alert("Player B a gagné !");
-        location.reload(true);
+        victoire("Player B a gagné !");
+
     }
 }
+function victoire(txt){
+    alert(txt);
+    if(partieChargee)
+        supprimerAnciennePartie(getUsername());
+    window.location.href = 'index.html';
+}
+
 
 function changeActivePlayer() {
     activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
     document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
+    if(tour<=200)
+        document.getElementById('nbTour').textContent = `Tour : n°${tour-1}`;
     showAntiCheat();
-    activateFog();
-    checkCrossing(player1Position, player2Position);
+
     tour--;
     console.log(tour);
+
+    activateFog();
+    checkCrossing(player1Position, player2Position);
+    if(activePlayer === "playerA"){
+        showForfaitA();
+        hideForfaitB();
+    }
+    else{
+        showForfaitB();
+        hideForfaitA();
+    }
     murAPose = new Array(3);
     if(activePlayer == "playerB" && getCookie("typeDePartie")=="bot"){
         computeMove(player2Position);
     }
-    else if(tour === 199){
-        firstTurn = true;
-        const bottomRows = document.querySelectorAll('.bot-row');
-        bottomRows.forEach(row => row.classList.add('first-turn'));
-
-        // Afficher le message pour le premier tour
-        const message = document.createElement('div');
-        message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
-        message.classList.add('message');
-        wrapper.appendChild(message);
-        //si une case de top-row est cliquée alors on move le joueur
-        console.log(tour);
-        bottomRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
-    }
+    checkTour201();
 
 }
 function checkNoMove(){
@@ -813,7 +859,7 @@ function wallPlacable(){
         tab["" + (i + 1)] = tmp;
     }
     }
-    console.log(tab);
+
    var res1 = dijkstra("playerA",player1Position+1,tab);
     //console.log("dijkstra pour A : " +res1);
     dijkstraVisitedNode = [];
@@ -852,3 +898,194 @@ function dijkstra(player,cellule,tab) {
         return Math.min.apply(null, tmpTab);
     }
 }
+function hideSauvegarder(){
+    document.querySelector('.sauvegarder').style.display = 'none';
+}
+function hideForfaitA(){
+    document.querySelector('#forfaitA').style.display = 'none';
+}
+
+function hideForfaitB(){
+    document.querySelector('#forfaitB').style.display = 'none';
+}
+function showForfaitA(){
+    document.querySelector('#forfaitA').style.display = 'grid';
+}
+
+function showForfaitB(){
+    document.querySelector('#forfaitB').style.display = 'grid';
+}
+function declarerForfait(){
+    if(activePlayer === "playerA"){
+        victoire("Vous avez déclarer forfait \n Player B a gagné !");
+    }else{
+        victoire("Vous avez déclarer forfait \n Player A a gagné !");
+    }
+}
+
+async function sauvegarderLaPartie() {
+   await supprimerAnciennePartie(getUsername());
+    if(murAPose[0]!= undefined)
+        annulerWall();
+    cells.forEach(cell => cell.classList.remove('possible-move'));
+    var tab = construireEtatPartie();
+    var etat = new gameState(getUsername(),tab, tour,getCookie("typeDePartie"));
+    const formDataJSON = {};
+    formDataJSON["username"] = etat.username;
+    formDataJSON["board"] = etat.board;
+    formDataJSON["tour"] = etat.tour;
+    formDataJSON["typeDePartie"] = etat.typeDePartie;
+    try {
+        const response = await fetch('/api/gameSave', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        });
+        if (!response.ok) {
+            throw new Error('Une erreur est survenue lors de la sauvegarde de la partie.');
+        }
+        alert('Partie sauvegardée !');
+        window.location.href = 'index.html';
+    } catch (e) {
+        alert(error.message);
+    }
+
+}
+async function supprimerAnciennePartie(user){
+    const formDataJSON = {};
+    formDataJSON["username"] = user;
+    try {
+        const response = await fetch('/api/gameDelete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        });
+    } catch (e) {
+        alert(error.message);
+    }
+}
+    function construireEtatPartie() {
+        var tab = [];
+        for (var i = 0; i < cells.length; i++) {
+            tab.push(new cellule(cells[i].getAttribute('id'), cells[i].classList, cells[i].getAttribute('visibility')))
+        }
+        return tab;
+    }
+
+    async function loadGame() {
+
+        console.log(getUsername());
+        console.log("loadgame");
+       var etatPartie = await retrieveGameBDD(getUsername());
+
+
+       tour = etatPartie["tour"];
+       if(tour == 202 || tour==201){
+           firstTurn = true;
+       }else{
+           firstTurn = false;
+       }
+       if(tour%2 == 0){
+           activePlayer = "playerA";
+       }else{
+           activePlayer = "playerB";
+       }
+
+        loadBoard(etatPartie["board"]);
+
+        console.log("fin");
+        //setCookie("typeDePartie",etatPartie["typeDePartie"],7);
+        setUpGame();
+        partieChargee = true;
+}
+function checkTour201(){
+    if(tour === 201){
+        firstTurn = true;
+        const bottomRows = document.querySelectorAll('.bot-row');
+        bottomRows.forEach(row => row.classList.add('first-turn'));
+
+        // Afficher le message pour le premier tour
+        const message = document.createElement('div');
+        message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
+        message.classList.add('message');
+        message.style.position = 'fixed';
+        message.style.top = '50%';
+        message.style.left = '50%';
+        wrapper.appendChild(message);
+        //si une case de top-row est cliquée alors on move le joueur
+        console.log(tour);
+        bottomRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
+
+    }
+}
+    async function retrieveGameBDD(username){
+        const formDataJSON = {};
+        formDataJSON["username"] = username;
+        try {
+            const response = await fetch('/api/gameRetrieve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataJSON)
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur de réseau ou HTTP: ' + response.status);
+                }
+
+                return response.json(); // Convertit la réponse en JSON
+            })
+                .then(data => {
+
+                    return data;
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des données:', error);
+                });
+            return response;
+        } catch (e) {
+            alert(e.message);
+        }
+    }
+
+    function loadBoard(tab) {
+        var wallA = 0;
+        var wallB = 0;
+
+        cells = new Array();
+        while (wrapper.firstChild)
+            wrapper.removeChild(wrapper.firstChild);
+
+        for (var i = 0; i < tab.length; i++) {
+            var newDiv = document.createElement('div');
+            const classes = Object.values(tab[i]["class"]);
+            classes.forEach(className => {
+                newDiv.classList.add(className);
+            });
+            if(classes.includes("playerA")||classes.includes("playerAFog")){
+                player1Position = i;
+            }
+            if(classes.includes("playerB") ||classes.includes("playerBFog")){
+                player2Position = i;
+            }
+            if(classes.includes("wallA")){
+                wallA++;
+            }
+            if(classes.includes("wallB")){
+                wallB++;
+            }
+
+            newDiv.setAttribute('id', tab[i]["id"]);
+            if (tab[i]["visibility"] != null)
+                newDiv.setAttribute('visibility', tab[i]["visibility"]);
+            cells.push(newDiv);
+            wrapper.appendChild(newDiv);
+        }
+        nbWallPlayerA = 10 - (wallA/3);
+        nbWallPlayerB = 10 - (wallB/3);
+
+    }

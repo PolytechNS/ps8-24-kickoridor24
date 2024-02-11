@@ -33,12 +33,16 @@
 </header>
 
 <div class="container">
-    <div class="PlayBot" onclick="redirectToGame()">
+    <div class="Play" onclick="redirectToGame('typeDePartie','bot',7)">
         <h2 class="btnJouer"> JOUER CONTRE UN BOT</h2>
     </div>
 
-    <div class="PLay1v1" onclick="redirectToGame()">
+    <div class="Play" onclick="redirectToGame('typeDePartie','1v1local',7)">
         <h2 class="btnJouer"> JOUER EN 1V1 LOCAL</h2>
+    </div>
+
+    <div class="Play" id="resumeGameButton" onclick="redirectToGame('typeDePartie','resumeGame',7)">
+        <h2 class="btnJouer"> REPRENDRE UNE PARTIE</h2>
     </div>
 </div>
 
@@ -47,6 +51,7 @@
 </div>
 </body>
 </html>
+<script src="js/cookie.js"></script>
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/authentification.js"></script>

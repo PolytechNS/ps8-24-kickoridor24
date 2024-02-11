@@ -26,7 +26,8 @@ document.getElementById('signupForm').addEventListener('submit', async (event) =
         });
 
         if (!response.ok) {
-            throw new Error('Une erreur est survenue lors de l\'inscription');
+            var err = await response.text();
+            throw new Error('Une erreur est survenue lors de l\'inscription : ' + err);
         }
 
         alert('Inscription réussie !');
