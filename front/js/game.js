@@ -41,6 +41,11 @@ let newMove = {
     type: '',
     position: ''
 };
+let newWall = {
+    player: '',
+    type: '',
+    position: ''
+};
 
 // Générez les 81 div et ajoutez-les à la div wrapper
 for (var i = 1; i <= 289; i++) {
@@ -205,7 +210,7 @@ function handleWall(cellIndex) {
     const downCell = cells[cellIndex + 17];
 
     if(clickedCell.classList.contains("rotation")){
-        console.log("log");
+
         return rotationWall(cellIndex);
     }
     var bougerMur = removeWallTmp(clickedCell);
@@ -219,8 +224,7 @@ function handleWall(cellIndex) {
         alert("Vous n'avez plus de murs !")
         return;
     }
-    console.log(clickedCell.classList.length);
-    console.log("log2");
+
 
     var poser = false;
     //pour placer a l'horizontale
@@ -614,6 +618,7 @@ function movePlayer(cellIndex) {
 function movePlyerFirstTurn(cellIndex) {
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du haut et si c'est au tour du joueur A
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du bas et si c'est au tour du joueur B
+
     if (activePlayer === 'playerA' && cellIndex >= 0 && cellIndex <= 16 && cells[cellIndex].classList.contains('first-turn')) {
         cells[player1Position].classList.remove('playerA');
         player1Position = cellIndex;
@@ -624,6 +629,12 @@ function movePlyerFirstTurn(cellIndex) {
         message.parentNode.removeChild(message);
         changeVisibilityPlayer(false, player1Position, "playerA");
         firstTurn = false;
+        newMove.player = 'playerA';
+        newMove.type = 'move';
+        newMove.position = player1Position;
+
+        socket.emit('newMove', newMove);
+
         changeActivePlayer();
     } else if (activePlayer === 'playerB' && cellIndex >= 272 && cellIndex <= 288 && cells[cellIndex].classList.contains('first-turn')) {
 
@@ -636,6 +647,11 @@ function movePlyerFirstTurn(cellIndex) {
         message.parentNode.removeChild(message);
         changeVisibilityPlayer(false, player2Position, "playerB");
         firstTurn = false;
+        newMove.player = 'playerB';
+        newMove.type = 'move';
+        newMove.position = player2Position;
+
+        socket.emit('newMove', newMove);
         changeActivePlayer();
     }
 
@@ -700,15 +716,19 @@ function changeActivePlayer() {
         showForfaitB();
         hideForfaitA();
     }
+
     murAPose = new Array(3);
+    checkTour201();
     if(activePlayer == "playerB" && getCookie("typeDePartie")=="bot"){
         if(tour>=200){
-            changeActivePlayer();
+
+            movePlyerFirstTurn(player2Position);
         }else {
+
             computeMove(player2Position);
         }
     }
-    checkTour201();
+
 
 }
 function checkNoMove(){
@@ -773,11 +793,24 @@ function validerWall() {
     if (murAPose[1] - murAPose[0] === 1) {
         horizontale = true;
     }
+    if (activePlayer === 'playerA') {
+        newWall.player = 'playerA';
+        newWall.type = 'wall';
+        newWall.position = murAPose;
 
+        socket.emit('newWall', newWall);
+
+    } else {
+        newWall.player = 'playerB';
+        newWall.type = 'wall';
+        newWall.position = murAPose;
+
+        socket.emit('newWall', newWall);
+    }
     changeVisibility(rightCell, leftCell, activePlayer, horizontale);
     changeActivePlayer();
     hideValider();
-    socket.emit
+
 }
 
 function annulerWall() {
@@ -869,10 +902,10 @@ function wallPlacable(){
     }
 
    var res1 = dijkstra("playerA",player1Position+1,tab);
-    //console.log("dijkstra pour A : " +res1);
+
     dijkstraVisitedNode = [];
     var res2 = dijkstra("playerB",player2Position+1,tab)
-    //console.log("dijkstra pour B : " +res2);
+
     var res = Math.max(res1, res2);
     return  res;
 }
@@ -986,7 +1019,6 @@ async function supprimerAnciennePartie(user){
 
     async function loadGame() {
 
-        console.log("loadgame");
        var etatPartie = await retrieveGameBDD(getUsername());
 
 
@@ -1096,3 +1128,4 @@ function checkTour201(){
         nbWallPlayerB = 10 - (wallB/3);
 
     }
+

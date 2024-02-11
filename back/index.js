@@ -3,7 +3,7 @@ const http = require('http')
 // Let's import our logic.
 const fileQuery = require('./queryManagers/front.js')
 const apiQuery = require('./queryManagers/api.js')
-
+const aiRandom = require('./logic/ai.js');
 /* The http module contains a createServer function, which takes one argument, which is the function that
 ** will be called whenever a new request arrives to the server.
  */
@@ -42,9 +42,13 @@ const io = new Server(server);
      socket.on('disconnect', () => {
          console.log('user disconnected');
      });
-
+     socket.on('computeMoveRandom', (move) => {
+            aiRandom.move(move);
+     });
      //TODO
-
+     socket.on('newWall', (newWall) => {
+         console.log('New wall received: ', newWall);
+     });
      socket.on('newMove', (newMove) => {
         console.log('New move received: ', newMove);
      });

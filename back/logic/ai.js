@@ -1,4 +1,3 @@
-
 function computeMove(pos) {
     console.log("bot : " +pos);
     var possibleMoves = getValidMoves(pos);
@@ -8,3 +7,4 @@ function computeMove(pos) {
     movePlayer(possibleMoves[moveIndex]);
     return possibleMoves[moveIndex];
 }
+exports.move = computeMove;
