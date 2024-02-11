@@ -20,10 +20,16 @@ async function handleBDD(request, response){
         request.on("data", chunk => {
             body += chunk.toString();
         });
-        request.on("end", () => {
+        request.on("end", async () => {
             let token;
             try {
                 const data = JSON.parse(body);
+                const user = await findUser(data);
+                if(user != null){
+                    response.statusCode = 400;
+                    response.end("Username already taken");
+                }
+                else{
                 const dataToHash = {
                     email: data.email,
                     password: data.password
@@ -36,8 +42,9 @@ async function handleBDD(request, response){
                 saveUser(dataToSend).then(r => {
                     response.statusCode = 200;
                     response.end("ok");
-                });
-            } catch (error) {
+                }
+                );
+            } }catch (error) {
                 console.error(error.message);
                 response.statusCode = 400;
                 response.end("Invalid JSON");
