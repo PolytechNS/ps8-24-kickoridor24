@@ -125,6 +125,27 @@ async function handleBDD(request, response){
                 response.end("Invalid JSON");
             }
         });
+    }else if(request.method === "POST" && request.url === "/api/gameDelete"){
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+                const deleteGame = await deleteGameState(data);
+                if (deleteGame != null) {
+                    response.end("ok");
+                }else{
+                    response.statusCode = 404;
+                    response.end("User not found");
+                }
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
     }
 
 }
@@ -167,6 +188,16 @@ async function findGameState(data) {
     try {
         await client.connect();
         return await client.db("kickoridor").collection("gameState").findOne({
+            username: data.username.toString()
+        });
+    } finally {
+        await client.close();
+    }
+}
+async function deleteGameState(data) {
+    try {
+        await client.connect();
+        return await client.db("kickoridor").collection("gameState").deleteOne({
             username: data.username.toString()
         });
     } finally {

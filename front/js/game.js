@@ -30,7 +30,7 @@ var tour = 200;
 var dernierTourB = false;
 var lanePlayerA;
 var lanePlayerB;
-
+var partieChargee = false;
 
 let newMove = {
     player: '',
@@ -640,15 +640,21 @@ function checkCrossing(playerAPosition, playerBPosition) {
         }
     }
     if ((gagneA && gagneB) || tour === 0) {
-        alert("match nul !");
-        location.reload(true);
+        victoire("match nul !");
+
     } else if (gagneA) {
-        alert("Player A a gagné !");
-        window.location.href = 'index.html';
+        victoire("Player A a gagné !");
+
     } else if (gagneB) {
-        alert("Player B a gagné !");
-        window.location.href = 'index.html';
+        victoire("Player B a gagné !");
+
     }
+}
+function victoire(txt){
+    alert(txt);
+    if(partieChargee)
+        supprimerAnciennePartie(getUsername());
+    window.location.href = 'index.html';
 }
 
 function changeActivePlayer() {
@@ -881,6 +887,7 @@ function declarerForfait(){
 }
 
 async function sauvegarderLaPartie() {
+   await supprimerAnciennePartie(getUsername());
     if(murAPose[0]!= undefined)
         annulerWall();
     cells.forEach(cell => cell.classList.remove('possible-move'));
@@ -909,7 +916,21 @@ async function sauvegarderLaPartie() {
     }
 
 }
-
+async function supprimerAnciennePartie(user){
+    const formDataJSON = {};
+    formDataJSON["username"] = user;
+    try {
+        const response = await fetch('/api/gameDelete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        });
+    } catch (e) {
+        alert(error.message);
+    }
+}
     function construireEtatPartie() {
         var tab = [];
         for (var i = 0; i < cells.length; i++) {
@@ -940,7 +961,7 @@ async function sauvegarderLaPartie() {
         console.log("fin");
         //setCookie("typeDePartie",etatPartie["typeDePartie"],7);
         setUpGame();
-
+        partieChargee = true;
 }
 function checkTour199(){
     if(tour === 199){
@@ -961,7 +982,6 @@ function checkTour199(){
     async function retrieveGameBDD(username){
         const formDataJSON = {};
         formDataJSON["username"] = username;
-        console.log(formDataJSON["username"]);
         try {
             const response = await fetch('/api/gameRetrieve', {
                 method: 'POST',
