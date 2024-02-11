@@ -669,6 +669,8 @@ function victoire(txt){
 function changeActivePlayer() {
     activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
     document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
+    if(tour<=200)
+        document.getElementById('nbTour').textContent = `Tour : n°${tour-1}`;
     showAntiCheat();
 
     tour--;
