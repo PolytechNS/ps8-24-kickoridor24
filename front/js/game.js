@@ -26,7 +26,7 @@ let firstTurn = true;
 let player1Position = 8;
 let player2Position = 280;
 
-var tour = 200;
+var tour = 202;
 var dernierTourB = false;
 var lanePlayerA;
 var lanePlayerB;
@@ -115,7 +115,7 @@ function setUpGame() {
             cell.addEventListener('click', () => movePlayer(index));
     });
 
-    if (tour === 200) {
+    if (tour === 202) {
         const topRows = document.querySelectorAll('.top-row');
         topRows.forEach(row => row.classList.add('first-turn'));
 
@@ -127,8 +127,9 @@ function setUpGame() {
         //si une case de top-row est cliquée alors on move le joueur
         topRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
         console.log(tour);
+
     }
-    checkTour199();
+    checkTour201();
     checkCrossing(player1Position,player2Position);
 }
 setUpGame();
@@ -183,7 +184,7 @@ function handleWall(cellIndex) {
         return;
     }
 
-    if((tour === 200 && firstTurn) || (tour === 199 && firstTurn)){
+    if((tour === 202 && firstTurn) || (tour === 201 && firstTurn)){
         alert("Vous ne pouvez pas poser de mur au premier tour !");
         return;
     }
@@ -603,7 +604,7 @@ function movePlyerFirstTurn(cellIndex) {
         message.parentNode.removeChild(message);
         changeVisibilityPlayer(false, player1Position, "playerA");
         firstTurn = false;
-
+        changeActivePlayer();
     } else if (activePlayer === 'playerB' && cellIndex >= 272 && cellIndex <= 288 && cells[cellIndex].classList.contains('first-turn')) {
         console.log("hahaha");
         cells[player2Position].classList.remove('playerB');
@@ -615,8 +616,9 @@ function movePlyerFirstTurn(cellIndex) {
         message.parentNode.removeChild(message);
         changeVisibilityPlayer(false, player2Position, "playerB");
         firstTurn = false;
-
+        changeActivePlayer();
     }
+
 }
 
 function checkCrossing(playerAPosition, playerBPosition) {
@@ -674,7 +676,7 @@ function changeActivePlayer() {
         showForfaitB();
         hideForfaitA();
     }
-    checkTour199();
+    checkTour201();
 }
 function checkNoMove(){
 
@@ -883,7 +885,11 @@ function showForfaitB(){
     document.querySelector('#forfaitB').style.display = 'grid';
 }
 function declarerForfait(){
-    //TODO
+    if(activePlayer === "playerA"){
+        victoire("Vous avez déclarer forfait \n Player B a gagné !");
+    }else{
+        victoire("Vous avez déclarer forfait \n Player A a gagné !");
+    }
 }
 
 async function sauvegarderLaPartie() {
@@ -947,7 +953,7 @@ async function supprimerAnciennePartie(user){
 
 
        tour = etatPartie["tour"];
-       if(tour == 200 || tour==199){
+       if(tour == 202 || tour==201){
            firstTurn = true;
        }
        if(tour%2 == 0){
@@ -963,8 +969,8 @@ async function supprimerAnciennePartie(user){
         setUpGame();
         partieChargee = true;
 }
-function checkTour199(){
-    if(tour === 199){
+function checkTour201(){
+    if(tour === 201){
         firstTurn = true;
         const bottomRows = document.querySelectorAll('.bot-row');
         bottomRows.forEach(row => row.classList.add('first-turn'));
@@ -977,6 +983,7 @@ function checkTour199(){
         //si une case de top-row est cliquée alors on move le joueur
         console.log(tour);
         bottomRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
+
     }
 }
     async function retrieveGameBDD(username){
