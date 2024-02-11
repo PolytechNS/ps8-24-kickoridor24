@@ -13,18 +13,13 @@ Both folders contain a README with more details.
 
 * [Node.js](https://nodejs.org/) should be installed.
 * The repo should have been cloned.
+* [Docker compose](https://docs.docker.com/compose/install/) should be installed.
 
 ---
 
-## First launch
-
-Not much in there, just launch `npm install` to install the dependencies for the server.
-
-Note that this command should be run again every time you install / delete a package.
-
----
 
 ## All runs
 
-Run `npm start`. That's it, unless you need other scripts to run before or while the server is launched,
-but then you (probably?) know what you are doing.
+Run project on prod mode: `docker-compose up --build`. It's change uri of mongo to connect with the mongo container.
+
+Run project on dev mode: `npm start dev`. It's change uri of mongo to connect localhost:27017.
