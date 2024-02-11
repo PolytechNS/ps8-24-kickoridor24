@@ -127,6 +127,8 @@ function setUpGame() {
     changeVisibilityPlayer(false, player1Position, "playerA");
     changeVisibilityPlayer(false, player2Position, "playerB");
 
+    if(tour<=200)
+        document.getElementById('nbTour').textContent = `Tour : n°${tour-1}`;
 
     cells.forEach((cell, index) => {
         if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col'))
@@ -563,8 +565,11 @@ function getValidMoves(position) {
 }
 
 function movePlayer(cellIndex) {
-    if(firstTurn)
+
+    if(firstTurn){
+        console.log("move");
         return;
+    }
     if(murAPose[0]!=undefined){
         annulerWall();
     }
@@ -869,7 +874,7 @@ function wallPlacable(){
         tab["" + (i + 1)] = tmp;
     }
     }
-    console.log(tab);
+
    var res1 = dijkstra("playerA",player1Position+1,tab);
     //console.log("dijkstra pour A : " +res1);
     dijkstraVisitedNode = [];
@@ -996,6 +1001,8 @@ async function supprimerAnciennePartie(user){
        tour = etatPartie["tour"];
        if(tour == 202 || tour==201){
            firstTurn = true;
+       }else{
+           firstTurn = false;
        }
        if(tour%2 == 0){
            activePlayer = "playerA";
