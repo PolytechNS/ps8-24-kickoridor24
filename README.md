@@ -20,5 +20,6 @@ Both folders contain a README with more details.
 
 ## All runs
 
-Run `docker-compose up --build`. That's it, unless you need other scripts to run before or while the server is launched,
-but then you (probably?) know what you are doing.
+Run project on prod mode: `docker-compose up --build`. It's change uri of mongo to connect with the mongo container.
+
+Run project on dev mode: `npm start dev`. It's change uri of mongo to connect localhost:27017.

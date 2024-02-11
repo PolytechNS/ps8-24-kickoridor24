@@ -1,8 +1,16 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const jwt = require("jsonwebtoken");
 
+const argument = process.argv[2];
 
-const uri = 'mongodb://mongo:27017';
+let uri;
+if(argument === "dev"){
+    console.log("mongo dev on localhost");
+    uri = 'mongodb://localhost:27017';
+}else{
+    console.log("mongo prod on mongo");
+    uri = 'mongodb://mongo:27017';
+}
 
 const client = new MongoClient(uri,  {
         serverApi: {
