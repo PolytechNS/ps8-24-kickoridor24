@@ -34,18 +34,14 @@ var dernierTourB = false;
 var lanePlayerA;
 var lanePlayerB;
 var partieChargee = false;
-
+var gState;
 
 let newMove = {
     player: '',
     type: '',
     position: ''
 };
-let newWall = {
-    player: '',
-    type: '',
-    position: ''
-};
+
 
 // Générez les 81 div et ajoutez-les à la div wrapper
 for (var i = 1; i <= 289; i++) {
@@ -82,12 +78,12 @@ for (var i = 1; i <= 289; i++) {
     wrapper.appendChild(newDiv);
 
 }
+function setUpGame(gameState) {
+    if(gameState === undefined){
 
-if(getCookie("typeDePartie") ==="resumeGame"){
-  loadGame();
-}
-function setUpGame() {
-
+    }else{
+        gState =gameState;
+    }
     hideAntiCheat();
     hideValider();
     if(getCookie("typeDePartie") === "enLigne" ||getCookie("username") == null)
@@ -109,8 +105,8 @@ function setUpGame() {
 
     hideAntiCheat();
     hideValider();
-     lanePlayerA = document.getElementsByClassName('top-row');
-     lanePlayerB = document.getElementsByClassName('bot-row');
+    lanePlayerA = document.getElementsByClassName('top-row');
+    lanePlayerB = document.getElementsByClassName('bot-row');
 
     dijkstraVisitedNode = [];
     activateFog();
@@ -147,7 +143,12 @@ function setUpGame() {
     checkTour201();
     checkCrossing(player1Position,player2Position);
 }
+if(getCookie("typeDePartie") ==="resumeGame"){
+  loadGame();
+}
+else{
 setUpGame();
+}
 function removeWallTmp(){
 
     var bougerMur = false;
@@ -737,13 +738,22 @@ function checkNoMove(){
         const validMoves = getValidMoves(player1Position);
         if(validMoves.length == 0 && nbWallPlayerA===0){
             alert("passage de tour");
+            newMove.player ="playerA";
+            newMove.type="idle";
+            newMove.position = player1Position;
+            socket.emit("newMove",newMove);
             changeActivePlayer();
         }
     }
     else if(activePlayer ==='playerB'){
         const validMoves = getValidMoves(player2Position);
-        if(validMoves.length == 0 && nbWallPlayerB===0){
+
+        if(validMoves.length == 0 && (nbWallPlayerB===0|| getCookie("typeDePartie")=="bot")){
             alert("passage de tour");
+            newMove.player ="playerB";
+            newMove.type="idle";
+            newMove.position = player2Position;
+            socket.emit("newMove",newMove);
             changeActivePlayer();
         }
     }
@@ -794,18 +804,18 @@ function validerWall() {
         horizontale = true;
     }
     if (activePlayer === 'playerA') {
-        newWall.player = 'playerA';
-        newWall.type = 'wall';
-        newWall.position = murAPose;
+        newMove.player = 'playerA';
+        newMove.type = 'wall';
+        newMove.position = murAPose;
 
-        socket.emit('newWall', newWall);
+        socket.emit('newMove', newMove);
 
     } else {
-        newWall.player = 'playerB';
-        newWall.type = 'wall';
-        newWall.position = murAPose;
+        newMove.player = 'playerB';
+        newMove.type = 'wall';
+        newMove.position = murAPose;
 
-        socket.emit('newWall', newWall);
+        socket.emit('newMove', newMove);
     }
     changeVisibility(rightCell, leftCell, activePlayer, horizontale);
     changeActivePlayer();
@@ -1038,6 +1048,7 @@ async function supprimerAnciennePartie(user){
 
 
         setCookie("typeDePartie",etatPartie["typeDePartie"],7);
+
         setUpGame();
         partieChargee = true;
 }
