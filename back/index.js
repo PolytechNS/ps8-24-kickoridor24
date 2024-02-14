@@ -42,8 +42,9 @@ const io = new Server(server);
      socket.on('disconnect', () => {
          console.log('user disconnected');
      });
-     socket.on('computeMoveRandom', (move) => {
-            aiRandom.move(move);
+     socket.on('computeMoveRandom', (possibleMoves,callback) => {
+         const returnValue = aiRandom.move(possibleMoves);
+         callback(returnValue);
      });
      //TODO
      socket.on('newWall', (newWall) => {

@@ -725,8 +725,14 @@ function changeActivePlayer() {
 
             movePlyerFirstTurn(player2Position);
         }else {
+            var possiblesMoves = getValidMoves(player2Position);
+            socket.emit('computeMoveRandom', possiblesMoves, (returnValue) => {
+                // Utilisez returnValue ici, c'est la valeur de retour de la fonction move
+                console.log('Valeur de retour de la fonction move:', returnValue);
+                movePlayer(player2Position);
+                movePlayer(returnValue);
+            });
 
-            computeMove(player2Position);
         }
     }
 
