@@ -110,8 +110,6 @@ function setUpGame(gameState) {
 
     dijkstraVisitedNode = [];
     activateFog();
-    changeVisibilityPlayer(false, player1Position, "playerA");
-    changeVisibilityPlayer(false, player2Position, "playerB");
 
     if(tour<=200)
         document.getElementById('nbTour').textContent = `Tour : n°${tour}`;
@@ -427,30 +425,30 @@ function changeVisibilityPlayer(remove,position,player){
     if (remove === true) {
         if (player === 'playerA') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) + 1);
-            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/)) && cells[position - 1].classList.contains('visibility')) {
+            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/)) && cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) + 1);
             }
-            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cells[position + 1].classList.contains('visibility')) {
+            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cellRight.hasAttribute('visibility')) {
                 cellRight.setAttribute('visibility', parseInt(cellRight.getAttribute('visibility')) + 1);
             }
-            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cells[position - 17].classList.contains('visibility')) {
+            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cellTop.hasAttribute('visibility')) {
                 cellTop.setAttribute('visibility', parseInt(cellTop.getAttribute('visibility')) + 1);
             }
-            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cells[position + 17].classList.contains('visibility')) {
+            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cellBot.hasAttribute('visibility')) {
                 cellBot.setAttribute('visibility', parseInt(cellBot.getAttribute('visibility')) + 1);
             }
         } else if (player === 'playerB') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) - 1);
-            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cells[position - 1].classList.contains('visibility')) {
+            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) - 1);
             }
-            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cells[position + 1].classList.contains('visibility')) {
+            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cellRight.hasAttribute('visibility')) {
                 cellRight.setAttribute('visibility', parseInt(cellRight.getAttribute('visibility')) - 1);
             }
-            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cells[position - 17].classList.contains('visibility')) {
+            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cellTop.hasAttribute('visibility')) {
                 cellTop.setAttribute('visibility', parseInt(cellTop.getAttribute('visibility')) - 1);
             }
-            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cells[position + 17].classList.contains('visibility')) {
+            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cellBot.hasAttribute('visibility')) {
                 cellBot.setAttribute('visibility', parseInt(cellBot.getAttribute('visibility')) - 1);
             }
         }
@@ -458,30 +456,30 @@ function changeVisibilityPlayer(remove,position,player){
     } else if (remove === false) {
         if (player === 'playerA') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) - 1);
-            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cells[position - 1].classList.contains('visibility')) {
+            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) - 1);
             }
-            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cells[position + 1].classList.contains('visibility')) {
+            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cellRight.hasAttribute('visibility')) {
                 cellRight.setAttribute('visibility', parseInt(cellRight.getAttribute('visibility')) - 1);
             }
-            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cells[position - 17].classList.contains('visibility')) {
+            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cellTop.hasAttribute('visibility')) {
                 cellTop.setAttribute('visibility', parseInt(cellTop.getAttribute('visibility')) - 1);
             }
-            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cells[position + 17].classList.contains('visibility')) {
+            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cellBot.hasAttribute('visibility')) {
                 cellBot.setAttribute('visibility', parseInt(cellBot.getAttribute('visibility')) - 1);
             }
         } else if (player === 'playerB') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) + 1);
-            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cells[position - 1].classList.contains('visibility')) {
+            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) + 1);
             }
-            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cells[position + 1].classList.contains('visibility')) {
+            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cellRight.hasAttribute('visibility')) {
                 cellRight.setAttribute('visibility', parseInt(cellRight.getAttribute('visibility')) + 1);
             }
-            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cells[position - 17].classList.contains('visibility')) {
+            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cellTop.hasAttribute('visibility')) {
                 cellTop.setAttribute('visibility', parseInt(cellTop.getAttribute('visibility')) + 1);
             }
-            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cells[position + 17].classList.contains('visibility')) {
+            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cellBot.hasAttribute('visibility')) {
                 cellBot.setAttribute('visibility', parseInt(cellBot.getAttribute('visibility')) + 1);
             }
         }
@@ -511,8 +509,8 @@ function getValidMoves(position) {
     const col = position % 17;
     const moves = [];
 
-    console.log("Row : " + row);
-    console.log("Col : " + col);
+    //console.log("Row : " + row);
+    //console.log("Col : " + col);
 
     const cellFoward = cells[position + 17];
     const cellBackward = cells[position - 17];
@@ -860,13 +858,13 @@ function activateFog() {
             if (cells[i].getAttribute('visibility') <= "0") {
                 cells[i].classList.remove('fog');
             }
-            if (parseInt(cells[i].getAttribute('id')) - 1 === player1Position) {
+            if (i=== player1Position) {
                 cells[i].classList.add('playerA');
                 cells[i].classList.remove('playerAFog');
             }
             if (cells[i].getAttribute('visibility') > "0") {
                 cells[i].classList.add('fog');
-                if (cells[i].classList.contains('playerB') && cells[i].classList.contains('fog')) {
+                if (cells[i].classList.contains('playerB') && cells[i].classList.contains('fog') && !checkJoueurColle()) {
                     cells[i].classList.remove('playerB');
                     cells[i].classList.add('playerBFog');
                 }
@@ -874,7 +872,7 @@ function activateFog() {
         }
     } else if (activePlayer == "playerB") {
         for (let i = 0; i < cells.length; i++) {
-            if (parseInt(cells[i].getAttribute('id')) - 1 === player2Position) {
+            if (i === player2Position) {
                 cells[i].classList.add('playerB');
                 cells[i].classList.remove('playerBFog');
             }
@@ -883,7 +881,7 @@ function activateFog() {
             }
             if (cells[i].getAttribute('visibility') < "0") {
                 cells[i].classList.add('fog');
-                if (cells[i].classList.contains('playerA') && cells[i].classList.contains('fog')) {
+                if (cells[i].classList.contains('playerA') && cells[i].classList.contains('fog') && !checkJoueurColle()) {
                     cells[i].classList.remove('playerA');
                     cells[i].classList.add('playerAFog');
                 }
@@ -891,7 +889,36 @@ function activateFog() {
         }
     }
 }
-
+function checkJoueurColle(){
+    var res = player2Position -player1Position;
+    var bool;
+    switch (res){
+        case 2 :
+            if(!cells[player1Position+1].classList.value.match(/\bwall[AB]\b/)){
+                bool = true;
+            }
+            break;
+        case -2 :
+            if(!cells[player1Position-1].classList.value.match(/\bwall[AB]\b/)){
+                bool = true;
+            }
+            break;
+        case 34 :
+            if(!cells[player1Position+17].classList.value.match(/\bwall[AB]\b/)){
+                bool = true;
+            }
+            break;
+        case -34 :
+            if(!cells[player1Position-17].classList.value.match(/\bwall[AB]\b/)){
+                bool = true;
+            }
+            break;
+        default :
+            bool = false;
+            break;
+    }
+    return bool;
+}
 
 function wallPlacable(){
     dijkstraVisitedNode = [];
