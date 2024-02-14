@@ -8,7 +8,7 @@ class cellule{
         this.visibility =visibilite;
     }
 }
-class gameState{
+class gameBDD {
     constructor(username,board,tour,typeDePartie) {
         this.username = username;
         this.board = board;
@@ -16,6 +16,42 @@ class gameState{
         this.typeDePartie = typeDePartie;
     }
 }
+
+class gameState{
+    constructor(playerAWalls, playerBWalls, board) {
+        this.playerAWalls = playerAWalls;
+        this.playerBWalls = playerBWalls;
+        this.board = board;
+    }
+}
+
+var game = new gameState(10,10,[]);
+
+var board = [];
+
+let i;
+var tmpLigne = [];
+let n;
+
+for(i = 0; i < 289; i = i+2){
+    if(i > 169){
+        n = -1;
+    }
+    else{
+        n = 0;
+    }
+    if(i%34 === 0 && i!==0){
+        board.push(tmpLigne);
+        tmpLigne = [];
+    }
+    else if(i%16 === 0 && i!==0){
+        i=i+16;
+    }
+    tmpLigne.push(n);
+}
+board.push(tmpLigne);
+
+console.log(board);
 
 // Sélectionnez la div wrapper
 const wrapper = document.querySelector('.wrapper');
@@ -48,7 +84,7 @@ let newWall = {
 };
 
 // Générez les 81 div et ajoutez-les à la div wrapper
-for (var i = 1; i <= 289; i++) {
+for (i = 1; i <= 289; i++) {
     var newDiv = document.createElement('div');
     newDiv.textContent = ' ';
     if (i > 0 && i < 18) {
@@ -777,6 +813,7 @@ function validerWall() {
     const rightCell = cells[murAPose[1]];
     const leftCell = cells[murAPose[2]];
 
+
     clickedCell.classList.remove('wallTMP');
     clickedCell.classList.remove('rotation');
     rightCell.classList.remove('wallTMP');
@@ -970,7 +1007,7 @@ async function sauvegarderLaPartie() {
         annulerWall();
     cells.forEach(cell => cell.classList.remove('possible-move'));
     var tab = construireEtatPartie();
-    var etat = new gameState(getUsername(),tab, tour,getCookie("typeDePartie"));
+    var etat = new gameBDD(getUsername(),tab, tour,getCookie("typeDePartie"));
     const formDataJSON = {};
     formDataJSON["username"] = etat.username;
     formDataJSON["board"] = etat.board;
