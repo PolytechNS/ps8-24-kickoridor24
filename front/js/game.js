@@ -229,9 +229,9 @@ function handleWall(cellIndex) {
     //pour placer a l'horizontale
 
     if( (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col') && !clickedCell.classList.value.match(/\bwall[AB]\b/) && !rightCell.classList.value.match(/\bwall[AB]\b/)&& !leftCell.classList.value.match(/\bwall[AB]\b/))
-    ||
-        (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col') && ( upCell.classList.value.match(/\bwall[AB]\b/) || downCell.classList.value.match(/\bwall[AB]\b/)) && !rightCell.classList.value.match(/\bwall[AB]\b/) && !leftCell.classList.value.match(/\bwall[AB]\b/))){// soit cliquer a cote d'un mur horizontale
-
+    //||
+       // (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col') && ( upCell.classList.value.match(/\bwall[AB]\b/) || downCell.classList.value.match(/\bwall[AB]\b/)) && !rightCell.classList.value.match(/\bwall[AB]\b/) && !leftCell.classList.value.match(/\bwall[AB]\b/))){// soit cliquer a cote d'un mur horizontale
+    ){
         clickedCell.classList.add('wallTMP');
         clickedCell.classList.add('rotation');
         murAPose[0] = cellIndex;
@@ -244,23 +244,20 @@ function handleWall(cellIndex) {
         poser = true;
     }
     //pour placer en verticale
-
-        else if( ((clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col')) && clickedCell.classList.value.match(/\bwall[AB]\b/) && !upCell.classList.value.match(/\bwall[AB]\b/) && !downCell.classList.value.match(/\bwall[AB]\b/))// soit cliquer au milieu d'un mur horizontale qui n'a pas de mur vertical
-    ||
-        (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col') && (rightCell.classList.value.match(/\bwall[AB]\b/) || leftCell.classList.value.match(/\bwall[AB]\b/)) && !upCell.classList.value.match(/\bwall[AB]\b/) && !downCell.classList.value.match(/\bwall[AB]\b/))){// soit cliquer a cote d'un mur horizontale
-
-            clickedCell.classList.add('wallTMP');
-            clickedCell.classList.add('rotation');
-            //clickedCell.classList.add('jambeMur');
-            murAPose[0] = cellIndex;
-            if(col < 16 && !upCell.classList.value.match(/\bwall[AB]\b/) && (upCell.classList.contains('odd-row') || upCell.classList.contains('odd-col')))
-                upCell.classList.add('wallTMP');
-            murAPose[1] = cellIndex-17;
-            if(col > 0 && !downCell.classList.value.match(/\bwall[AB]\b/) && (downCell.classList.contains('odd-row') || downCell.classList.contains('odd-col')))
-                downCell.classList.add('wallTMP');
-            murAPose[2] = cellIndex+17;
-            poser = true;
-        }
+    else if( (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col'))  && !clickedCell.classList.value.match(/\bwall[AB]\b/) && (rightCell.classList.value.match(/\bwall[AB]\b/) || leftCell.classList.value.match(/\bwall[AB]\b/)) )
+    {
+        clickedCell.classList.add('wallTMP');
+        clickedCell.classList.add('rotation');
+        //clickedCell.classList.add('jambeMur');
+        murAPose[0] = cellIndex;
+        if(col < 16 && !upCell.classList.value.match(/\bwall[AB]\b/) && (upCell.classList.contains('odd-row') || upCell.classList.contains('odd-col')))
+            upCell.classList.add('wallTMP');
+        murAPose[1] = cellIndex-17;
+        if(col > 0 && !downCell.classList.value.match(/\bwall[AB]\b/) && (downCell.classList.contains('odd-row') || downCell.classList.contains('odd-col')))
+            downCell.classList.add('wallTMP');
+        murAPose[2] = cellIndex+17;
+        poser = true;
+    }
 
         else if(clickedCell.classList.contains('odd-row') && !clickedCell.classList.contains('odd-col') && !clickedCell.classList.value.match(/\bwall[AB]\b/)) //la cellule est une ligne
         {
@@ -338,12 +335,15 @@ function handleWall(cellIndex) {
                 nbWallPlayerB--;
                 document.getElementById('nbWallPlayerB').textContent = `Murs restants : ${nbWallPlayerB}`;
             }
+
             if(wallPlacable()===0){
                 showValider();
             }else{
+
                 alert("Vous ne pouvez pas poser ce mur au risque de bloquer un joueur");
                 annulerWall();
             }
+
         }
 
 }
