@@ -538,8 +538,8 @@ function changeVisibilityPlayer(remove,position,player){
 }
 
 function handleCellClick(cellIndex, position) {
-    //const validMoves = getValidMoves(position);
-    socket.emit('getValidMoves', activePlayer, activePlayer === 'playerA' ? player1Position : player2Position, grid, validGrid);
+    const validMoves = getValidMoves(position);
+    /*socket.emit('getValidMoves', activePlayer, activePlayer === 'playerA' ? player1Position : player2Position, grid, validGrid);
     socket.on('validMoves', function (validMoves) {
         console.log("ValidMoves : " + validMoves);
         if (isClickedCell) {
@@ -554,7 +554,20 @@ function handleCellClick(cellIndex, position) {
                 }
             });
         }
-    })
+    })*/
+    console.log("ValidMoves : " + validMoves);
+    if (isClickedCell) {
+        cells.forEach(cell => cell.classList.remove('possible-move'));
+        isClickedCell = false;
+    } else {
+        validMoves.forEach(move => {
+            const moveCell = cells[move];
+            if (!moveCell.classList.contains('playerA') && !moveCell.classList.contains('playerB')) {
+                moveCell.classList.add('possible-move');
+                isClickedCell = true;
+            }
+        });
+    }
 }
 
 function movePlayer(cellIndex) {
@@ -719,7 +732,7 @@ function changeActivePlayer() {
 
     murAPose = new Array(3);
     checkTour201();
-    if(activePlayer == "playerB" && getCookie("typeDePartie")=="bot"){
+    if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot"){
         if(tour>=200){
 
             movePlyerFirstTurn(player2Position);
@@ -728,7 +741,7 @@ function changeActivePlayer() {
             computeMove(player2Position);
         }
     }
-    else if(activePlayer == "playerB" && getCookie("typeDePartie")=="bot_v2"){
+    else if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot_v2"){
         if(tour>=200){
 
             movePlyerFirstTurn(player2Position);
@@ -1152,4 +1165,60 @@ function checkTour201(){
         nbWallPlayerB = 10 - (wallB/3);
 
     }
+
+
+
+    //TODO : A RETIRER
+
+function getValidMoves(position) {
+    const row = Math.floor(position / 17);
+    const col = position % 17;
+    const moves = [];
+
+    console.log("Row : " + row);
+    console.log("Col : " + col);
+
+    const cellFoward = cells[position + 17];
+    const cellBackward = cells[position - 17];
+    const cellLeft = cells[position - 1];
+    const cellRight = cells[position + 1];
+
+    const cellFowardPlus1 = cells[position + 34];
+    const cellBackwardPlus1 = cells[position - 34];
+    const cellLeftPlus1 = cells[position - 2];
+    const cellRightPlus1 = cells[position + 2];
+
+    if (row > 0 && !(cellBackward.classList.value.match(/\bwall[AB]\b/))){
+        if(cellBackwardPlus1.classList.value.match(/\bplayer[AB]\b/) || cellBackwardPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
+            if(!(cells[position - 51].classList.value.match(/\bwall[AB]\b/)))
+                moves.push(position - 68);
+        } else
+            moves.push(position - 34);
+    }
+    if (row < 16 && !(cellFoward.classList.value.match(/\bwall[AB]\b/))){
+        if(cellFowardPlus1.classList.value.match(/\bplayer[AB]\b/) || cellFowardPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
+            if(!(cells[position + 51].classList.value.match(/\bwall[AB]\b/)))
+                moves.push(position + 68);
+        } else
+            moves.push(position + 34);
+    }
+    if (col > 0 && !(cellLeft.classList.value.match(/\bwall[AB]\b/))){
+        if(cellLeftPlus1.classList.value.match(/\bplayer[AB]\b/) || cellLeftPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
+            if(!(cells[position - 3].classList.value.match(/\bwall[AB]\b/)))
+                moves.push(position - 4);
+        } else
+            moves.push(position - 2);
+    }
+    if (col < 16 && !(cellRight.classList.value.match(/\bwall[AB]\b/))){
+        if(cellRightPlus1.classList.value.match(/\bplayer[AB]\b/) || cellRightPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
+            if(!(cells[position + 3].classList.value.match(/\bwall[AB]\b/)))
+                moves.push(position + 4);
+        } else
+            moves.push(position + 2);
+    }
+
+
+
+    return moves;
+}
 

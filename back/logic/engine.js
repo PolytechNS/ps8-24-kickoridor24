@@ -65,3 +65,5 @@ function getValidMoves(activePlayer,position, grid, validGrid) {
     }
     return moves;
 }
+
+exports.getValidMoves = getValidMoves;
