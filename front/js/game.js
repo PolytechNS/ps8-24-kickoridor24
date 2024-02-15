@@ -25,20 +25,22 @@ class gameState{
     }
 }
 
-var game = new gameState(10,10,[]);
-
 var board = [];
+var playerAWalls = [];
+var playerBWalls = [];
+
+var gameState1 = new gameState(playerAWalls,playerBWalls,board);
 
 let i;
 var tmpLigne = [];
 let n;
 
 for(i = 0; i < 289; i = i+2){
-    if(i > 169){
-        n = -1;
+    if(i > 135){
+        n = 0;
     }
     else{
-        n = 0;
+        n = -1;
     }
     if(i%34 === 0 && i!==0){
         board.push(tmpLigne);
@@ -764,6 +766,15 @@ function changeActivePlayer() {
             computeMove(player2Position);
         }
     }
+    else if(activePlayer == "playerB" && getCookie("typeDePartie")=="bot_v2"){
+        if(tour>=200){
+
+            movePlyerFirstTurn(player2Position);
+        }else {
+            chooseBestMove(player2Position);
+        }
+
+    }
 
 
 }
@@ -813,6 +824,7 @@ function validerWall() {
     const rightCell = cells[murAPose[1]];
     const leftCell = cells[murAPose[2]];
 
+    const wallPosition = murAPose[0] - 18;
 
     clickedCell.classList.remove('wallTMP');
     clickedCell.classList.remove('rotation');
@@ -836,6 +848,9 @@ function validerWall() {
         newWall.position = murAPose;
 
         socket.emit('newWall', newWall);
+        const newWallA = [convertPositionToGameState(wallPosition), horizontale ? 0 : 1];
+        playerAWalls.push(newWallA);
+        console.log(playerAWalls);
 
     } else {
         newWall.player = 'playerB';
@@ -843,10 +858,20 @@ function validerWall() {
         newWall.position = murAPose;
 
         socket.emit('newWall', newWall);
+        const newWallB = [convertPositionToGameState(wallPosition), horizontale ? 0 : 1];
+        playerBWalls.push(newWallB);
+        console.log(playerBWalls);
     }
     changeVisibility(rightCell, leftCell, activePlayer, horizontale);
     changeActivePlayer();
     hideValider();
+
+}
+
+function convertPositionToGameState(position) {
+    const ligne = Math.floor(position / 17) / 2;
+    const colonne = position % 17 / 2;
+    return ligne + "" + colonne;
 
 }
 
