@@ -1,5 +1,4 @@
-
-var socket = io('/api/game');
+const socket = io('/api/game');
 
 class cellule{
     constructor(id,classes,visibilite) {
@@ -20,6 +19,8 @@ class gameState{
 // Sélectionnez la div wrapper
 const wrapper = document.querySelector('.wrapper');
 var cells = [];
+var validGrid = [];
+var grid = [];
 let activePlayer = 'playerA';
 var nbWallPlayerA = 10;
 var nbWallPlayerB = 10;
@@ -36,6 +37,7 @@ var lanePlayerB;
 var partieChargee = false;
 
 
+
 let newMove = {
     player: '',
     type: '',
@@ -47,16 +49,20 @@ let newWall = {
     position: ''
 };
 
+
 // Générez les 81 div et ajoutez-les à la div wrapper
 for (var i = 1; i <= 289; i++) {
     var newDiv = document.createElement('div');
     newDiv.textContent = ' ';
+    grid[i] = 1;
     if (i > 0 && i < 18) {
-        if (!(i % 2 === 0))
+        if (!(i % 2 === 0)){
             newDiv.classList.add('top-row');
+        }
     } else if (i > 272 && i <= 289) {
-        if (!(i % 2 === 0))
+        if (!(i % 2 === 0)){
             newDiv.classList.add('bot-row');
+        }
     }
     if (!(Math.floor((i - 1) / 17) % 2 === 0)) {
         newDiv.classList.add('odd-row');
@@ -65,6 +71,7 @@ for (var i = 1; i <= 289; i++) {
         newDiv.classList.add('odd-col');
     } else if (!(newDiv.classList.contains('odd-row'))) {
         newDiv.classList.add('cell');
+        grid[i] = 0;
     }
     newDiv.setAttribute('id', i);
 
@@ -78,6 +85,11 @@ for (var i = 1; i <= 289; i++) {
         }
     }
 
+    if (i === player1Position || i === player2Position) {
+        validGrid.push(1);
+    }else{
+        validGrid.push(0);
+    }
     cells.push(newDiv);
     wrapper.appendChild(newDiv);
 
@@ -488,73 +500,23 @@ function changeVisibilityPlayer(remove,position,player){
 }
 
 function handleCellClick(cellIndex, position) {
-    const validMoves = getValidMoves(position);
-
-
-    if (isClickedCell) {
-        cells.forEach(cell => cell.classList.remove('possible-move'));
-        isClickedCell = false;
-    } else {
-        validMoves.forEach(move => {
-            const moveCell = cells[move];
-            if (!moveCell.classList.contains('playerA') && !moveCell.classList.contains('playerB')) {
-                moveCell.classList.add('possible-move');
-                isClickedCell = true;
-            }
-        });
-    }
-}
-
-function getValidMoves(position) {
-    const row = Math.floor(position / 17);
-    const col = position % 17;
-    const moves = [];
-
-    console.log("Row : " + row);
-    console.log("Col : " + col);
-
-    const cellFoward = cells[position + 17];
-    const cellBackward = cells[position - 17];
-    const cellLeft = cells[position - 1];
-    const cellRight = cells[position + 1];
-
-    const cellFowardPlus1 = cells[position + 34];
-    const cellBackwardPlus1 = cells[position - 34];
-    const cellLeftPlus1 = cells[position - 2];
-    const cellRightPlus1 = cells[position + 2];
-
-    if (row > 0 && !(cellBackward.classList.value.match(/\bwall[AB]\b/))){
-        if(cellBackwardPlus1.classList.value.match(/\bplayer[AB]\b/) || cellBackwardPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
-            if(!(cells[position - 51].classList.value.match(/\bwall[AB]\b/)))
-                moves.push(position - 68);
-        } else
-            moves.push(position - 34);
-    }
-    if (row < 16 && !(cellFoward.classList.value.match(/\bwall[AB]\b/))){
-        if(cellFowardPlus1.classList.value.match(/\bplayer[AB]\b/) || cellFowardPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
-            if(!(cells[position + 51].classList.value.match(/\bwall[AB]\b/)))
-                moves.push(position + 68);
-        } else
-            moves.push(position + 34);
-    }
-    if (col > 0 && !(cellLeft.classList.value.match(/\bwall[AB]\b/))){
-        if(cellLeftPlus1.classList.value.match(/\bplayer[AB]\b/) || cellLeftPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
-            if(!(cells[position - 3].classList.value.match(/\bwall[AB]\b/)))
-                moves.push(position - 4);
-        } else
-            moves.push(position - 2);
-    }
-    if (col < 16 && !(cellRight.classList.value.match(/\bwall[AB]\b/))){
-        if(cellRightPlus1.classList.value.match(/\bplayer[AB]\b/) || cellRightPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
-            if(!(cells[position + 3].classList.value.match(/\bwall[AB]\b/)))
-                moves.push(position + 4);
-        } else
-            moves.push(position + 2);
-    }
-
-
-
-    return moves;
+    //const validMoves = getValidMoves(position);
+    socket.emit('getValidMoves', activePlayer, activePlayer === 'playerA' ? player1Position : player2Position, grid, validGrid);
+    socket.on('validMoves', function (validMoves) {
+        console.log("ValidMoves : " + validMoves);
+        if (isClickedCell) {
+            cells.forEach(cell => cell.classList.remove('possible-move'));
+            isClickedCell = false;
+        } else {
+            validMoves.forEach(move => {
+                const moveCell = cells[move-1];
+                if (!moveCell.classList.contains('playerA') && !moveCell.classList.contains('playerB')) {
+                    moveCell.classList.add('possible-move');
+                    isClickedCell = true;
+                }
+            });
+        }
+    })
 }
 
 function movePlayer(cellIndex) {
