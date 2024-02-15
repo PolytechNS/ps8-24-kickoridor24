@@ -790,7 +790,8 @@ function validerWall() {
     const clickedCell = cells[murAPose[0]];
     const rightCell = cells[murAPose[1]];
     const leftCell = cells[murAPose[2]];
-
+    changeVisibilityPlayer(true,player1Position,"playerA");
+    changeVisibilityPlayer(true,player2Position,"playerB");
     clickedCell.classList.remove('wallTMP');
     clickedCell.classList.remove('rotation');
     rightCell.classList.remove('wallTMP');
@@ -821,6 +822,8 @@ function validerWall() {
 
         socket.emit('newMove', newMove);
     }
+    changeVisibilityPlayer(false,player1Position,"playerA");
+    changeVisibilityPlayer(false,player2Position,"playerB");
     changeVisibility(rightCell, leftCell, activePlayer, horizontale);
     changeActivePlayer();
     hideValider();
