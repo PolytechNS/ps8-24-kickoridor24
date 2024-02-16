@@ -428,6 +428,7 @@ function changeVisibility(rigthCell, leftCell, player, horizontale) {
 
         if(topRightCell != undefined && topRightCell.hasAttribute('visibility'))
             topRightCell.setAttribute('visibility',topRightCell.getAttribute('visibility') - 2);
+
         if(botRightCell != undefined && botRightCell.hasAttribute('visibility'))
             botRightCell.setAttribute('visibility',botRightCell.getAttribute('visibility') - 2);
         if(topLeftCell != undefined && topLeftCell.hasAttribute('visibility'))
@@ -463,7 +464,41 @@ function changeVisibility(rigthCell, leftCell, player, horizontale) {
         if(botLeftCellPlus1 != undefined && botLeftCellPlus1.hasAttribute('visibility'))
             botLeftCellPlus1.setAttribute('visibility',parseInt(botLeftCellPlus1.getAttribute('visibility')) + 1);
         }
+    //boucle sur cells :
+    //     si cell[i] == fog, board[i] == -1
+    //     sinon si != fog
+    //           si cell[i] == playerActuel (celui qui joue), board[i] = 1
+    //           sinon si cell[i] == autreplayer, board[i] = 2
+    //           sinon board[i] = 0
+
+}
+
+function convertBoard(){
+    let j = 0;
+    let k = 0;
+    for(let m = 0; m < 289; m++){
+        if(!(cells[m].classList.contains('odd-row') || cells[m].classList.contains('odd-col'))){
+            if(k>8) {
+                j = j + 1;
+                k = 0;
+            }
+            if(cells[m].classList.contains('fog')){
+                board[j][k] = -1;
+
+            }
+            else if(!(cells[m].classList.contains('fog'))) {
+                if (cells[m].classList.contains('playerA')) {
+                    board[j][k] = 2;
+                } else if (cells[m].classList.contains('playerB') || cells[m].classList.contains('playerBFog')) {
+                    board[j][k] = 1;
+                } else {
+                    board[j][k] = 0;
+                }
+            }
+            k = k + 1;
+        }
     }
+}
 
 
 function changeVisibilityPlayer(remove,position,player){
@@ -594,6 +629,8 @@ function movePlayer(cellIndex) {
         // Retirer le joueur actif de sa position actuelle
         const currentPlayerPosition = activePlayer === 'playerA' ? player1Position : player2Position;
         cells[currentPlayerPosition].classList.remove(activePlayer);
+        convertBoard();
+        console.log(board);
         changeVisibilityPlayer(true, currentPlayerPosition, activePlayer);
 
         // Mettre à jour la position du joueur actif
@@ -622,6 +659,8 @@ function movePlayer(cellIndex) {
         isClickedCell = false;
 
         // Basculer vers l'autre joueur
+        convertBoard();
+        console.log(board);
         changeVisibilityPlayer(false, activePlayer === 'playerA' ? player1Position : player2Position, activePlayer);
         changeActivePlayer();
     }
@@ -750,8 +789,8 @@ function changeActivePlayer() {
         }
 
     }
-
-
+    convertBoard();
+    console.log(board);
 }
 function checkNoMove(){
 
@@ -844,8 +883,11 @@ function validerWall() {
 }
 
 function convertPositionToGameState(position) {
-    const ligne = Math.floor(position / 17) / 2;
-    const colonne = position % 17 / 2;
+    let ligne = position % 17 / 2;
+    let colonne = Math.floor(position / 17) / 2;
+    colonne = 8 - colonne;
+    colonne = colonne + 1;
+    ligne = ligne + 1;
     return ligne + "" + colonne;
 
 }
