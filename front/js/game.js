@@ -474,6 +474,12 @@ function changeVisibility(rigthCell, leftCell, player, horizontale) {
 }
 
 function convertBoard(){
+    var opponent;
+    if(activePlayer === "playerA"){
+        opponent = "playerB";
+    }else{
+        opponent = "playerA";
+    }
     let j = 0;
     let k = 0;
     for(let m = 0; m < 289; m++){
@@ -487,9 +493,9 @@ function convertBoard(){
 
             }
             else if(!(cells[m].classList.contains('fog'))) {
-                if (cells[m].classList.contains('playerA')) {
+                if (cells[m].classList.contains(activePlayer)) {
                     board[j][k] = 2;
-                } else if (cells[m].classList.contains('playerB') || cells[m].classList.contains('playerBFog')) {
+                } else if (cells[m].classList.contains(opponent) || cells[m].classList.contains(opponent+'Fog')) {
                     board[j][k] = 1;
                 } else {
                     board[j][k] = 0;
@@ -629,8 +635,8 @@ function movePlayer(cellIndex) {
         // Retirer le joueur actif de sa position actuelle
         const currentPlayerPosition = activePlayer === 'playerA' ? player1Position : player2Position;
         cells[currentPlayerPosition].classList.remove(activePlayer);
-        convertBoard();
-        console.log(board);
+        //convertBoard();
+        //console.log(board);
         changeVisibilityPlayer(true, currentPlayerPosition, activePlayer);
 
         // Mettre à jour la position du joueur actif
@@ -659,8 +665,8 @@ function movePlayer(cellIndex) {
         isClickedCell = false;
 
         // Basculer vers l'autre joueur
-        convertBoard();
-        console.log(board);
+       // convertBoard();
+        //console.log(board);
         changeVisibilityPlayer(false, activePlayer === 'playerA' ? player1Position : player2Position, activePlayer);
         changeActivePlayer();
     }
@@ -749,6 +755,8 @@ function victoire(txt){
 
 
 function changeActivePlayer() {
+    convertBoard();
+    console.log( activePlayer + " fin de tour : " + board);
     activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
     document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
     if(tour<=200)
@@ -783,14 +791,14 @@ function changeActivePlayer() {
     else if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot_v2"){
         if(tour>=200){
 
-            movePlyerFirstTurn(player2Position);
+           return  movePlyerFirstTurn(player2Position);
         }else {
-            chooseBestMove(player2Position);
+            return chooseBestMove(player2Position);
         }
 
     }
     convertBoard();
-    console.log(board);
+    console.log(activePlayer + "debut de tour : " + board);
 }
 function checkNoMove(){
 
