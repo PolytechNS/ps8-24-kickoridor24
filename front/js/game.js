@@ -232,6 +232,7 @@ function handleWall(cellIndex) {
     //||
        // (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col') && ( upCell.classList.value.match(/\bwall[AB]\b/) || downCell.classList.value.match(/\bwall[AB]\b/)) && !rightCell.classList.value.match(/\bwall[AB]\b/) && !leftCell.classList.value.match(/\bwall[AB]\b/))){// soit cliquer a cote d'un mur horizontale
     ){
+
         clickedCell.classList.add('wallTMP');
         clickedCell.classList.add('rotation');
         murAPose[0] = cellIndex;
@@ -244,8 +245,11 @@ function handleWall(cellIndex) {
         poser = true;
     }
     //pour placer en verticale
-    else if( (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col'))  && !clickedCell.classList.value.match(/\bwall[AB]\b/) && (rightCell.classList.value.match(/\bwall[AB]\b/) || leftCell.classList.value.match(/\bwall[AB]\b/)) )
+    else if( (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col'))
+        && !clickedCell.classList.value.match(/\bwall[AB]\b/) && (rightCell.classList.value.match(/\bwall[AB]\b/) || leftCell.classList.value.match(/\bwall[AB]\b/))
+    && !upCell.classList.value.match(/\bwall[AB]\b/) && !downCell.classList.value.match(/\bwall[AB]\b/))
     {
+        console.log("okkk");
         clickedCell.classList.add('wallTMP');
         clickedCell.classList.add('rotation');
         //clickedCell.classList.add('jambeMur');
