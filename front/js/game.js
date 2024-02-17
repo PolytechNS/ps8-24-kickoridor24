@@ -485,7 +485,7 @@ function convertBoard(){
     }
     let j = 0;
     let k = 0;
-    for(let m = 0; m < 289; m++){
+  /*  for(let m = 0; m < 289; m++){
         if(!(cells[m].classList.contains('odd-row') || cells[m].classList.contains('odd-col'))){
             if(k>8) {
                 j = j + 1;
@@ -506,8 +506,36 @@ function convertBoard(){
             }
             k = k + 1;
         }
+    }*/
+
+    for(let m = 272; m <289; m = m-34){
+
+        if(!(cells[m].classList.contains('odd-row') || cells[m].classList.contains('odd-col'))){
+            if(k>8) {
+                j = j + 1;
+                k = 0;
+            }
+
+                if (cells[m].classList.contains(activePlayer)) {
+                    board[j][k] = 1;
+                } else if (cells[m].classList.contains(opponent) ) {
+                    board[j][k] = 2;
+                }
+                else  if(cells[m].classList.contains('fog')){
+                    board[j][k] = -1;}
+
+                    else {
+                    board[j][k] = 0;
+                }
+
+
+            k = k + 1;
+        }
+        if(m < 17){
+            m = m + 274 + 34;
+        }
     }
-    board = board.reverse();
+  //  board = board.reverse();
 }
 
 
