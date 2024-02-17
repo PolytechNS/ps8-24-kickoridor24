@@ -422,3 +422,40 @@ function deplacementPossible(positionI, positionJ, mouvementI, mouvementJ) {
     return true;
 
 }
+
+function opponentVisibilty(board){
+    const opponentPosition = [];
+    for (let j = 0; j < 17; j++) {
+        for (let k = 0; k < 17; k++) {
+            if (board[j][k] === 2) {
+                opponentPosition.push(j, k);
+                return opponentPosition;
+            }
+        }
+        if(opponentPosition.length === 0){
+            return null;
+        }
+    }
+}
+
+function PassOrBlock(board,walls){
+    let opponentPath = [];
+    let botPath = [];
+    botPath.push(pathFinding(positionBot,board,walls));
+    if(opponentVisibilty(board) !== null){
+        opponentPath.push(pathFinding(opponentVisibilty(board),board,walls));
+        if(opponentPath.length > botPath.length){
+            return blockOpponent();
+        }
+        else {
+            return pathFinding();
+        }
+    }
+    else{
+        return pathFinding();
+    }
+}
+
+function blockOpponent(){
+    //TODO
+}
