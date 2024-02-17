@@ -73,7 +73,7 @@ var dernierTourB = false;
 var lanePlayerA;
 var lanePlayerB;
 var partieChargee = false;
-
+var gState;
 
 
 let newMove = {
@@ -81,11 +81,7 @@ let newMove = {
     type: '',
     position: ''
 };
-let newWall = {
-    player: '',
-    type: '',
-    position: ''
-};
+
 
 
 // Générez les 81 div et ajoutez-les à la div wrapper
@@ -132,12 +128,12 @@ for (i = 1; i <= 289; i++) {
     wrapper.appendChild(newDiv);
 
 }
+function setUpGame(gameState) {
+    if(gameState === undefined){
 
-if(getCookie("typeDePartie") ==="resumeGame"){
-  loadGame();
-}
-function setUpGame() {
-
+    }else{
+        gState =gameState;
+    }
     hideAntiCheat();
     hideValider();
     if(getCookie("typeDePartie") === "enLigne" ||getCookie("username") == null)
@@ -159,13 +155,11 @@ function setUpGame() {
 
     hideAntiCheat();
     hideValider();
-     lanePlayerA = document.getElementsByClassName('top-row');
-     lanePlayerB = document.getElementsByClassName('bot-row');
+    lanePlayerA = document.getElementsByClassName('top-row');
+    lanePlayerB = document.getElementsByClassName('bot-row');
 
     dijkstraVisitedNode = [];
     activateFog();
-    changeVisibilityPlayer(false, player1Position, "playerA");
-    changeVisibilityPlayer(false, player2Position, "playerB");
 
     if(tour<=200)
         document.getElementById('nbTour').textContent = `Tour : n°${tour}`;
@@ -197,7 +191,12 @@ function setUpGame() {
     checkTour201();
     checkCrossing(player1Position,player2Position);
 }
+if(getCookie("typeDePartie") ==="resumeGame"){
+  loadGame();
+}
+else{
 setUpGame();
+}
 function removeWallTmp(){
 
     var bougerMur = false;
@@ -280,8 +279,9 @@ function handleWall(cellIndex) {
     //pour placer a l'horizontale
 
     if( (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col') && !clickedCell.classList.value.match(/\bwall[AB]\b/) && !rightCell.classList.value.match(/\bwall[AB]\b/)&& !leftCell.classList.value.match(/\bwall[AB]\b/))
-    ||
-        (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col') && ( upCell.classList.value.match(/\bwall[AB]\b/) || downCell.classList.value.match(/\bwall[AB]\b/)) && !rightCell.classList.value.match(/\bwall[AB]\b/) && !leftCell.classList.value.match(/\bwall[AB]\b/))){// soit cliquer a cote d'un mur horizontale
+    //||
+       // (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col') && ( upCell.classList.value.match(/\bwall[AB]\b/) || downCell.classList.value.match(/\bwall[AB]\b/)) && !rightCell.classList.value.match(/\bwall[AB]\b/) && !leftCell.classList.value.match(/\bwall[AB]\b/))){// soit cliquer a cote d'un mur horizontale
+    ){
 
         clickedCell.classList.add('wallTMP');
         clickedCell.classList.add('rotation');
@@ -295,23 +295,23 @@ function handleWall(cellIndex) {
         poser = true;
     }
     //pour placer en verticale
-
-        else if( ((clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col')) && clickedCell.classList.value.match(/\bwall[AB]\b/) && !upCell.classList.value.match(/\bwall[AB]\b/) && !downCell.classList.value.match(/\bwall[AB]\b/))// soit cliquer au milieu d'un mur horizontale qui n'a pas de mur vertical
-    ||
-        (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col') && (rightCell.classList.value.match(/\bwall[AB]\b/) || leftCell.classList.value.match(/\bwall[AB]\b/)) && !upCell.classList.value.match(/\bwall[AB]\b/) && !downCell.classList.value.match(/\bwall[AB]\b/))){// soit cliquer a cote d'un mur horizontale
-
-            clickedCell.classList.add('wallTMP');
-            clickedCell.classList.add('rotation');
-            //clickedCell.classList.add('jambeMur');
-            murAPose[0] = cellIndex;
-            if(col < 16 && !upCell.classList.value.match(/\bwall[AB]\b/) && (upCell.classList.contains('odd-row') || upCell.classList.contains('odd-col')))
-                upCell.classList.add('wallTMP');
-            murAPose[1] = cellIndex-17;
-            if(col > 0 && !downCell.classList.value.match(/\bwall[AB]\b/) && (downCell.classList.contains('odd-row') || downCell.classList.contains('odd-col')))
-                downCell.classList.add('wallTMP');
-            murAPose[2] = cellIndex+17;
-            poser = true;
-        }
+    else if( (clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col'))
+        && !clickedCell.classList.value.match(/\bwall[AB]\b/) && (rightCell.classList.value.match(/\bwall[AB]\b/) || leftCell.classList.value.match(/\bwall[AB]\b/))
+    && !upCell.classList.value.match(/\bwall[AB]\b/) && !downCell.classList.value.match(/\bwall[AB]\b/))
+    {
+        console.log("okkk");
+        clickedCell.classList.add('wallTMP');
+        clickedCell.classList.add('rotation');
+        //clickedCell.classList.add('jambeMur');
+        murAPose[0] = cellIndex;
+        if(col < 16 && !upCell.classList.value.match(/\bwall[AB]\b/) && (upCell.classList.contains('odd-row') || upCell.classList.contains('odd-col')))
+            upCell.classList.add('wallTMP');
+        murAPose[1] = cellIndex-17;
+        if(col > 0 && !downCell.classList.value.match(/\bwall[AB]\b/) && (downCell.classList.contains('odd-row') || downCell.classList.contains('odd-col')))
+            downCell.classList.add('wallTMP');
+        murAPose[2] = cellIndex+17;
+        poser = true;
+    }
 
         else if(clickedCell.classList.contains('odd-row') && !clickedCell.classList.contains('odd-col') && !clickedCell.classList.value.match(/\bwall[AB]\b/)) //la cellule est une ligne
         {
@@ -389,12 +389,15 @@ function handleWall(cellIndex) {
                 nbWallPlayerB--;
                 document.getElementById('nbWallPlayerB').textContent = `Murs restants : ${nbWallPlayerB}`;
             }
+
             if(wallPlacable()===0){
                 showValider();
             }else{
+
                 alert("Vous ne pouvez pas poser ce mur au risque de bloquer un joueur");
                 annulerWall();
             }
+
         }
 
 }
@@ -518,30 +521,30 @@ function changeVisibilityPlayer(remove,position,player){
     if (remove === true) {
         if (player === 'playerA') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) + 1);
-            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/)) && cells[position - 1].classList.contains('visibility')) {
+            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/)) && cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) + 1);
             }
-            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cells[position + 1].classList.contains('visibility')) {
+            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cellRight.hasAttribute('visibility')) {
                 cellRight.setAttribute('visibility', parseInt(cellRight.getAttribute('visibility')) + 1);
             }
-            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cells[position - 17].classList.contains('visibility')) {
+            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cellTop.hasAttribute('visibility')) {
                 cellTop.setAttribute('visibility', parseInt(cellTop.getAttribute('visibility')) + 1);
             }
-            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cells[position + 17].classList.contains('visibility')) {
+            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cellBot.hasAttribute('visibility')) {
                 cellBot.setAttribute('visibility', parseInt(cellBot.getAttribute('visibility')) + 1);
             }
         } else if (player === 'playerB') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) - 1);
-            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cells[position - 1].classList.contains('visibility')) {
+            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) - 1);
             }
-            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cells[position + 1].classList.contains('visibility')) {
+            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cellRight.hasAttribute('visibility')) {
                 cellRight.setAttribute('visibility', parseInt(cellRight.getAttribute('visibility')) - 1);
             }
-            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cells[position - 17].classList.contains('visibility')) {
+            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cellTop.hasAttribute('visibility')) {
                 cellTop.setAttribute('visibility', parseInt(cellTop.getAttribute('visibility')) - 1);
             }
-            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cells[position + 17].classList.contains('visibility')) {
+            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cellBot.hasAttribute('visibility')) {
                 cellBot.setAttribute('visibility', parseInt(cellBot.getAttribute('visibility')) - 1);
             }
         }
@@ -549,30 +552,30 @@ function changeVisibilityPlayer(remove,position,player){
     } else if (remove === false) {
         if (player === 'playerA') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) - 1);
-            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cells[position - 1].classList.contains('visibility')) {
+            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) - 1);
             }
-            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cells[position + 1].classList.contains('visibility')) {
+            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cellRight.hasAttribute('visibility')) {
                 cellRight.setAttribute('visibility', parseInt(cellRight.getAttribute('visibility')) - 1);
             }
-            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cells[position - 17].classList.contains('visibility')) {
+            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cellTop.hasAttribute('visibility')) {
                 cellTop.setAttribute('visibility', parseInt(cellTop.getAttribute('visibility')) - 1);
             }
-            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cells[position + 17].classList.contains('visibility')) {
+            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cellBot.hasAttribute('visibility')) {
                 cellBot.setAttribute('visibility', parseInt(cellBot.getAttribute('visibility')) - 1);
             }
         } else if (player === 'playerB') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) + 1);
-            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cells[position - 1].classList.contains('visibility')) {
+            if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) + 1);
             }
-            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cells[position + 1].classList.contains('visibility')) {
+            if (cellRight !== undefined && !(cells[position + 1].classList.value.match(/\bwall[AB]\b/))&& cellRight.hasAttribute('visibility')) {
                 cellRight.setAttribute('visibility', parseInt(cellRight.getAttribute('visibility')) + 1);
             }
-            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cells[position - 17].classList.contains('visibility')) {
+            if (cellTop !== undefined && !(cells[position - 17].classList.value.match(/\bwall[AB]\b/))&& cellTop.hasAttribute('visibility')) {
                 cellTop.setAttribute('visibility', parseInt(cellTop.getAttribute('visibility')) + 1);
             }
-            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cells[position + 17].classList.contains('visibility')) {
+            if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cellBot.hasAttribute('visibility')) {
                 cellBot.setAttribute('visibility', parseInt(cellBot.getAttribute('visibility')) + 1);
             }
         }
@@ -611,6 +614,7 @@ function handleCellClick(cellIndex, position) {
         });
     }
 }
+
 
 function movePlayer(cellIndex) {
 
@@ -784,8 +788,13 @@ function changeActivePlayer() {
 
             return movePlyerFirstTurn(player2Position);
         }else {
-
-            return computeMove(player2Position);
+            var possiblesMoves = getValidMoves(player2Position);
+            socket.emit('computeMoveRandom', possiblesMoves, (returnValue) => {
+                // Utilisez returnValue ici, c'est la valeur de retour de la fonction move
+                console.log('Valeur de retour de la fonction move:', returnValue);
+                movePlayer(player2Position);
+                movePlayer(returnValue);
+            });
         }
     }
     else if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot_v2"){
@@ -796,6 +805,7 @@ function changeActivePlayer() {
         }else {
             convertBoard();
             return nextMove(gameState1);
+
         }
 
     }
@@ -808,13 +818,22 @@ function checkNoMove(){
         const validMoves = getValidMoves(player1Position);
         if(validMoves.length == 0 && nbWallPlayerA===0){
             alert("passage de tour");
+            newMove.player ="playerA";
+            newMove.type="idle";
+            newMove.position = player1Position;
+            socket.emit("newMove",newMove);
             changeActivePlayer();
         }
     }
     else if(activePlayer ==='playerB'){
         const validMoves = getValidMoves(player2Position);
-        if(validMoves.length == 0 && nbWallPlayerB===0){
+
+        if(validMoves.length == 0 && (nbWallPlayerB===0|| getCookie("typeDePartie")=="bot")){
             alert("passage de tour");
+            newMove.player ="playerB";
+            newMove.type="idle";
+            newMove.position = player2Position;
+            socket.emit("newMove",newMove);
             changeActivePlayer();
         }
     }
@@ -848,6 +867,10 @@ function validerWall() {
     const rightCell = cells[murAPose[1]];
     const leftCell = cells[murAPose[2]];
 
+    changeVisibilityPlayer(true,player1Position,"playerA");
+    changeVisibilityPlayer(true,player2Position,"playerB");
+
+
     const wallPosition = murAPose[0] - 18;
 
     clickedCell.classList.remove('wallTMP');
@@ -867,25 +890,34 @@ function validerWall() {
         horizontale = true;
     }
     if (activePlayer === 'playerA') {
-        newWall.player = 'playerA';
-        newWall.type = 'wall';
-        newWall.position = murAPose;
+        newMove.player = 'playerA';
+        newMove.type = 'wall';
+        newMove.position = murAPose;
 
-        socket.emit('newWall', newWall);
+
+        socket.emit('newMove', newMove);
+
+       
         const newWallA = [convertPositionToGameState(wallPosition), horizontale ? 0 : 1];
         playerAWalls.push(newWallA);
        // console.log(playerAWalls);
 
-    } else {
-        newWall.player = 'playerB';
-        newWall.type = 'wall';
-        newWall.position = murAPose;
 
-        socket.emit('newWall', newWall);
+    } else {
+        newMove.player = 'playerB';
+        newMove.type = 'wall';
+        newMove.position = murAPose;
+
+
+        socket.emit('newMove', newMove);
+
         const newWallB = [convertPositionToGameState(wallPosition), horizontale ? 0 : 1];
         playerBWalls.push(newWallB);
         //console.log(playerBWalls);
+
     }
+    changeVisibilityPlayer(false,player1Position,"playerA");
+    changeVisibilityPlayer(false,player2Position,"playerB");
     changeVisibility(rightCell, leftCell, activePlayer, horizontale);
     changeActivePlayer();
     hideValider();
@@ -933,13 +965,13 @@ function activateFog() {
             if (cells[i].getAttribute('visibility') <= "0") {
                 cells[i].classList.remove('fog');
             }
-            if (parseInt(cells[i].getAttribute('id')) - 1 === player1Position) {
+            if (i=== player1Position) {
                 cells[i].classList.add('playerA');
                 cells[i].classList.remove('playerAFog');
             }
             if (cells[i].getAttribute('visibility') > "0") {
                 cells[i].classList.add('fog');
-                if (cells[i].classList.contains('playerB') && cells[i].classList.contains('fog')) {
+                if (cells[i].classList.contains('playerB') && cells[i].classList.contains('fog') && !checkJoueurColle()) {
                     cells[i].classList.remove('playerB');
                     cells[i].classList.add('playerBFog');
                 }
@@ -947,7 +979,7 @@ function activateFog() {
         }
     } else if (activePlayer == "playerB") {
         for (let i = 0; i < cells.length; i++) {
-            if (parseInt(cells[i].getAttribute('id')) - 1 === player2Position) {
+            if (i === player2Position) {
                 cells[i].classList.add('playerB');
                 cells[i].classList.remove('playerBFog');
             }
@@ -956,7 +988,7 @@ function activateFog() {
             }
             if (cells[i].getAttribute('visibility') < "0") {
                 cells[i].classList.add('fog');
-                if (cells[i].classList.contains('playerA') && cells[i].classList.contains('fog')) {
+                if (cells[i].classList.contains('playerA') && cells[i].classList.contains('fog') && !checkJoueurColle()) {
                     cells[i].classList.remove('playerA');
                     cells[i].classList.add('playerAFog');
                 }
@@ -964,7 +996,36 @@ function activateFog() {
         }
     }
 }
-
+function checkJoueurColle(){
+    var res = player2Position -player1Position;
+    var bool;
+    switch (res){
+        case 2 :
+            if(!cells[player1Position+1].classList.value.match(/\bwall[AB]\b/)){
+                bool = true;
+            }
+            break;
+        case -2 :
+            if(!cells[player1Position-1].classList.value.match(/\bwall[AB]\b/)){
+                bool = true;
+            }
+            break;
+        case 34 :
+            if(!cells[player1Position+17].classList.value.match(/\bwall[AB]\b/)){
+                bool = true;
+            }
+            break;
+        case -34 :
+            if(!cells[player1Position-17].classList.value.match(/\bwall[AB]\b/)){
+                bool = true;
+            }
+            break;
+        default :
+            bool = false;
+            break;
+    }
+    return bool;
+}
 
 function wallPlacable(){
     dijkstraVisitedNode = [];
@@ -1127,6 +1188,7 @@ async function supprimerAnciennePartie(user){
 
 
         setCookie("typeDePartie",etatPartie["typeDePartie"],7);
+
         setUpGame();
         partieChargee = true;
 }

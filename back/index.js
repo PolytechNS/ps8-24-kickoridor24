@@ -37,7 +37,9 @@ const io = new Server(server);
 
 const gameNamespace = io.of('/api/game');
 
+
 socketManager(io);
+
 
 server.listen(8000, ()=> {
     console.log('Server is listening on port 8000');
