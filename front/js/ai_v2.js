@@ -43,3 +43,23 @@ function chooseAction(pos){
         chooseBestWall(pos);
     }
 }
+
+function setup(AIplay){
+    console.log("le bot est le joueur numero "+ AIplay );
+    //TODO
+    return player2Position;
+}
+function nextMove(gameState){
+    //TODO
+    console.log("board");
+    console.table(gameState.board);
+    console.log("murs");
+    console.table(gameState.playerAWalls);
+    console.table(gameState.playerBWalls);
+}
+function correction(rightMove){
+    //TODO
+}
+function updateBoard(){
+    //TODO
+}

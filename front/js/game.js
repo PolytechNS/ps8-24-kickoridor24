@@ -191,7 +191,7 @@ function setUpGame() {
         wrapper.appendChild(message);
         //si une case de top-row est cliquée alors on move le joueur
         topRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
-        console.log(tour);
+      //  console.log(tour);
 
     }
     checkTour201();
@@ -422,7 +422,7 @@ function changeVisibility(rigthCell, leftCell, player, horizontale) {
         botRightCellPlus1 = cells[parseInt(rigthCellNumber) - 4];
         topLeftCellPlus1 = cells[parseInt(leftCellNumber) + 2];
         botLeftCellPlus1 = cells[parseInt(leftCellNumber) - 4];
-        console.log(parseInt(rigthCellNumber) + " " + (parseInt(rigthCellNumber) - 2) +" " + parseInt(leftCellNumber))
+       // console.log(parseInt(rigthCellNumber) + " " + (parseInt(rigthCellNumber) - 2) +" " + parseInt(leftCellNumber))
     }
     if(player == "playerA"){
 
@@ -504,6 +504,7 @@ function convertBoard(){
             k = k + 1;
         }
     }
+    board = board.reverse();
 }
 
 
@@ -596,7 +597,7 @@ function handleCellClick(cellIndex, position) {
             });
         }
     })*/
-    console.log("ValidMoves : " + validMoves);
+   // console.log("ValidMoves : " + validMoves);
     if (isClickedCell) {
         cells.forEach(cell => cell.classList.remove('possible-move'));
         isClickedCell = false;
@@ -755,8 +756,7 @@ function victoire(txt){
 
 
 function changeActivePlayer() {
-    convertBoard();
-    console.log( activePlayer + " fin de tour : " + board);
+
     activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
     document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
     if(tour<=200)
@@ -782,23 +782,25 @@ function changeActivePlayer() {
     if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot"){
         if(tour>=200){
 
-            movePlyerFirstTurn(player2Position);
+            return movePlyerFirstTurn(player2Position);
         }else {
 
-            computeMove(player2Position);
+            return computeMove(player2Position);
         }
     }
     else if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot_v2"){
         if(tour>=200){
 
-           return  movePlyerFirstTurn(player2Position);
+             var res = setup(2);
+             return movePlyerFirstTurn(res);
         }else {
-            return chooseBestMove(player2Position);
+            convertBoard();
+            return nextMove(gameState1);
         }
 
     }
-    convertBoard();
-    console.log(activePlayer + "debut de tour : " + board);
+
+
 }
 function checkNoMove(){
 
@@ -872,7 +874,7 @@ function validerWall() {
         socket.emit('newWall', newWall);
         const newWallA = [convertPositionToGameState(wallPosition), horizontale ? 0 : 1];
         playerAWalls.push(newWallA);
-        console.log(playerAWalls);
+       // console.log(playerAWalls);
 
     } else {
         newWall.player = 'playerB';
@@ -882,7 +884,7 @@ function validerWall() {
         socket.emit('newWall', newWall);
         const newWallB = [convertPositionToGameState(wallPosition), horizontale ? 0 : 1];
         playerBWalls.push(newWallB);
-        console.log(playerBWalls);
+        //console.log(playerBWalls);
     }
     changeVisibility(rightCell, leftCell, activePlayer, horizontale);
     changeActivePlayer();
@@ -1143,7 +1145,7 @@ function checkTour201(){
         message.style.left = '50%';
         wrapper.appendChild(message);
         //si une case de top-row est cliquée alors on move le joueur
-        console.log(tour);
+
         bottomRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
 
     }
@@ -1225,8 +1227,6 @@ function getValidMoves(position) {
     const col = position % 17;
     const moves = [];
 
-    console.log("Row : " + row);
-    console.log("Col : " + col);
 
     const cellFoward = cells[position + 17];
     const cellBackward = cells[position - 17];
