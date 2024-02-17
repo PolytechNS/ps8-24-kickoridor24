@@ -2,6 +2,7 @@ var currentWall;
 var nbWalls = 10;
 var deplacement = 0;
 var IAplay;
+var dijkstraVisitedNode = [];
 
 class Move {
     constructor(action, value) {
@@ -159,30 +160,39 @@ function putWall(gameState, pos,orientation){
                     return false;
                 }
             }
-            nbWalls--;
-            return new Move('wall', [pos,orientation]);
+            dijkstraVisitedNode = [];
+            var res1 = dijkstra("playerA",player1Position+1,gameState.board);
+
+            dijkstraVisitedNode = [];
+            var res2 = dijkstra("playerB",player2Position+1,gameState.board)
+
+            var res = Math.max(res1, res2);
+
+            if(res !==0){
+                console.log("je peux pas placer la sinon je bloque un joueur");
+            }else{
+                nbWalls--;
+                return new Move('wall', [pos,orientation]);
+            }
+
         }
     }
 }
 function dijkstra(player,cellule,tab) {
-    var lanePlayerAArray = Array.from(lanePlayerA);
-    var lanePlayerBArray = Array.from(lanePlayerB);
+    const lanePlayerAArray = ['11','21','31','41','51','61','71','81','91'];
+    const lanePlayerBArray = ['19','29','39','49','59','69','79','89','99'];
+
     if (player === 'playerA') {
-
-        if (lanePlayerBArray.includes(document.getElementById('' + cellule))) {
-
+        if (lanePlayerBArray.includes(cellule)) {
             return 0;
         }
     }
     if (player === 'playerB') {
-
-        if (lanePlayerAArray.includes(document.getElementById('' + cellule))) {
-
+        if (lanePlayerAArray.includes(cellule)){
             return 0;
         }
     }
     if (dijkstraVisitedNode.includes(cellule)) {
-
         return 999;
     } else {
         var tmpTab = [];
