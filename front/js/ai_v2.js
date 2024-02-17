@@ -65,8 +65,12 @@ function nextMove(gameState){
     if(deplacement <= 4){
         var isTunnel = findTunnel(gameState);
         if(isTunnel !== '00'){
-            deplacement ++;
-            return Promise(putWall(isTunnel, '0'));
+            if(putWall(gameState,isTunnel,0) !== false){
+                deplacement++;
+                console.log(putWall(gameState,isTunnel,0));
+            }else {
+                console.log("HASSOUL TUNNEL DEJA BLOQUE");
+            }
         }
     }
     pathFinding()
@@ -139,8 +143,26 @@ function sortTabLowerFirst(tab){
     });
 }
 
-function putWall(pos,orientation){
-    return new Move('wall', [pos,orientation]);
+function putWall(gameState, pos,orientation){
+    if(nbWalls > 0) {
+        let posInInt = parseInt(pos);
+        const walls = gameState.playerAWalls.concat(gameState.playerBWalls);
+        if(walls.length >= 1){
+            for (let i = 0; i < walls.length; i++) {
+                if(walls[i][0] === pos){
+                    return false;
+                }
+                if(orientation === 0 && (walls[i][0] === (posInInt+10).toString() && orientation === 0) || (walls[i][0] === (posInInt-10).toString() && orientation === 0)){
+                    return false;
+                }
+                if(orientation === 1 && (walls[i][0] === (posInInt+1).toString() && orientation === 1) || (walls[i][0] === (posInInt-1).toString() && orientation === 1)){
+                    return false;
+                }
+            }
+            nbWalls--;
+            return new Move('wall', [pos,orientation]);
+        }
+    }
 }
 function dijkstra(player,cellule,tab) {
     var lanePlayerAArray = Array.from(lanePlayerA);
