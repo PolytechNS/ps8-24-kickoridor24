@@ -1,5 +1,4 @@
-
-var socket = io('/api/game');
+const socket = io('/api/game');
 
 class cellule{
     constructor(id,classes,visibilite) {
@@ -8,7 +7,7 @@ class cellule{
         this.visibility =visibilite;
     }
 }
-class gameState{
+class gameBDD {
     constructor(username,board,tour,typeDePartie) {
         this.username = username;
         this.board = board;
@@ -17,9 +16,49 @@ class gameState{
     }
 }
 
+class gameState{
+    constructor(playerAWalls, playerBWalls, board) {
+        this.playerAWalls = playerAWalls;
+        this.playerBWalls = playerBWalls;
+        this.board = board;
+    }
+}
+
+var board = [];
+var playerAWalls = [];
+var playerBWalls = [];
+
+var gameState1 = new gameState(playerAWalls,playerBWalls,board);
+
+let i;
+var tmpLigne = [];
+let n;
+
+for(i = 0; i < 289; i = i+2){
+    if(i > 135){
+        n = 0;
+    }
+    else{
+        n = -1;
+    }
+    if(i%34 === 0 && i!==0){
+        board.push(tmpLigne);
+        tmpLigne = [];
+    }
+    else if(i%16 === 0 && i!==0){
+        i=i+16;
+    }
+    tmpLigne.push(n);
+}
+board.push(tmpLigne);
+
+console.log(board);
+
 // Sélectionnez la div wrapper
 const wrapper = document.querySelector('.wrapper');
 var cells = [];
+var validGrid = [];
+var grid = [];
 let activePlayer = 'playerA';
 var nbWallPlayerA = 10;
 var nbWallPlayerB = 10;
@@ -36,6 +75,7 @@ var lanePlayerB;
 var partieChargee = false;
 var gState;
 
+
 let newMove = {
     player: '',
     type: '',
@@ -43,16 +83,20 @@ let newMove = {
 };
 
 
+
 // Générez les 81 div et ajoutez-les à la div wrapper
-for (var i = 1; i <= 289; i++) {
+for (i = 1; i <= 289; i++) {
     var newDiv = document.createElement('div');
     newDiv.textContent = ' ';
+    grid[i] = 1;
     if (i > 0 && i < 18) {
-        if (!(i % 2 === 0))
+        if (!(i % 2 === 0)){
             newDiv.classList.add('top-row');
+        }
     } else if (i > 272 && i <= 289) {
-        if (!(i % 2 === 0))
+        if (!(i % 2 === 0)){
             newDiv.classList.add('bot-row');
+        }
     }
     if (!(Math.floor((i - 1) / 17) % 2 === 0)) {
         newDiv.classList.add('odd-row');
@@ -61,6 +105,7 @@ for (var i = 1; i <= 289; i++) {
         newDiv.classList.add('odd-col');
     } else if (!(newDiv.classList.contains('odd-row'))) {
         newDiv.classList.add('cell');
+        grid[i] = 0;
     }
     newDiv.setAttribute('id', i);
 
@@ -74,6 +119,11 @@ for (var i = 1; i <= 289; i++) {
         }
     }
 
+    if (i === player1Position || i === player2Position) {
+        validGrid.push(1);
+    }else{
+        validGrid.push(0);
+    }
     cells.push(newDiv);
     wrapper.appendChild(newDiv);
 
@@ -135,7 +185,7 @@ function setUpGame(gameState) {
         wrapper.appendChild(message);
         //si une case de top-row est cliquée alors on move le joueur
         topRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
-        console.log(tour);
+      //  console.log(tour);
 
     }
     checkTour201();
@@ -375,12 +425,13 @@ function changeVisibility(rigthCell, leftCell, player, horizontale) {
         botRightCellPlus1 = cells[parseInt(rigthCellNumber) - 4];
         topLeftCellPlus1 = cells[parseInt(leftCellNumber) + 2];
         botLeftCellPlus1 = cells[parseInt(leftCellNumber) - 4];
-        console.log(parseInt(rigthCellNumber) + " " + (parseInt(rigthCellNumber) - 2) +" " + parseInt(leftCellNumber))
+       // console.log(parseInt(rigthCellNumber) + " " + (parseInt(rigthCellNumber) - 2) +" " + parseInt(leftCellNumber))
     }
     if(player == "playerA"){
 
         if(topRightCell != undefined && topRightCell.hasAttribute('visibility'))
             topRightCell.setAttribute('visibility',topRightCell.getAttribute('visibility') - 2);
+
         if(botRightCell != undefined && botRightCell.hasAttribute('visibility'))
             botRightCell.setAttribute('visibility',botRightCell.getAttribute('visibility') - 2);
         if(topLeftCell != undefined && topLeftCell.hasAttribute('visibility'))
@@ -416,7 +467,48 @@ function changeVisibility(rigthCell, leftCell, player, horizontale) {
         if(botLeftCellPlus1 != undefined && botLeftCellPlus1.hasAttribute('visibility'))
             botLeftCellPlus1.setAttribute('visibility',parseInt(botLeftCellPlus1.getAttribute('visibility')) + 1);
         }
+    //boucle sur cells :
+    //     si cell[i] == fog, board[i] == -1
+    //     sinon si != fog
+    //           si cell[i] == playerActuel (celui qui joue), board[i] = 1
+    //           sinon si cell[i] == autreplayer, board[i] = 2
+    //           sinon board[i] = 0
+
+}
+
+function convertBoard(){
+    var opponent;
+    if(activePlayer === "playerA"){
+        opponent = "playerB";
+    }else{
+        opponent = "playerA";
     }
+    let j = 0;
+    let k = 0;
+    for(let m = 0; m < 289; m++){
+        if(!(cells[m].classList.contains('odd-row') || cells[m].classList.contains('odd-col'))){
+            if(k>8) {
+                j = j + 1;
+                k = 0;
+            }
+            if(cells[m].classList.contains('fog')){
+                board[j][k] = -1;
+
+            }
+            else if(!(cells[m].classList.contains('fog'))) {
+                if (cells[m].classList.contains(activePlayer)) {
+                    board[j][k] = 1;
+                } else if (cells[m].classList.contains(opponent) || cells[m].classList.contains(opponent+'Fog')) {
+                    board[j][k] = 2;
+                } else {
+                    board[j][k] = 0;
+                }
+            }
+            k = k + 1;
+        }
+    }
+    board = board.reverse();
+}
 
 
 function changeVisibilityPlayer(remove,position,player){
@@ -492,8 +584,23 @@ function changeVisibilityPlayer(remove,position,player){
 
 function handleCellClick(cellIndex, position) {
     const validMoves = getValidMoves(position);
-
-
+    /*socket.emit('getValidMoves', activePlayer, activePlayer === 'playerA' ? player1Position : player2Position, grid, validGrid);
+    socket.on('validMoves', function (validMoves) {
+        console.log("ValidMoves : " + validMoves);
+        if (isClickedCell) {
+            cells.forEach(cell => cell.classList.remove('possible-move'));
+            isClickedCell = false;
+        } else {
+            validMoves.forEach(move => {
+                const moveCell = cells[move-1];
+                if (!moveCell.classList.contains('playerA') && !moveCell.classList.contains('playerB')) {
+                    moveCell.classList.add('possible-move');
+                    isClickedCell = true;
+                }
+            });
+        }
+    })*/
+   // console.log("ValidMoves : " + validMoves);
     if (isClickedCell) {
         cells.forEach(cell => cell.classList.remove('possible-move'));
         isClickedCell = false;
@@ -508,57 +615,6 @@ function handleCellClick(cellIndex, position) {
     }
 }
 
-function getValidMoves(position) {
-    const row = Math.floor(position / 17);
-    const col = position % 17;
-    const moves = [];
-
-    //console.log("Row : " + row);
-    //console.log("Col : " + col);
-
-    const cellFoward = cells[position + 17];
-    const cellBackward = cells[position - 17];
-    const cellLeft = cells[position - 1];
-    const cellRight = cells[position + 1];
-
-    const cellFowardPlus1 = cells[position + 34];
-    const cellBackwardPlus1 = cells[position - 34];
-    const cellLeftPlus1 = cells[position - 2];
-    const cellRightPlus1 = cells[position + 2];
-
-    if (row > 0 && !(cellBackward.classList.value.match(/\bwall[AB]\b/))){
-        if(cellBackwardPlus1.classList.value.match(/\bplayer[AB]\b/) || cellBackwardPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
-            if(!(cells[position - 51].classList.value.match(/\bwall[AB]\b/)))
-                moves.push(position - 68);
-        } else
-            moves.push(position - 34);
-    }
-    if (row < 16 && !(cellFoward.classList.value.match(/\bwall[AB]\b/))){
-        if(cellFowardPlus1.classList.value.match(/\bplayer[AB]\b/) || cellFowardPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
-            if(!(cells[position + 51].classList.value.match(/\bwall[AB]\b/)))
-                moves.push(position + 68);
-        } else
-            moves.push(position + 34);
-    }
-    if (col > 0 && !(cellLeft.classList.value.match(/\bwall[AB]\b/))){
-        if(cellLeftPlus1.classList.value.match(/\bplayer[AB]\b/) || cellLeftPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
-            if(!(cells[position - 3].classList.value.match(/\bwall[AB]\b/)))
-                moves.push(position - 4);
-        } else
-            moves.push(position - 2);
-    }
-    if (col < 16 && !(cellRight.classList.value.match(/\bwall[AB]\b/))){
-        if(cellRightPlus1.classList.value.match(/\bplayer[AB]\b/) || cellRightPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
-            if(!(cells[position + 3].classList.value.match(/\bwall[AB]\b/)))
-                moves.push(position + 4);
-        } else
-            moves.push(position + 2);
-    }
-
-
-
-    return moves;
-}
 
 function movePlayer(cellIndex) {
 
@@ -584,6 +640,8 @@ function movePlayer(cellIndex) {
         // Retirer le joueur actif de sa position actuelle
         const currentPlayerPosition = activePlayer === 'playerA' ? player1Position : player2Position;
         cells[currentPlayerPosition].classList.remove(activePlayer);
+        //convertBoard();
+        //console.log(board);
         changeVisibilityPlayer(true, currentPlayerPosition, activePlayer);
 
         // Mettre à jour la position du joueur actif
@@ -612,6 +670,8 @@ function movePlayer(cellIndex) {
         isClickedCell = false;
 
         // Basculer vers l'autre joueur
+       // convertBoard();
+        //console.log(board);
         changeVisibilityPlayer(false, activePlayer === 'playerA' ? player1Position : player2Position, activePlayer);
         changeActivePlayer();
     }
@@ -700,6 +760,7 @@ function victoire(txt){
 
 
 function changeActivePlayer() {
+
     activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
     document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
     if(tour<=200)
@@ -722,10 +783,10 @@ function changeActivePlayer() {
 
     murAPose = new Array(3);
     checkTour201();
-    if(activePlayer == "playerB" && getCookie("typeDePartie")=="bot"){
+    if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot"){
         if(tour>=200){
 
-            movePlyerFirstTurn(player2Position);
+            return movePlyerFirstTurn(player2Position);
         }else {
             var possiblesMoves = getValidMoves(player2Position);
             socket.emit('computeMoveRandom', possiblesMoves, (returnValue) => {
@@ -734,8 +795,19 @@ function changeActivePlayer() {
                 movePlayer(player2Position);
                 movePlayer(returnValue);
             });
+        }
+    }
+    else if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot_v2"){
+        if(tour>=200){
+
+             var res = setup(2);
+             return movePlyerFirstTurn(res);
+        }else {
+            convertBoard();
+            return nextMove(gameState1);
 
         }
+
     }
 
 
@@ -794,8 +866,13 @@ function validerWall() {
     const clickedCell = cells[murAPose[0]];
     const rightCell = cells[murAPose[1]];
     const leftCell = cells[murAPose[2]];
+
     changeVisibilityPlayer(true,player1Position,"playerA");
     changeVisibilityPlayer(true,player2Position,"playerB");
+
+
+    const wallPosition = murAPose[0] - 18;
+
     clickedCell.classList.remove('wallTMP');
     clickedCell.classList.remove('rotation');
     rightCell.classList.remove('wallTMP');
@@ -817,20 +894,43 @@ function validerWall() {
         newMove.type = 'wall';
         newMove.position = murAPose;
 
+
         socket.emit('newMove', newMove);
+
+       
+        const newWallA = [convertPositionToGameState(wallPosition), horizontale ? 0 : 1];
+        playerAWalls.push(newWallA);
+       // console.log(playerAWalls);
+
 
     } else {
         newMove.player = 'playerB';
         newMove.type = 'wall';
         newMove.position = murAPose;
 
+
         socket.emit('newMove', newMove);
+
+        const newWallB = [convertPositionToGameState(wallPosition), horizontale ? 0 : 1];
+        playerBWalls.push(newWallB);
+        //console.log(playerBWalls);
+
     }
     changeVisibilityPlayer(false,player1Position,"playerA");
     changeVisibilityPlayer(false,player2Position,"playerB");
     changeVisibility(rightCell, leftCell, activePlayer, horizontale);
     changeActivePlayer();
     hideValider();
+
+}
+
+function convertPositionToGameState(position) {
+    let ligne = position % 17 / 2;
+    let colonne = Math.floor(position / 17) / 2;
+    colonne = 8 - colonne;
+    colonne = colonne + 1;
+    ligne = ligne + 1;
+    return ligne + "" + colonne;
 
 }
 
@@ -1020,7 +1120,7 @@ async function sauvegarderLaPartie() {
         annulerWall();
     cells.forEach(cell => cell.classList.remove('possible-move'));
     var tab = construireEtatPartie();
-    var etat = new gameState(getUsername(),tab, tour,getCookie("typeDePartie"));
+    var etat = new gameBDD(getUsername(),tab, tour,getCookie("typeDePartie"));
     const formDataJSON = {};
     formDataJSON["username"] = etat.username;
     formDataJSON["board"] = etat.board;
@@ -1107,7 +1207,7 @@ function checkTour201(){
         message.style.left = '50%';
         wrapper.appendChild(message);
         //si une case de top-row est cliquée alors on move le joueur
-        console.log(tour);
+
         bottomRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
 
     }
@@ -1179,4 +1279,58 @@ function checkTour201(){
         nbWallPlayerB = 10 - (wallB/3);
 
     }
+
+
+
+    //TODO : A RETIRER
+
+function getValidMoves(position) {
+    const row = Math.floor(position / 17);
+    const col = position % 17;
+    const moves = [];
+
+
+    const cellFoward = cells[position + 17];
+    const cellBackward = cells[position - 17];
+    const cellLeft = cells[position - 1];
+    const cellRight = cells[position + 1];
+
+    const cellFowardPlus1 = cells[position + 34];
+    const cellBackwardPlus1 = cells[position - 34];
+    const cellLeftPlus1 = cells[position - 2];
+    const cellRightPlus1 = cells[position + 2];
+
+    if (row > 0 && !(cellBackward.classList.value.match(/\bwall[AB]\b/))){
+        if(cellBackwardPlus1.classList.value.match(/\bplayer[AB]\b/) || cellBackwardPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
+            if(!(cells[position - 51].classList.value.match(/\bwall[AB]\b/)))
+                moves.push(position - 68);
+        } else
+            moves.push(position - 34);
+    }
+    if (row < 16 && !(cellFoward.classList.value.match(/\bwall[AB]\b/))){
+        if(cellFowardPlus1.classList.value.match(/\bplayer[AB]\b/) || cellFowardPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
+            if(!(cells[position + 51].classList.value.match(/\bwall[AB]\b/)))
+                moves.push(position + 68);
+        } else
+            moves.push(position + 34);
+    }
+    if (col > 0 && !(cellLeft.classList.value.match(/\bwall[AB]\b/))){
+        if(cellLeftPlus1.classList.value.match(/\bplayer[AB]\b/) || cellLeftPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
+            if(!(cells[position - 3].classList.value.match(/\bwall[AB]\b/)))
+                moves.push(position - 4);
+        } else
+            moves.push(position - 2);
+    }
+    if (col < 16 && !(cellRight.classList.value.match(/\bwall[AB]\b/))){
+        if(cellRightPlus1.classList.value.match(/\bplayer[AB]\b/) || cellRightPlus1.classList.value.match(/\bplayer[AB]Fog\b/)){
+            if(!(cells[position + 3].classList.value.match(/\bwall[AB]\b/)))
+                moves.push(position + 4);
+        } else
+            moves.push(position + 2);
+    }
+
+
+
+    return moves;
+}
 

@@ -3,7 +3,7 @@ const http = require('http')
 // Let's import our logic.
 const fileQuery = require('./queryManagers/front.js')
 const apiQuery = require('./queryManagers/api.js')
-const aiRandom = require('./logic/ai.js');
+const socketManager = require('./logic/engine');
 /* The http module contains a createServer function, which takes one argument, which is the function that
 ** will be called whenever a new request arrives to the server.
  */
@@ -35,25 +35,11 @@ const { Server } = require('socket.io');
 
 const io = new Server(server);
 
- const gameNamespace = io.of('/api/game');
+const gameNamespace = io.of('/api/game');
 
- gameNamespace.on('connection', (socket) => {
-     console.log('A user connected');
-     socket.on('disconnect', () => {
-         console.log('user disconnected');
-     });
-     socket.on('computeMoveRandom', (possibleMoves,callback) => {
-         const returnValue = aiRandom.move(possibleMoves);
-         callback(returnValue);
-     });
-     //TODO
-     socket.on('newWall', (newWall) => {
-         console.log('New wall received: ', newWall);
-     });
-     socket.on('newMove', (newMove) => {
-        console.log('New move received: ', newMove);
-     });
- })
+
+socketManager(io);
+
 
 server.listen(8000, ()=> {
     console.log('Server is listening on port 8000');

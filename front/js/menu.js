@@ -10,6 +10,11 @@ function redirectToLogin() {
     window.location.href = "login.html";
 }
 
+function redirectToBotPage() {
+    window.location.href = "bot-page.html";
+
+}
+
 function redirectToMenu() {
     window.location.href = "index.html";
 }

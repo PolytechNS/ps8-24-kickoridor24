@@ -33,16 +33,12 @@
 </header>
 
 <div class="container">
-    <div class="Play" onclick="redirectToBotPage()">
-        <h2 class="btnJouer"> JOUER CONTRE UN BOT</h2>
+    <div class="Play" onclick="redirectToGame('typeDePartie','bot',7)">
+        <h2 class="btnJouer"> JOUER CONTRE UN BOT ALEATOIRE</h2>
     </div>
 
-    <div class="Play" onclick="redirectToGame('typeDePartie','1v1local',7)">
-        <h2 class="btnJouer"> JOUER EN 1V1 LOCAL</h2>
-    </div>
-
-    <div class="Play" id="resumeGameButton" onclick="redirectToGame('typeDePartie','resumeGame',7)">
-        <h2 class="btnJouer"> REPRENDRE UNE PARTIE</h2>
+    <div class="Play" onclick="redirectToGame('typeDePartie','bot_v2',7)">
+        <h2 class="btnJouer"> JOUER CONTRE UN BOT INTELLIGENT</h2>
     </div>
 </div>
 
