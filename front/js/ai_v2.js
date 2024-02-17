@@ -51,6 +51,7 @@ function setup(AIplay){
 }
 function nextMove(gameState){
     //TODO
+    pathFinding()
     console.log("board");
     console.table(gameState.board);
     console.log("murs");
@@ -62,4 +63,38 @@ function correction(rightMove){
 }
 function updateBoard(){
     //TODO
+}
+
+function pathFinding(posJoueur,board,walls){
+
+}
+
+function dijkstra(player,cellule,tab) {
+    var lanePlayerAArray = Array.from(lanePlayerA);
+    var lanePlayerBArray = Array.from(lanePlayerB);
+    if (player === 'playerA') {
+
+        if (lanePlayerBArray.includes(document.getElementById('' + cellule))) {
+
+            return 0;
+        }
+    }
+    if (player === 'playerB') {
+
+        if (lanePlayerAArray.includes(document.getElementById('' + cellule))) {
+
+            return 0;
+        }
+    }
+    if (dijkstraVisitedNode.includes(cellule)) {
+
+        return 999;
+    } else {
+        var tmpTab = [];
+        dijkstraVisitedNode.push(cellule);
+        for (var voisin in tab['' + cellule]) {
+            tmpTab.push(dijkstra(player,tab["" + cellule][voisin], tab));
+        }
+        return Math.min.apply(null, tmpTab);
+    }
 }

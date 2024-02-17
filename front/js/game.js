@@ -494,9 +494,9 @@ function convertBoard(){
             }
             else if(!(cells[m].classList.contains('fog'))) {
                 if (cells[m].classList.contains(activePlayer)) {
-                    board[j][k] = 2;
-                } else if (cells[m].classList.contains(opponent) || cells[m].classList.contains(opponent+'Fog')) {
                     board[j][k] = 1;
+                } else if (cells[m].classList.contains(opponent) || cells[m].classList.contains(opponent+'Fog')) {
+                    board[j][k] = 2;
                 } else {
                     board[j][k] = 0;
                 }
