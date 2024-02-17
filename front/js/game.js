@@ -833,7 +833,6 @@ function changeActivePlayer() {
         }else {
             convertBoard();
             return nextMove(gameState1);
-
         }
 
     }
