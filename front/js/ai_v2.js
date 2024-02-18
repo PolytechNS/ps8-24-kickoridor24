@@ -61,9 +61,16 @@ function setup(AIplay){
     console.log("le bot est le joueur numero "+ AIplay );
     IAplay = AIplay;
     deplacement = 0;
+    var positionBot = '00';
+    if(AIplay === 1){
+        positionBot = '15';
+    }else if(AIplay === 2){
+        positionBot = '95';
+    }
 
-
-    return player2Position;
+    return new Promise((resolve, reject) => {
+        resolve(positionBot);
+    });
 }
 function nextMove(gameState){
     //init des variables
@@ -96,7 +103,9 @@ function nextMove(gameState){
             if(putWall(gameState,isTunnel,0) !== false){
                 deplacement++;
                 console.log(putWall(gameState,isTunnel,0));
-                return putWall(gameState,isTunnel,0);
+                return new Promise((resolve, reject) => {
+                    resolve(putWall(gameState,isTunnel,0));
+                });
             }else {
                 console.log("HASSOUL TUNNEL DEJA BLOQUE");
             }
@@ -108,24 +117,35 @@ function nextMove(gameState){
 
     if(cheminLePlusCoutBot === "idle" && nbWalls ===0){
         console.log('idle');
-        return new Move('idle');
+        return new Promise((resolve, reject) => {
+            resolve(new Move('idle'));
+        });
     }else if(cheminLePlusCoutBot === "idle"){
         //obliger de poser un mur
         //TODO
-        return new Move('wall',"");
+        return new Promise((resolve, reject) => {
+           resolve(new Move('wall',""));
+        });
     }
     else{
         console.log((parseInt(cheminLePlusCoutBot[0])+11));
-        return new Move('move',(parseInt(cheminLePlusCoutBot[0])+11));
+        return new Promise((resolve, reject) => {
+            resolve(new Move('move',(parseInt(cheminLePlusCoutBot[0])+11)));
+        });
     }
-
 }
 function correction(rightMove){
-    //TODO
+    new Promise((resolve, reject) => {
+        resolve(true);
+    });
 }
 function updateBoard(){
-    //TODO
+    new Promise((resolve, reject) => {
+        resolve(true);
+    });
 }
+
+
 var dijkstraVisitedNode = [];
 function pathFinding(posJoueur,board){
 
