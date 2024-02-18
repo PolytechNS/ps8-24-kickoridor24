@@ -104,7 +104,7 @@ function nextMove(gameState){
     }
     //bouger
     walls = gameState.opponentWalls.concat(gameState.ownWalls);
-    var cheminLePlusCoutBot = pathFinding(positionBot,gameState.board);
+    var cheminLePlusCoutBot = pathFinding(positionBot,gameState.board, "bot");
 
     if(cheminLePlusCoutBot === "idle" && nbWalls ===0){
         console.log('idle');
@@ -115,8 +115,10 @@ function nextMove(gameState){
         return new Move('wall',"");
     }
     else{
-        console.log((parseInt(cheminLePlusCoutBot[0])+11));
-        return new Move('move',(parseInt(cheminLePlusCoutBot[0])+11));
+        /*console.log((parseInt(cheminLePlusCoutBot[0])+11));
+        return new Move('move',(parseInt(cheminLePlusCoutBot[0])+11));*/
+        PassOrBlock(gameState, gameState.board,walls);
+        console.log(PassOrBlock(gameState, gameState.board,walls));
     }
 
 }
@@ -127,7 +129,8 @@ function updateBoard(){
     //TODO
 }
 var dijkstraVisitedNode = [];
-function pathFinding(posJoueur,board){
+
+function pathFinding(posJoueur,board,player){
 
     var ligneFinale = new Array();
     if(IAplay === 1){
@@ -139,35 +142,45 @@ function pathFinding(posJoueur,board){
     let x =  [...board];
     //  let result =  x.concat(board.reverse().slice(1,board.length));
     console.table(board);
-   var possiblesMoves = validMoves(positionBot[0],positionBot[1]);
-   console.log(possiblesMoves);
-   var tab = hashMapVoisin(board,walls);
-   var tabRes = [];
-   for(var i = 0;i<possiblesMoves.length;i++){
-       dijkstraVisitedNode = [];
-       tabRes.push(dijkstraNode(IAplay== 1 ? "playerA" : "playerB",possiblesMoves[i],tab));
-   }
-
-   if(tabRes.length === 1){
-
-       if(!checkBonDeplacement(tabRes[0],tab)){
-
-           return "idle"; //mouvement pas bon
-       }
-
-   }
-   var indice = 999;
-   var longueur = 999;
-  for(var i =0;i<tabRes.length;i++){
-    if(tabRes[i].length<longueur){
-        longueur = tabRes[i].length;
-        indice = i;
+    if(player=="bot") {
+        var possiblesMoves = validMoves(positionBot[0], positionBot[1]);
     }
-  }
-  if(indice ===999){
-      return "idle"; //impossible de bouger
-  }
-   return tabRes[indice];
+    else{
+        var possiblesMoves = validMoves(positionOpponent[0], positionOpponent[1]);
+    }
+    console.log(possiblesMoves);
+    var tab = hashMapVoisin(board,walls);
+    var tabRes = [];
+    for(var i = 0;i<possiblesMoves.length;i++){
+        dijkstraVisitedNode = [];
+        if(player === "bot"){
+            tabRes.push(dijkstraNode(IAplay== 1 ? "playerA" : "playerB",possiblesMoves[i],tab));
+        }else{
+            tabRes.push(dijkstraNode(IAplay== 1 ? "playerB" : "playerA",possiblesMoves[i],tab));
+        }
+
+    }
+
+    if(tabRes.length === 1){
+        if(player === "bot") {
+            if (!checkBonDeplacement(tabRes[0], tab)) {
+
+                return "idle"; //mouvement pas bon
+            }
+        }
+    }
+    var indice = 999;
+    var longueur = 999;
+    for(var i =0;i<tabRes.length;i++){
+        if(tabRes[i].length<longueur){
+            longueur = tabRes[i].length;
+            indice = i;
+        }
+    }
+    if(indice ===999){
+        return "idle"; //impossible de bouger
+    }
+    return tabRes[indice];
 }
 
 
@@ -546,4 +559,136 @@ function checkBonDeplacement(chemin,tab){
         return false;
     }
     return true;
+}
+
+function opponentVisibilty(board){
+    const opponentPosition = [];
+    for (let j = 0; j < 17; j++) {
+        for (let k = 0; k < 17; k++) {
+            if (board[j][k] === 2) {
+                opponentPosition.push(j, k);
+                return opponentPosition;
+            }
+        }
+        if(opponentPosition.length === 0){
+            return null;
+        }
+    }
+}
+
+function PassOrBlock(gameState, board,walls){
+    let opponentPath = [];
+    let botPath = [];
+    botPath = pathFinding(positionBot,board, "bot");
+    console.log("botPath : " +botPath);
+    if(positionOpponent !== null){
+        console.log("opponentVisibility : " +positionOpponent);
+        opponentPath = pathFinding(positionOpponent,board, "opponent");
+        console.log("opponentPath : " +opponentPath);
+        if(opponentPath.length < botPath.length){
+            return blockOpponent(gameState, opponentPath, botPath);
+        }
+        else {
+            return new Move('move', botPath[0]);
+        }
+    }
+    else{
+        return new Move('move', botPath[0]);
+    }
+}
+
+function blockOpponent(gameState, opponentPath, botPath){
+    //ralonger le chemin de l'adversaire pour qu'il soit plus long que celui du bot en ajoutant des murs si possible devant lui
+   console.log("blockOpponent");
+       //prochain move vertical ou horizontal
+        var posWall;
+        var orientation;
+        var nextMoveI = opponentPath[0][0] - positionOpponent[0];
+        var nextMoveJ = opponentPath[0][1] - positionOpponent[1];
+        console.log("opponenetPath[0][0] : " +opponentPath[0][0]);
+        console.log("positionOpponent[0][0] : " +positionOpponent[0]);
+        console.log("opponenetPath[0][1] : " +opponentPath[0][1]);
+        console.log("positionOpponent[0][1] : " +positionOpponent[1]);
+        console.log("nextMoveI : " +nextMoveI);
+        console.log("nextMoveJ : " +nextMoveJ);
+        if(nextMoveI === 1){
+            orientation = 1;
+            posWall = (parseInt(positionOpponent[0]) + 1) + "" + positionOpponent[1];
+        }
+        else if(nextMoveI === -1){
+            orientation = 1;
+            posWall = (parseInt(positionOpponent[0]) - 1) + "" + positionOpponent[1];
+        }
+        else {
+            if(nextMoveJ === -1){
+                orientation = 0;
+                posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) - 1);
+            }
+            else if(nextMoveJ === 1){
+                console.log("positionOpponent[1] : " +positionOpponent[1]);
+                console.log("positionOpponent[0] : " +positionOpponent[0]);
+                orientation = 0;
+                posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) + 1);
+                console.log("posWall : " +posWall);
+            }
+            else{
+                posWall = null;
+                console.log("prochain move pas possible");
+            }
+        }
+        if(posWall !== null){
+            if(putWall(gameState, (parseInt(posWall)+11).toString(), orientation) !== false){
+                console.log(putWall(gameState, parseInt(posWall)+11, orientation));
+                return putWall(gameState, (parseInt(posWall)+11).toString(), orientation);
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return new Move('move', botPath[0]);
+        }
+}
+
+function VerifputWall(gameState, pos, orientation) {
+    var tmpPos = [];
+    if (nbWalls > 0) {
+        let posInInt = parseInt(pos);
+        const walls = gameState.opponentWalls.concat(gameState.ownWalls);
+        if (walls.length >= 1) {
+            for (let i = 0; i < walls.length; i++) {
+                if (walls[i][0] === pos) {
+                    return false;
+                }
+                if (orientation === 0 && (walls[i][0] === (posInInt + 10).toString() && orientation === 0) || (walls[i][0] === (posInInt - 10).toString() && orientation === 0)) {
+                    return false;
+                }
+                if (orientation === 1 && (walls[i][0] === (posInInt + 1).toString() && orientation === 1) || (walls[i][0] === (posInInt - 1).toString() && orientation === 1)) {
+                    return false;
+                }
+            }
+            walls.push(new Array(pos,orientation));
+            dijkstraVisitedNode = [];
+
+            var tab = hashMapVoisin(gameState.board,walls);
+            var res1 = 0;
+            if(positionOpponent !==null)
+                res1 = dijkstra1(IAplay== 2 ? "playerA" : "playerB", positionOpponent, tab);
+            else{
+                res1 = 0;
+            }
+            dijkstraVisitedNode = [];
+            var res2 = dijkstra1(IAplay== 1 ? "playerA" : "playerB", positionBot, tab);
+
+            var res = Math.max(res1, res2);
+
+            if (res !== 0) {
+                return false;
+            } else {
+                nbWalls--;
+                return true;
+            }
+
+        }
+    }
 }
