@@ -327,6 +327,7 @@ function putWall(gameState, pos, orientation) {
 
 
     }
+    return false;
 }
 
 function dijkstra1(player, cellule, tab) {
@@ -797,6 +798,7 @@ function verifPutWall(gameState, pos, longueurCheminOpponnent, longueurCheminBot
         }
         return murPossibles[indice];
     }
+    return false;
 }
 
 function pathFindingTMP(posJoueur, board, player, walls) {
@@ -910,3 +912,8 @@ function ouvertureProcess(gameState) {
    return nextMove(gameState);
 
 }
+
+exports.setup = setup;
+exports.nextMove = nextMove;
+exports.correction = correction;
+exports.updateBoard = updateBoard;
