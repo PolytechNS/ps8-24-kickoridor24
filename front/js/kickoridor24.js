@@ -20,9 +20,9 @@ class Move {
 
 
 function chooseBestMove(pos) {
-    console.log("bot : " + pos);
+    //console.log("bot : " + pos);
     var possibleMoves = getValidMoves(pos);
-    console.log("possible moves : " + possibleMoves);
+    //console.log("possible moves : " + possibleMoves);
     //choisir dans possible move le plus petit chiffre
     let moveIndex = 0;
     for (let i = 0; i < possibleMoves.length; i++) {
@@ -30,7 +30,7 @@ function chooseBestMove(pos) {
             moveIndex = i;
         }
     }
-    console.log("move : " + possibleMoves[moveIndex]);
+    //console.log("move : " + possibleMoves[moveIndex]);
     movePlayer(pos);
     movePlayer(possibleMoves[moveIndex]);
     deplacement++;
@@ -59,7 +59,7 @@ function chooseAction(pos) {
 }
 
 function setup(AIplay) {
-    console.log("le bot est le joueur numero " + AIplay);
+    //console.log("le bot est le joueur numero " + AIplay);
     IAplay = AIplay;
     deplacement = 0;
     var positionBot = '00';
@@ -105,7 +105,7 @@ function nextMove(gameState) {
             if (isTunnel !== '00') {
                 if (putWall(gameState, isTunnel, 0) !== false) {
                     deplacement++;
-                    console.log(putWall(gameState, isTunnel, 0));
+                    //console.log(putWall(gameState, isTunnel, 0));
                     return new Promise((resolve, reject) => {
                         resolve(putWall(gameState, isTunnel, 0));
                     });
@@ -115,7 +115,7 @@ function nextMove(gameState) {
             }
         }
         var resultat = ouvertureProcess(gameState);
-        console.log(resultat);
+        //console.log(resultat);
         return new Promise((resolve, reject) => {
             resolve(resultat);
         });
@@ -144,7 +144,7 @@ function nextMove(gameState) {
             });
         } else {
               //  PassOrBlock(gameState, gameState.board, walls);
-       // console.log();
+       //console.log();
         //console.log((parseInt(cheminLePlusCoutBot[0]) + 11));
         return new Promise((resolve, reject) => {
             resolve(PassOrBlock(gameState, gameState.board, walls));
@@ -318,7 +318,7 @@ function putWall(gameState, pos, orientation) {
         var res = Math.max(res1, res2);
 
         if (res !== 0) {
-            console.log("je peux pas placer la sinon je bloque un joueur");
+            //console.log("je peux pas placer la sinon je bloque un joueur");
             return false;
         } else {
             nbWalls--;
@@ -633,11 +633,11 @@ function PassOrBlock(gameState, board, walls) {
     let opponentPath = [];
     let botPath = [];
     botPath = pathFinding(positionBot, board, "bot");
-    console.log("botPath : " + botPath);
+   //console.log("botPath : " + botPath);
     if (positionOpponent !== null) {
-        console.log("opponentVisibility : " + positionOpponent);
+      //console.log("opponentVisibility : " + positionOpponent);
         opponentPath = pathFinding(positionOpponent, board, "opponent");
-        console.log("opponentPath : " + opponentPath);
+       //console.log("opponentPath : " + opponentPath);
         if (opponentPath.length < botPath.length) {
             return blockOpponent(gameState, opponentPath, botPath);
         } else {
@@ -651,18 +651,18 @@ function PassOrBlock(gameState, board, walls) {
 
 function blockOpponent(gameState, opponentPath, botPath) {
     //ralonger le chemin de l'adversaire pour qu'il soit plus long que celui du bot en ajoutant des murs si possible devant lui
-    console.log("blockOpponent");
+    //console.log("blockOpponent");
     //prochain move vertical ou horizontal
     var posWall;
     var orientation;
     var nextMoveI = opponentPath[0][0] - positionOpponent[0];
     var nextMoveJ = opponentPath[0][1] - positionOpponent[1];
-    console.log("opponenetPath[0][0] : " + opponentPath[0][0]);
-    console.log("positionOpponent[0][0] : " + positionOpponent[0]);
-    console.log("opponenetPath[0][1] : " + opponentPath[0][1]);
-    console.log("positionOpponent[0][1] : " + positionOpponent[1]);
-    console.log("nextMoveI : " + nextMoveI);
-    console.log("nextMoveJ : " + nextMoveJ);
+    //console.log("opponenetPath[0][0] : " + opponentPath[0][0]);
+    //console.log("positionOpponent[0][0] : " + positionOpponent[0]);
+    //console.log("opponenetPath[0][1] : " + opponentPath[0][1]);
+    //console.log("positionOpponent[0][1] : " + positionOpponent[1]);
+    //console.log("nextMoveI : " + nextMoveI);
+    //console.log("nextMoveJ : " + nextMoveJ);
     if (nextMoveI === 1) {
         orientation = 1;
         posWall = (parseInt(positionOpponent[0]) + 1) + "" + positionOpponent[1];
@@ -674,14 +674,14 @@ function blockOpponent(gameState, opponentPath, botPath) {
             orientation = 0;
             posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) - 1);
         } else if (nextMoveJ === 1) {
-            console.log("positionOpponent[1] : " + positionOpponent[1]);
-            console.log("positionOpponent[0] : " + positionOpponent[0]);
+            //console.log("positionOpponent[1] : " + positionOpponent[1]);
+            //console.log("positionOpponent[0] : " + positionOpponent[0]);
             orientation = 0;
             posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) + 1);
-            console.log("posWall : " + posWall);
+            //console.log("posWall : " + posWall);
         } else {
             posWall = null;
-            console.log("prochain move pas possible");
+            //console.log("prochain move pas possible");
         }
     }
     if (posWall !== null) {
@@ -772,7 +772,7 @@ function verifPutWall(gameState, pos, longueurCheminOpponnent, longueurCheminBot
         var diffChemin = longueurCheminOpponnent-longueurCheminBot;
         var indice = 999;
         for (var a = 0; a < murPossibles.length; a++) {
-             console.log("murPossibles :" + murPossibles[a]);
+             //console.log("murPossibles :" + murPossibles[a]);
             walls.push(murPossibles[a]);
             tmpLongueurBot = pathFindingTMP(positionBot, gameState.board, "bot", walls).length;
 
@@ -780,18 +780,18 @@ function verifPutWall(gameState, pos, longueurCheminOpponnent, longueurCheminBot
             tmpLongueurOpponent = pathFindingTMP(positionOpponent, gameState.board, "opponent", walls).length;
 
             if (tmpLongueurOpponent >= MaxOpponent && (tmpLongueurOpponent - tmpLongueurBot) > diffChemin) {
-                console.log("tmpLongueurOpponent : " + tmpLongueurOpponent);
-                console.log("diffChemin : " + diffChemin);
+                //console.log("tmpLongueurOpponent : " + tmpLongueurOpponent);
+                //console.log("diffChemin : " + diffChemin);
                 MaxOpponent = tmpLongueurOpponent;
                 diffChemin = tmpLongueurOpponent - tmpLongueurBot;
                 indice = a;
-                console.log("TROUVEEE " + murPossibles[a]);
+                //console.log("TROUVEEE " + murPossibles[a]);
 
             }
             walls.splice(walls.indexOf(new Array(newPos, orientation)), 1);
 
         }
-      //  console.log("res = " + murPossibles[indice]);
+      //console.log("res = " + murPossibles[indice]);
         if(indice===999){
             return false;
         }
@@ -846,7 +846,7 @@ function ouvertureProcess(gameState) {
     var posI = parseInt(positionBot[0]) ;
     var posJ = parseInt(positionBot[1]) ;
     var posBotFixed = (parseInt(posI)+1) + "" + (parseInt(posJ)+1);
-    console.log("pos : " +posI +""+ posJ+ "  mouvement : "+ posI+""+ parseInt(posJ - 1));
+    //console.log("pos : " +posI +""+ posJ+ "  mouvement : "+ posI+""+ parseInt(posJ - 1));
     if(IAplay === 2){
         if (ouverture === 1) {
             if (deplacementPossible(posI, posJ, posI, parseInt(posJ - 1), walls)) {

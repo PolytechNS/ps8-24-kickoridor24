@@ -829,6 +829,7 @@ function changeActivePlayer() {
         if(tour>=200){
 
              var res = setup(2);
+             console.log(res.then());
              return movePlyerFirstTurn(res);
         }else {
             convertBoard();
