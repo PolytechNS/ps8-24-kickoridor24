@@ -316,7 +316,7 @@ function handleWall(cellIndex) {
         else if(clickedCell.classList.contains('odd-row') && !clickedCell.classList.contains('odd-col') && !clickedCell.classList.value.match(/\bwall[AB]\b/)) //la cellule est une ligne
         {
             //horizontale a droite
-            if(!cells[cellIndex+2].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex+2].classList.contains('odd-row') ){
+            if(!cells[cellIndex+2].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex+2].classList.contains('odd-row') && !cells[cellIndex+1].classList.value.match(/\bwall[AB]\b/)){
 
                 clickedCell.classList.add('wallTMP');
                 murAPose[2] = cellIndex;
@@ -332,7 +332,7 @@ function handleWall(cellIndex) {
 
             }
             //horizontale a gauche
-            else if(!cells[cellIndex- 2].classList.value.match(/\bwall[AB]\b/) && cells[cellIndex-2].classList.contains('odd-row')){
+            else if(!cells[cellIndex- 2].classList.value.match(/\bwall[AB]\b/) && cells[cellIndex-2].classList.contains('odd-row') && !cells[cellIndex-1].classList.value.match(/\bwall[AB]\b/)){
 
                 clickedCell.classList.add('wallTMP');
                 murAPose[1] = cellIndex;
@@ -350,7 +350,7 @@ function handleWall(cellIndex) {
         }
         else if(!clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col')&& !clickedCell.classList.value.match(/\bwall[AB]\b/)) //la cellule est une colonne
         {
-            if(cells[cellIndex-34] != undefined && !cells[cellIndex-34].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex-34].classList.contains('odd-col') ){
+            if(cells[cellIndex-34] != undefined && !cells[cellIndex-34].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex-34].classList.contains('odd-col') && !cells[cellIndex-17].classList.value.match(/\bwall[AB]\b/) ){
                 //verticale haut
 
                 clickedCell.classList.add('wallTMP');
@@ -365,7 +365,7 @@ function handleWall(cellIndex) {
                 murAPose[0] = cellIndex-17;
                 poser = true;
             }
-            else if( cells[cellIndex+34] != undefined &&!cells[cellIndex+34].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex+34].classList.contains('odd-col') ){
+            else if( cells[cellIndex+34] != undefined &&!cells[cellIndex+34].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex+34].classList.contains('odd-col') && !cells[cellIndex+17].classList.value.match(/\bwall[AB]\b/) ){
                 //verticale bas
 
                 clickedCell.classList.add('wallTMP');

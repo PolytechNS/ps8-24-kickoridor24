@@ -2,12 +2,10 @@ var currentWall;
 var nbWalls = 10;
 var deplacement = 0;
 var positionBot = 0;
-var walls;
+var walls ;
 var IAplay;
 var dijkstraVisitedNode = [];
-var player1Pos = '00';
-var player2Pos = '00';
-
+var positionOpponent = null;
 class Move {
     constructor(action, value) {
         this.action = action;
@@ -16,10 +14,10 @@ class Move {
 }
 
 
-function chooseBestMove(pos) {
-    console.log("bot : " + pos);
+function chooseBestMove(pos){
+    console.log("bot : " +pos);
     var possibleMoves = getValidMoves(pos);
-    console.log("possible moves : " + possibleMoves);
+    console.log("possible moves : " +possibleMoves);
     //choisir dans possible move le plus petit chiffre
     let moveIndex = 0;
     for (let i = 0; i < possibleMoves.length; i++) {
@@ -27,94 +25,105 @@ function chooseBestMove(pos) {
             moveIndex = i;
         }
     }
-    console.log("move : " + possibleMoves[moveIndex]);
+    console.log("move : " +possibleMoves[moveIndex]);
     movePlayer(pos);
     movePlayer(possibleMoves[moveIndex]);
     deplacement++;
     return possibleMoves[moveIndex];
 }
 
-function chooseBestWall(pos) {
-    if (nbWalls === 10) {
+function chooseBestWall(pos){
+    if(nbWalls === 10) {
         currentWall = pos + 18;
         handleWall(currentWall);
-    } else if (nbWalls % 2 === 1) {
+    }
+    else if(nbWalls % 2 === 1){
         currentWall = currentWall + 2;
         handleWall(currentWall);
-    } else {
+    }
+    else{
         currentWall = currentWall - 2;
         handleWall(currentWall);
     }
 }
 
-function chooseAction(pos) {
-    if (deplacement < 2 || nbWalls === 0) {
+function chooseAction(pos){
+    if(deplacement < 2 || nbWalls === 0){
         chooseBestMove(pos);
-    } else {
+    }
+    else{
         chooseBestWall(pos);
     }
 }
 
-function setup(AIplay) {
-    console.log("le bot est le joueur numero " + AIplay);
+function setup(AIplay){
+    console.log("le bot est le joueur numero "+ AIplay );
     IAplay = AIplay;
     deplacement = 0;
 
 
     return player2Position;
 }
-
-function nextMove(gameState) {
+function nextMove(gameState){
     //TODO
-
+    var opponentfound =false;
     for (let i = 0; i < gameState.board.length; i++) {
         for (let j = 0; j < gameState.board[i].length; j++) {
-            if (gameState.board[i][j] == +1) {
+            if(gameState.board[i][j] === 1){
                 positionBot = i;
-                positionBot += "" + j;
+                positionBot += ""+j;
+            }
+            if(gameState.board[i][j] === 2){
+                positionOpponent = i;
+                positionOpponent += ""+j;
+                opponentfound = true;
             }
         }
     }
 
+    if(!opponentfound){
+        positionOpponent = null;
+    }
 
-    if (deplacement <= 4) {
+
+
+    if(deplacement <= 4){
         var isTunnel = findTunnel(gameState);
-        if (isTunnel !== '00') {
-            if (putWall(gameState, isTunnel, 0) !== false) {
+        if(isTunnel !== '00'){
+            if(putWall(gameState,isTunnel,0) !== false){
                 deplacement++;
-                console.log(putWall(gameState, isTunnel, 0));
-            } else {
+                console.log(putWall(gameState,isTunnel,0));
+            }else {
                 console.log("HASSOUL TUNNEL DEJA BLOQUE");
             }
         }
     }
     walls = gameState.playerAWalls.concat(gameState.playerBWalls);
-    pathFinding(positionBot, gameState.board);
-    validMoves(positionBot[0], positionBot[1]);
+    pathFinding(positionBot,gameState.board);
+    validMoves(positionBot[0],positionBot[1]);
 
 }
-
-function correction(rightMove) {
+function correction(rightMove){
     //TODO
 }
-
-function updateBoard() {
+function updateBoard(){
     //TODO
 }
-
-function pathFinding(posJoueur, board) {
+var dijkstraVisitedNode = [];
+function pathFinding(posJoueur,board){
     console.table(walls);
     var ligneFinale = new Array();
-    if (IAplay === 1) {
+    if(IAplay === 1){
         ligneFinale = board[8];
-    } else {
+    }else{
         ligneFinale = board[0];
 
     }
-    let x = [...board];
+    let x =  [...board];
     //  let result =  x.concat(board.reverse().slice(1,board.length));
     console.table(board);
 }
+
 
 
 function findTunnel(gameState) {
@@ -167,20 +176,6 @@ function sortTabLowerFirst(tab) {
     });
 }
 
-
-function findPlayerPosition(tab) {
-    for (let i = 0; i < tab.length; i++) {
-        for (let j = 0; j < tab[i].length; j++) {
-            if (tab[i][j] === 1) {
-                player1Pos = i + "" + j;
-            } else if (tab[i][j] === 2) {
-                player2Pos = i + "" + j;
-            }
-        }
-    }
-}
-
-
 function putWall(gameState, pos, orientation) {
     if (nbWalls > 0) {
         let posInInt = parseInt(pos);
@@ -197,16 +192,22 @@ function putWall(gameState, pos, orientation) {
                     return false;
                 }
             }
-
-            findPlayerPosition(gameState.board);
+            walls.push(new Array(pos,orientation));
             dijkstraVisitedNode = [];
-            var res1 = dijkstra("playerA", player1Position + 1, gameState.board);
-
+            console.log(walls);
+            var tab = hashMapVoisin(gameState.board,walls);
+            var res1 = 0;
+            if(positionOpponent !==null)
+                res1 = dijkstra1("playerA", positionOpponent, tab);
+            else{
+                res1 = 0;
+            }
             dijkstraVisitedNode = [];
-            var res2 = dijkstra("playerB", player2Position + 1, gameState.board);
+            var res2 = dijkstra1("playerB", positionBot, tab);
 
             var res = Math.max(res1, res2);
-
+            console.log(res1);
+            console.log(res2);
             if (res !== 0) {
                 console.log("je peux pas placer la sinon je bloque un joueur");
             } else {
@@ -218,28 +219,34 @@ function putWall(gameState, pos, orientation) {
     }
 }
 
-function dijkstra(player, cellule, tab) {
-    const lanePlayerAArray = ['11', '21', '31', '41', '51', '61', '71', '81', '91'];
-    const lanePlayerBArray = ['19', '29', '39', '49', '59', '69', '79', '89', '99'];
+function dijkstra1(player, cellule, tab) {
+
+    const lanePlayerAArray = ['00', '10', '20', '30', '40', '50', '60', '70', '80'];
+    const lanePlayerBArray = ['08', '18', '28', '38', '48', '58', '68', '78', '88'];
 
     if (player === 'playerA') {
         if (lanePlayerBArray.includes(cellule)) {
+            console.log("ok");
             return 0;
         }
     }
     if (player === 'playerB') {
         if (lanePlayerAArray.includes(cellule)) {
+
             return 0;
         }
     }
 
     if (dijkstraVisitedNode.includes(cellule)) {
+
         return 999;
     } else {
         var tmpTab = [];
         dijkstraVisitedNode.push(cellule);
-        for (var voisin in tab['' + cellule]) {
-            tmpTab.push(dijkstra(player, tab["" + cellule][voisin], tab));
+
+        for (var voisin in tab["" + cellule]) {
+
+            tmpTab.push(dijkstra1(player, tab["" + cellule][voisin], tab));
         }
         return Math.min.apply(null, tmpTab);
     }
@@ -262,10 +269,10 @@ function validMoves(positionI, positionJ) {
     {
         if (board[cellFoward[0]][cellFoward[1]] === 2) {
 
-            if (deplacementPossible(positionI, positionJ, cellFowardPlus1[0], cellFowardPlus1[1]))
+            if (deplacementPossible(positionI, positionJ, cellFowardPlus1[0], cellFowardPlus1[1],walls))
                 mouvement.push(cellFowardPlus1);
         } else {
-            if (deplacementPossible(positionI, positionJ, cellFoward[0], cellFoward[1]))
+            if (deplacementPossible(positionI, positionJ, cellFoward[0], cellFoward[1],walls))
                 mouvement.push(cellFoward);
         }
     }
@@ -273,10 +280,10 @@ function validMoves(positionI, positionJ) {
     {
         if (board[cellBackward[0]][cellBackward[1]] === 2) {
 
-            if (deplacementPossible(positionI, positionJ, cellBackwardPlus1[0], cellBackwardPlus1[1]))
+            if (deplacementPossible(positionI, positionJ, cellBackwardPlus1[0], cellBackwardPlus1[1],walls))
                 mouvement.push(cellBackwardPlus1);
         } else {
-            if (deplacementPossible(positionI, positionJ, cellBackward[0], cellBackward[1]))
+            if (deplacementPossible(positionI, positionJ, cellBackward[0], cellBackward[1],walls))
                 mouvement.push(cellBackward);
         }
     }
@@ -284,10 +291,10 @@ function validMoves(positionI, positionJ) {
     {
         if (board[cellLeft[0]][cellLeft[1]] === 2) {
 
-            if (deplacementPossible(positionI, positionJ, cellLeftPlus1[0], cellLeftPlus1[1]))
+            if (deplacementPossible(positionI, positionJ, cellLeftPlus1[0], cellLeftPlus1[1],walls))
                 mouvement.push(cellLeftPlus1);
         } else {
-            if (deplacementPossible(positionI, positionJ, cellLeft[0], cellLeft[1]))
+            if (deplacementPossible(positionI, positionJ, cellLeft[0], cellLeft[1],walls))
                 mouvement.push(cellLeft);
         }
     }
@@ -296,17 +303,20 @@ function validMoves(positionI, positionJ) {
 
         if (board[cellRight[0]][cellRight[1]] === 2) {
 
-            if (deplacementPossible(positionI, positionJ, cellRightPlus1[0], cellRightPlus1[1]))
+            if (deplacementPossible(positionI, positionJ, cellRightPlus1[0], cellRightPlus1[1],walls))
                 mouvement.push(cellRightPlus1);
         } else {
-            if (deplacementPossible(positionI, positionJ, cellRight[0], cellRight[1]))
+            if (deplacementPossible(positionI, positionJ, cellRight[0], cellRight[1],walls))
                 mouvement.push(cellRight);
         }
     }
     console.log(mouvement);
 }
 
-function deplacementPossible(positionI, positionJ, mouvementI, mouvementJ) {
+function deplacementPossible(positionI, positionJ, mouvementI, mouvementJ,walls) {
+    if(positionI <0 || positionJ<0 || mouvementJ <0 || mouvementI<0 ||
+        positionI >8 || positionJ>8 || mouvementJ >8 || mouvementI>8  )
+        return false;
 //vérifier que ya pas de mur entre les deux pos
     var deplacementI = positionI - mouvementI;
     var deplacementJ = positionJ - mouvementJ;
@@ -422,40 +432,28 @@ function deplacementPossible(positionI, positionJ, mouvementI, mouvementJ) {
     return true;
 
 }
+function hashMapVoisin(board,walls){
+    var tab ={};
+    for(var i = 0;i<board.length;i++){
 
-function opponentVisibilty(board){
-    const opponentPosition = [];
-    for (let j = 0; j < 17; j++) {
-        for (let k = 0; k < 17; k++) {
-            if (board[j][k] === 2) {
-                opponentPosition.push(j, k);
-                return opponentPosition;
+        for (var j = 0;j<board[i].length;j++){
+            var tmp = [];
+            if(deplacementPossible(i,j,(parseInt(i)+1),j,walls)){
+                tmp.push(""+(parseInt(i)+1) +j);
             }
-        }
-        if(opponentPosition.length === 0){
-            return null;
+            if(deplacementPossible(i,j,(parseInt(i)-1),j,walls)){
+                tmp.push(""+(parseInt(i)-1) +j);
+            }
+            if(deplacementPossible(i,j,i,(parseInt(j)+1),walls)){
+                tmp.push(""+i +(parseInt(j)+1));
+            }
+            if(deplacementPossible(i,j,i,(parseInt(j)-1),walls)){
+                tmp.push(""+i +(parseInt(j)-1));
+            }
+            tab["" + i+"" + j] = tmp;
         }
     }
-}
+    console.log(tab);
+    return tab;
 
-function PassOrBlock(board,walls){
-    let opponentPath = [];
-    let botPath = [];
-    botPath.push(pathFinding(positionBot,board,walls));
-    if(opponentVisibilty(board) !== null){
-        opponentPath.push(pathFinding(opponentVisibilty(board),board,walls));
-        if(opponentPath.length > botPath.length){
-            return blockOpponent();
-        }
-        else {
-            return pathFinding();
-        }
-    }
-    else{
-        return pathFinding();
-    }
-}
-
-function blockOpponent(){
-    //TODO
 }
