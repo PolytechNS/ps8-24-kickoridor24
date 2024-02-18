@@ -3,10 +3,12 @@ var nbWalls = 10;
 var nbWallsOpponent = 10;
 var deplacement = 0;
 var positionBot = 0;
-var walls ;
+var walls;
 var IAplay;
 var dijkstraVisitedNode = [];
 var positionOpponent = null;
+var ouverture = 1;
+
 class Move {
     constructor(action, value) {
         this.action = action;
@@ -15,10 +17,10 @@ class Move {
 }
 
 
-function chooseBestMove(pos){
-    console.log("bot : " +pos);
+function chooseBestMove(pos) {
+    console.log("bot : " + pos);
     var possibleMoves = getValidMoves(pos);
-    console.log("possible moves : " +possibleMoves);
+    console.log("possible moves : " + possibleMoves);
     //choisir dans possible move le plus petit chiffre
     let moveIndex = 0;
     for (let i = 0; i < possibleMoves.length; i++) {
@@ -26,124 +28,128 @@ function chooseBestMove(pos){
             moveIndex = i;
         }
     }
-    console.log("move : " +possibleMoves[moveIndex]);
+    console.log("move : " + possibleMoves[moveIndex]);
     movePlayer(pos);
     movePlayer(possibleMoves[moveIndex]);
     deplacement++;
     return possibleMoves[moveIndex];
 }
 
-function chooseBestWall(pos){
-    if(nbWalls === 10) {
+function chooseBestWall(pos) {
+    if (nbWalls === 10) {
         currentWall = pos + 18;
         handleWall(currentWall);
-    }
-    else if(nbWalls % 2 === 1){
+    } else if (nbWalls % 2 === 1) {
         currentWall = currentWall + 2;
         handleWall(currentWall);
-    }
-    else{
+    } else {
         currentWall = currentWall - 2;
         handleWall(currentWall);
     }
 }
 
-function chooseAction(pos){
-    if(deplacement < 2 || nbWalls === 0){
+function chooseAction(pos) {
+    if (deplacement < 2 || nbWalls === 0) {
         chooseBestMove(pos);
-    }
-    else{
+    } else {
         chooseBestWall(pos);
     }
 }
 
-function setup(AIplay){
-    console.log("le bot est le joueur numero "+ AIplay );
+function setup(AIplay) {
+    console.log("le bot est le joueur numero " + AIplay);
     IAplay = AIplay;
     deplacement = 0;
     var positionBot = '00';
-    if(AIplay === 1){
-        positionBot = '15';
-    }else if(AIplay === 2){
-        positionBot = '95';
+    if (AIplay === 1) {
+        positionBot = '51';
+    } else if (AIplay === 2) {
+        positionBot = '59';
     }
 
     return new Promise((resolve, reject) => {
         resolve(positionBot);
     });
 }
-function nextMove(gameState){
+
+function nextMove(gameState) {
     //init des variables
 
-    var opponentfound =false;
+    var opponentfound = false;
     for (let i = 0; i < gameState.board.length; i++) {
         for (let j = 0; j < gameState.board[i].length; j++) {
-            if(gameState.board[i][j] === 1){
+            if (gameState.board[i][j] === 1) {
                 positionBot = i;
-                positionBot += ""+j;
+                positionBot += "" + j;
             }
-            if(gameState.board[i][j] === 2){
+            if (gameState.board[i][j] === 2) {
                 positionOpponent = i;
-                positionOpponent += ""+j;
+                positionOpponent += "" + j;
                 opponentfound = true;
             }
         }
     }
     nbWalls = 10 - gameState.ownWalls.length;
-    nbWallsOpponent = 10 -gameState.opponentWalls.length;
-    if(!opponentfound){
+    nbWallsOpponent = 10 - gameState.opponentWalls.length;
+    if (!opponentfound) {
         positionOpponent = null;
     }
 
-
-//bloquer tunnel
-    if(deplacement <= 4){
-        var isTunnel = findTunnel(gameState);
-        if(isTunnel !== '00'){
-            if(putWall(gameState,isTunnel,0) !== false){
-                deplacement++;
-                console.log(putWall(gameState,isTunnel,0));
-                return new Promise((resolve, reject) => {
-                    resolve(putWall(gameState,isTunnel,0));
-                });
-            }else {
-                console.log("HASSOUL TUNNEL DEJA BLOQUE");
+    if (ouverture <= 5) {
+        //bloquer tunnel
+        if (deplacement <= 4) {
+            var isTunnel = findTunnel(gameState);
+            if (isTunnel !== '00') {
+                if (putWall(gameState, isTunnel, 0) !== false) {
+                    deplacement++;
+                    console.log(putWall(gameState, isTunnel, 0));
+                    return new Promise((resolve, reject) => {
+                        resolve(putWall(gameState, isTunnel, 0));
+                    });
+                } else {
+                    console.log("HASSOUL TUNNEL DEJA BLOQUE");
+                }
             }
         }
-    }
-    //bouger
-    walls = gameState.opponentWalls.concat(gameState.ownWalls);
-    var cheminLePlusCoutBot = pathFinding(positionBot,gameState.board, "bot");
+        return new Promise((resolve, reject) => {
+            resolve(ouvertureProcess(gameState));
+        });
+    } else {
+        //bouger
+        walls = gameState.opponentWalls.concat(gameState.ownWalls);
+        var cheminLePlusCoutBot = pathFinding(positionBot, gameState.board, "bot");
 
-    if(cheminLePlusCoutBot === "idle" && nbWalls ===0){
-        console.log('idle');
-        return new Promise((resolve, reject) => {
-            resolve(new Move('idle'));
-        });
-    }else if(cheminLePlusCoutBot === "idle"){
-        //obliger de poser un mur
-        //TODO
-        return new Promise((resolve, reject) => {
-           resolve(new Move('wall',""));
-        });
-    }
-    else{
-        /*console.log((parseInt(cheminLePlusCoutBot[0])+11));
-        return new Move('move',(parseInt(cheminLePlusCoutBot[0])+11));*/
-        PassOrBlock(gameState, gameState.board,walls);
-        console.log(PassOrBlock(gameState, gameState.board,walls));
-        console.log((parseInt(cheminLePlusCoutBot[0])+11));
-        return new Promise((resolve, reject) => {
-            resolve(new Move('move',(parseInt(cheminLePlusCoutBot[0])+11)));
-        });
+        if (cheminLePlusCoutBot === "idle" && nbWalls === 0) {
+            console.log('idle');
+            return new Promise((resolve, reject) => {
+                resolve(new Move('idle'));
+            });
+        } else if (cheminLePlusCoutBot === "idle") {
+            //obliger de poser un mur
+            //TODO
+            return new Promise((resolve, reject) => {
+                resolve(new Move('wall', ""));
+            });
+        } else {
+            /*console.log((parseInt(cheminLePlusCoutBot[0])+11));
+            return new Move('move',(parseInt(cheminLePlusCoutBot[0])+11));*/
+            PassOrBlock(gameState, gameState.board, walls);
+            console.log(PassOrBlock(gameState, gameState.board, walls));
+            console.log((parseInt(cheminLePlusCoutBot[0]) + 11));
+            return new Promise((resolve, reject) => {
+                resolve(new Move('move', (parseInt(cheminLePlusCoutBot[0]) + 11)));
+            });
+        }
     }
 }
-function correction(rightMove){
+
+function correction(rightMove) {
     new Promise((resolve, reject) => {
         resolve(true);
     });
 }
-function updateBoard(){
+
+function updateBoard() {
     new Promise((resolve, reject) => {
         resolve(true);
     });
@@ -152,39 +158,38 @@ function updateBoard(){
 
 var dijkstraVisitedNode = [];
 
-function pathFinding(posJoueur,board,player){
+function pathFinding(posJoueur, board, player) {
 
     var ligneFinale = new Array();
-    if(IAplay === 1){
+    if (IAplay === 1) {
         ligneFinale = board[8];
-    }else{
+    } else {
         ligneFinale = board[0];
 
     }
-    let x =  [...board];
+    let x = [...board];
     //  let result =  x.concat(board.reverse().slice(1,board.length));
     console.table(board);
-    if(player=="bot") {
+    if (player == "bot") {
         var possiblesMoves = validMoves(positionBot[0], positionBot[1]);
-    }
-    else{
+    } else {
         var possiblesMoves = validMoves(positionOpponent[0], positionOpponent[1]);
     }
     console.log(possiblesMoves);
-    var tab = hashMapVoisin(board,walls);
+    var tab = hashMapVoisin(board, walls);
     var tabRes = [];
-    for(var i = 0;i<possiblesMoves.length;i++){
+    for (var i = 0; i < possiblesMoves.length; i++) {
         dijkstraVisitedNode = [];
-        if(player === "bot"){
-            tabRes.push(dijkstraNode(IAplay== 1 ? "playerA" : "playerB",possiblesMoves[i],tab));
-        }else{
-            tabRes.push(dijkstraNode(IAplay== 1 ? "playerB" : "playerA",possiblesMoves[i],tab));
+        if (player === "bot") {
+            tabRes.push(dijkstraNode(IAplay == 1 ? "playerA" : "playerB", possiblesMoves[i], tab));
+        } else {
+            tabRes.push(dijkstraNode(IAplay == 1 ? "playerB" : "playerA", possiblesMoves[i], tab));
         }
 
     }
 
-    if(tabRes.length === 1){
-        if(player === "bot") {
+    if (tabRes.length === 1) {
+        if (player === "bot") {
             if (!checkBonDeplacement(tabRes[0], tab)) {
 
                 return "idle"; //mouvement pas bon
@@ -193,59 +198,56 @@ function pathFinding(posJoueur,board,player){
     }
     var indice = 999;
     var longueur = 999;
-    for(var i =0;i<tabRes.length;i++){
-        if(tabRes[i].length<longueur){
+    for (var i = 0; i < tabRes.length; i++) {
+        if (tabRes[i].length < longueur) {
             longueur = tabRes[i].length;
             indice = i;
         }
     }
-    if(indice ===999){
+    if (indice === 999) {
         return "idle"; //impossible de bouger
     }
     return tabRes[indice];
 }
 
 
-
-function findTunnel(gameState){
+function findTunnel(gameState) {
     var walls = gameState.ownWalls.concat(gameState.opponentWalls);
-    if(walls.length >= 2){
-        if(IAplay === 1){
+    if (walls.length >= 2) {
+        if (IAplay === 1) {
             const sortedPlayerBWalls = sortTabBiggerFirst(walls);
-            for(let i = 0; i < sortedPlayerBWalls.length; i++){
-                if(sortedPlayerBWalls[i+1] !== undefined){
-                    if((sortedPlayerBWalls[i][0] === '89' && sortedPlayerBWalls[i+1][0] === '87') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i+1][1] === 1)){
-                        if(sortedPlayerBWalls[i+2] !== undefined && (sortedPlayerBWalls[i+2][0] === '85' && sortedPlayerBWalls[i+2][1] === 1)) return '83';
+            for (let i = 0; i < sortedPlayerBWalls.length; i++) {
+                if (sortedPlayerBWalls[i + 1] !== undefined) {
+                    if ((sortedPlayerBWalls[i][0] === '89' && sortedPlayerBWalls[i + 1][0] === '87') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i + 1][1] === 1)) {
+                        if (sortedPlayerBWalls[i + 2] !== undefined && (sortedPlayerBWalls[i + 2][0] === '85' && sortedPlayerBWalls[i + 2][1] === 1)) return '83';
                         return '85';
-                    }else if((sortedPlayerBWalls[i][0] === '79' && sortedPlayerBWalls[i+1][0] === '77') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i+1][1] === 1)){
-                        if(sortedPlayerBWalls[i+2] !== undefined && (sortedPlayerBWalls[i+2][0] === '75' && sortedPlayerBWalls[i+2][1] === 1)) return '83';
+                    } else if ((sortedPlayerBWalls[i][0] === '79' && sortedPlayerBWalls[i + 1][0] === '77') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i + 1][1] === 1)) {
+                        if (sortedPlayerBWalls[i + 2] !== undefined && (sortedPlayerBWalls[i + 2][0] === '75' && sortedPlayerBWalls[i + 2][1] === 1)) return '83';
                         return '85';
-                    }else if((sortedPlayerBWalls[i][0] === '29' && sortedPlayerBWalls[i+1][0] === '27') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i+1][1] === 1)){
-                        if(sortedPlayerBWalls[i+2] !== undefined && (sortedPlayerBWalls[i+2][0] === '25' && sortedPlayerBWalls[i+2][1] === 1)) return '13';
+                    } else if ((sortedPlayerBWalls[i][0] === '29' && sortedPlayerBWalls[i + 1][0] === '27') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i + 1][1] === 1)) {
+                        if (sortedPlayerBWalls[i + 2] !== undefined && (sortedPlayerBWalls[i + 2][0] === '25' && sortedPlayerBWalls[i + 2][1] === 1)) return '13';
                         return '15';
-                    }
-                    else if((sortedPlayerBWalls[i][0] === '19' && sortedPlayerBWalls[i+1][0] === '17') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i+1][1] === 1)){
-                        if(sortedPlayerBWalls[i+2] !== undefined && (sortedPlayerBWalls[i+2][0] === '15' && sortedPlayerBWalls[i+2][1] === 1)) return '13';
+                    } else if ((sortedPlayerBWalls[i][0] === '19' && sortedPlayerBWalls[i + 1][0] === '17') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i + 1][1] === 1)) {
+                        if (sortedPlayerBWalls[i + 2] !== undefined && (sortedPlayerBWalls[i + 2][0] === '15' && sortedPlayerBWalls[i + 2][1] === 1)) return '13';
                         return '15';
                     }
                 }
             }
-        }else if(IAplay === 2){
+        } else if (IAplay === 2) {
             const sortedPlayerAWalls = sortTabLowerFirst(walls);
-            for(let j = 0; j < sortedPlayerAWalls.length; j++){
-                if(sortedPlayerAWalls[j+1] !== undefined){
-                    if((sortedPlayerAWalls[j][0] === '12' && sortedPlayerAWalls[j+1][0] === '14') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j+1][1] === 1)){
-                        if(sortedPlayerAWalls[j+2] !== undefined && (sortedPlayerAWalls[j+2][0] === '16' && sortedPlayerAWalls[j+2][1] === 1)) return '18';
+            for (let j = 0; j < sortedPlayerAWalls.length; j++) {
+                if (sortedPlayerAWalls[j + 1] !== undefined) {
+                    if ((sortedPlayerAWalls[j][0] === '12' && sortedPlayerAWalls[j + 1][0] === '14') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j + 1][1] === 1)) {
+                        if (sortedPlayerAWalls[j + 2] !== undefined && (sortedPlayerAWalls[j + 2][0] === '16' && sortedPlayerAWalls[j + 2][1] === 1)) return '18';
                         return '16';
-                    }else if((sortedPlayerAWalls[j][0] === '22' && sortedPlayerAWalls[j+1][0] === '24') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j+1][1] === 1)){
-                        if(sortedPlayerAWalls[j+2] !== undefined && (sortedPlayerAWalls[j+2][0] === '26' && sortedPlayerAWalls[j+2][1] === 1)) return '18';
+                    } else if ((sortedPlayerAWalls[j][0] === '22' && sortedPlayerAWalls[j + 1][0] === '24') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j + 1][1] === 1)) {
+                        if (sortedPlayerAWalls[j + 2] !== undefined && (sortedPlayerAWalls[j + 2][0] === '26' && sortedPlayerAWalls[j + 2][1] === 1)) return '18';
                         return '16';
-                    }else if((sortedPlayerAWalls[j][0] === '72' && sortedPlayerAWalls[j+1][0] === '74') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j+1][1] === 1)){
-                        if(sortedPlayerAWalls[j+2] !== undefined && (sortedPlayerAWalls[j+2][0] === '76' && sortedPlayerAWalls[j+2][1] === 1)) return '88';
+                    } else if ((sortedPlayerAWalls[j][0] === '72' && sortedPlayerAWalls[j + 1][0] === '74') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j + 1][1] === 1)) {
+                        if (sortedPlayerAWalls[j + 2] !== undefined && (sortedPlayerAWalls[j + 2][0] === '76' && sortedPlayerAWalls[j + 2][1] === 1)) return '88';
                         return '86';
-                    }
-                    else if((sortedPlayerAWalls[j][0] === '82' && sortedPlayerAWalls[j+1][0] === '84') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j+1][1] === 1)){
-                        if(sortedPlayerAWalls[j+2] !== undefined && (sortedPlayerAWalls[j+2][0] === '86' && sortedPlayerAWalls[j+2][1] === 1)) return '88';
+                    } else if ((sortedPlayerAWalls[j][0] === '82' && sortedPlayerAWalls[j + 1][0] === '84') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j + 1][1] === 1)) {
+                        if (sortedPlayerAWalls[j + 2] !== undefined && (sortedPlayerAWalls[j + 2][0] === '86' && sortedPlayerAWalls[j + 2][1] === 1)) return '88';
                         return '86';
                     }
                 }
@@ -283,29 +285,30 @@ function putWall(gameState, pos, orientation) {
                     return false;
                 }
             }
-            walls.push(new Array(pos,orientation));
-            dijkstraVisitedNode = [];
-
-            var tab = hashMapVoisin(gameState.board,walls);
-            var res1 = 0;
-            if(positionOpponent !==null)
-                res1 = dijkstra1(IAplay== 2 ? "playerA" : "playerB", positionOpponent, tab);
-            else{
-                res1 = 0;
-            }
-            dijkstraVisitedNode = [];
-            var res2 = dijkstra1(IAplay== 1 ? "playerA" : "playerB", positionBot, tab);
-
-            var res = Math.max(res1, res2);
-
-            if (res !== 0) {
-                console.log("je peux pas placer la sinon je bloque un joueur");
-            } else {
-                nbWalls--;
-                return new Move('wall', [pos, orientation]);
-            }
-
         }
+        walls.push(new Array(pos, orientation));
+        dijkstraVisitedNode = [];
+
+        var tab = hashMapVoisin(gameState.board, walls);
+        var res1 = 0;
+        if (positionOpponent !== null)
+            res1 = dijkstra1(IAplay == 2 ? "playerA" : "playerB", positionOpponent, tab);
+        else {
+            res1 = 0;
+        }
+        dijkstraVisitedNode = [];
+        var res2 = dijkstra1(IAplay == 1 ? "playerA" : "playerB", positionBot, tab);
+
+        var res = Math.max(res1, res2);
+
+        if (res !== 0) {
+            console.log("je peux pas placer la sinon je bloque un joueur");
+        } else {
+            nbWalls--;
+            return new Move('wall', [pos, orientation]);
+        }
+
+
     }
 }
 
@@ -359,10 +362,10 @@ function validMoves(positionI, positionJ) {
     {
         if (board[cellFoward[0]][cellFoward[1]] === 2) {
 
-            if (deplacementPossible(positionI, positionJ, cellFowardPlus1[0], cellFowardPlus1[1],walls))
+            if (deplacementPossible(positionI, positionJ, cellFowardPlus1[0], cellFowardPlus1[1], walls))
                 mouvement.push(cellFowardPlus1);
         } else {
-            if (deplacementPossible(positionI, positionJ, cellFoward[0], cellFoward[1],walls))
+            if (deplacementPossible(positionI, positionJ, cellFoward[0], cellFoward[1], walls))
                 mouvement.push(cellFoward);
         }
     }
@@ -370,10 +373,10 @@ function validMoves(positionI, positionJ) {
     {
         if (board[cellBackward[0]][cellBackward[1]] === 2) {
 
-            if (deplacementPossible(positionI, positionJ, cellBackwardPlus1[0], cellBackwardPlus1[1],walls))
+            if (deplacementPossible(positionI, positionJ, cellBackwardPlus1[0], cellBackwardPlus1[1], walls))
                 mouvement.push(cellBackwardPlus1);
         } else {
-            if (deplacementPossible(positionI, positionJ, cellBackward[0], cellBackward[1],walls))
+            if (deplacementPossible(positionI, positionJ, cellBackward[0], cellBackward[1], walls))
                 mouvement.push(cellBackward);
         }
     }
@@ -381,10 +384,10 @@ function validMoves(positionI, positionJ) {
     {
         if (board[cellLeft[0]][cellLeft[1]] === 2) {
 
-            if (deplacementPossible(positionI, positionJ, cellLeftPlus1[0], cellLeftPlus1[1],walls))
+            if (deplacementPossible(positionI, positionJ, cellLeftPlus1[0], cellLeftPlus1[1], walls))
                 mouvement.push(cellLeftPlus1);
         } else {
-            if (deplacementPossible(positionI, positionJ, cellLeft[0], cellLeft[1],walls))
+            if (deplacementPossible(positionI, positionJ, cellLeft[0], cellLeft[1], walls))
                 mouvement.push(cellLeft);
         }
     }
@@ -393,10 +396,10 @@ function validMoves(positionI, positionJ) {
 
         if (board[cellRight[0]][cellRight[1]] === 2) {
 
-            if (deplacementPossible(positionI, positionJ, cellRightPlus1[0], cellRightPlus1[1],walls))
+            if (deplacementPossible(positionI, positionJ, cellRightPlus1[0], cellRightPlus1[1], walls))
                 mouvement.push(cellRightPlus1);
         } else {
-            if (deplacementPossible(positionI, positionJ, cellRight[0], cellRight[1],walls))
+            if (deplacementPossible(positionI, positionJ, cellRight[0], cellRight[1], walls))
                 mouvement.push(cellRight);
         }
     }
@@ -404,9 +407,9 @@ function validMoves(positionI, positionJ) {
     return mouvement;
 }
 
-function deplacementPossible(positionI, positionJ, mouvementI, mouvementJ,walls) {
-    if(positionI <0 || positionJ<0 || mouvementJ <0 || mouvementI<0 ||
-        positionI >8 || positionJ>8 || mouvementJ >8 || mouvementI>8  )
+function deplacementPossible(positionI, positionJ, mouvementI, mouvementJ, walls) {
+    if (positionI < 0 || positionJ < 0 || mouvementJ < 0 || mouvementI < 0 ||
+        positionI > 8 || positionJ > 8 || mouvementJ > 8 || mouvementI > 8)
         return false;
 //vérifier que ya pas de mur entre les deux pos
     var deplacementI = positionI - mouvementI;
@@ -523,25 +526,26 @@ function deplacementPossible(positionI, positionJ, mouvementI, mouvementJ,walls)
     return true;
 
 }
-function hashMapVoisin(board,walls){
-    var tab ={};
-    for(var i = 0;i<board.length;i++){
 
-        for (var j = 0;j<board[i].length;j++){
+function hashMapVoisin(board, walls) {
+    var tab = {};
+    for (var i = 0; i < board.length; i++) {
+
+        for (var j = 0; j < board[i].length; j++) {
             var tmp = [];
-            if(deplacementPossible(i,j,(parseInt(i)+1),j,walls)){
-                tmp.push(""+(parseInt(i)+1) +j);
+            if (deplacementPossible(i, j, (parseInt(i) + 1), j, walls)) {
+                tmp.push("" + (parseInt(i) + 1) + j);
             }
-            if(deplacementPossible(i,j,(parseInt(i)-1),j,walls)){
-                tmp.push(""+(parseInt(i)-1) +j);
+            if (deplacementPossible(i, j, (parseInt(i) - 1), j, walls)) {
+                tmp.push("" + (parseInt(i) - 1) + j);
             }
-            if(deplacementPossible(i,j,i,(parseInt(j)+1),walls)){
-                tmp.push(""+i +(parseInt(j)+1));
+            if (deplacementPossible(i, j, i, (parseInt(j) + 1), walls)) {
+                tmp.push("" + i + (parseInt(j) + 1));
             }
-            if(deplacementPossible(i,j,i,(parseInt(j)-1),walls)){
-                tmp.push(""+i +(parseInt(j)-1));
+            if (deplacementPossible(i, j, i, (parseInt(j) - 1), walls)) {
+                tmp.push("" + i + (parseInt(j) - 1));
             }
-            tab["" + i+"" + j] = tmp;
+            tab["" + i + "" + j] = tmp;
         }
     }
 
@@ -585,15 +589,15 @@ function dijkstraNode(player, start, graph) {
     return null; // No path found
 }
 
-function checkBonDeplacement(chemin,tab){
+function checkBonDeplacement(chemin, tab) {
 
-    if(chemin.length > dijkstraNode(IAplay== 1 ? "playerA" : "playerB",positionBot,tab).length){
+    if (chemin.length > dijkstraNode(IAplay == 1 ? "playerA" : "playerB", positionBot, tab).length) {
         return false;
     }
     return true;
 }
 
-function opponentVisibilty(board){
+function opponentVisibilty(board) {
     const opponentPosition = [];
     for (let j = 0; j < 17; j++) {
         for (let k = 0; k < 17; k++) {
@@ -602,84 +606,76 @@ function opponentVisibilty(board){
                 return opponentPosition;
             }
         }
-        if(opponentPosition.length === 0){
+        if (opponentPosition.length === 0) {
             return null;
         }
     }
 }
 
-function PassOrBlock(gameState, board,walls){
+function PassOrBlock(gameState, board, walls) {
     let opponentPath = [];
     let botPath = [];
-    botPath = pathFinding(positionBot,board, "bot");
-    console.log("botPath : " +botPath);
-    if(positionOpponent !== null){
-        console.log("opponentVisibility : " +positionOpponent);
-        opponentPath = pathFinding(positionOpponent,board, "opponent");
-        console.log("opponentPath : " +opponentPath);
-        if(opponentPath.length < botPath.length){
+    botPath = pathFinding(positionBot, board, "bot");
+    console.log("botPath : " + botPath);
+    if (positionOpponent !== null) {
+        console.log("opponentVisibility : " + positionOpponent);
+        opponentPath = pathFinding(positionOpponent, board, "opponent");
+        console.log("opponentPath : " + opponentPath);
+        if (opponentPath.length < botPath.length) {
             return blockOpponent(gameState, opponentPath, botPath);
-        }
-        else {
+        } else {
             return new Move('move', botPath[0]);
         }
-    }
-    else{
+    } else {
         return new Move('move', botPath[0]);
     }
 }
 
-function blockOpponent(gameState, opponentPath, botPath){
+function blockOpponent(gameState, opponentPath, botPath) {
     //ralonger le chemin de l'adversaire pour qu'il soit plus long que celui du bot en ajoutant des murs si possible devant lui
-   console.log("blockOpponent");
-       //prochain move vertical ou horizontal
-        var posWall;
-        var orientation;
-        var nextMoveI = opponentPath[0][0] - positionOpponent[0];
-        var nextMoveJ = opponentPath[0][1] - positionOpponent[1];
-        console.log("opponenetPath[0][0] : " +opponentPath[0][0]);
-        console.log("positionOpponent[0][0] : " +positionOpponent[0]);
-        console.log("opponenetPath[0][1] : " +opponentPath[0][1]);
-        console.log("positionOpponent[0][1] : " +positionOpponent[1]);
-        console.log("nextMoveI : " +nextMoveI);
-        console.log("nextMoveJ : " +nextMoveJ);
-        if(nextMoveI === 1){
-            orientation = 1;
-            posWall = (parseInt(positionOpponent[0]) + 1) + "" + positionOpponent[1];
+    console.log("blockOpponent");
+    //prochain move vertical ou horizontal
+    var posWall;
+    var orientation;
+    var nextMoveI = opponentPath[0][0] - positionOpponent[0];
+    var nextMoveJ = opponentPath[0][1] - positionOpponent[1];
+    console.log("opponenetPath[0][0] : " + opponentPath[0][0]);
+    console.log("positionOpponent[0][0] : " + positionOpponent[0]);
+    console.log("opponenetPath[0][1] : " + opponentPath[0][1]);
+    console.log("positionOpponent[0][1] : " + positionOpponent[1]);
+    console.log("nextMoveI : " + nextMoveI);
+    console.log("nextMoveJ : " + nextMoveJ);
+    if (nextMoveI === 1) {
+        orientation = 1;
+        posWall = (parseInt(positionOpponent[0]) + 1) + "" + positionOpponent[1];
+    } else if (nextMoveI === -1) {
+        orientation = 1;
+        posWall = (parseInt(positionOpponent[0]) - 1) + "" + positionOpponent[1];
+    } else {
+        if (nextMoveJ === -1) {
+            orientation = 0;
+            posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) - 1);
+        } else if (nextMoveJ === 1) {
+            console.log("positionOpponent[1] : " + positionOpponent[1]);
+            console.log("positionOpponent[0] : " + positionOpponent[0]);
+            orientation = 0;
+            posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) + 1);
+            console.log("posWall : " + posWall);
+        } else {
+            posWall = null;
+            console.log("prochain move pas possible");
         }
-        else if(nextMoveI === -1){
-            orientation = 1;
-            posWall = (parseInt(positionOpponent[0]) - 1) + "" + positionOpponent[1];
+    }
+    if (posWall !== null) {
+        if (putWall(gameState, (parseInt(posWall) + 11).toString(), orientation) !== false) {
+            console.log(putWall(gameState, parseInt(posWall) + 11, orientation));
+            return putWall(gameState, (parseInt(posWall) + 11).toString(), orientation);
+        } else {
+            return false;
         }
-        else {
-            if(nextMoveJ === -1){
-                orientation = 0;
-                posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) - 1);
-            }
-            else if(nextMoveJ === 1){
-                console.log("positionOpponent[1] : " +positionOpponent[1]);
-                console.log("positionOpponent[0] : " +positionOpponent[0]);
-                orientation = 0;
-                posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) + 1);
-                console.log("posWall : " +posWall);
-            }
-            else{
-                posWall = null;
-                console.log("prochain move pas possible");
-            }
-        }
-        if(posWall !== null){
-            if(putWall(gameState, (parseInt(posWall)+11).toString(), orientation) !== false){
-                console.log(putWall(gameState, parseInt(posWall)+11, orientation));
-                return putWall(gameState, (parseInt(posWall)+11).toString(), orientation);
-            }
-            else{
-                return false;
-            }
-        }
-        else{
-            return new Move('move', botPath[0]);
-        }
+    } else {
+        return new Move('move', botPath[0]);
+    }
 }
 
 function VerifputWall(gameState, pos, orientation) {
@@ -699,18 +695,18 @@ function VerifputWall(gameState, pos, orientation) {
                     return false;
                 }
             }
-            walls.push(new Array(pos,orientation));
+            walls.push(new Array(pos, orientation));
             dijkstraVisitedNode = [];
 
-            var tab = hashMapVoisin(gameState.board,walls);
+            var tab = hashMapVoisin(gameState.board, walls);
             var res1 = 0;
-            if(positionOpponent !==null)
-                res1 = dijkstra1(IAplay== 2 ? "playerA" : "playerB", positionOpponent, tab);
-            else{
+            if (positionOpponent !== null)
+                res1 = dijkstra1(IAplay == 2 ? "playerA" : "playerB", positionOpponent, tab);
+            else {
                 res1 = 0;
             }
             dijkstraVisitedNode = [];
-            var res2 = dijkstra1(IAplay== 1 ? "playerA" : "playerB", positionBot, tab);
+            var res2 = dijkstra1(IAplay == 1 ? "playerA" : "playerB", positionBot, tab);
 
             var res = Math.max(res1, res2);
 
@@ -723,4 +719,64 @@ function VerifputWall(gameState, pos, orientation) {
 
         }
     }
+}
+
+function ouvertureProcess(gameState) {
+    walls = gameState.opponentWalls.concat(gameState.ownWalls);
+    var posI = parseInt(positionBot[0]) + 1;
+    var posJ = parseInt(positionBot[1]) + 1;
+    var posBotFixed = parseInt(posI + "" + posJ);
+
+    if(IAplay === 1){
+        if (ouverture === 1) {
+            if (deplacementPossible(posBotFixed[0], posBotFixed[1], posBotFixed[0], posBotFixed[1] + 1, walls)) {
+                ouverture++;
+                return new Move('move', (posBotFixed + 1).toString());
+            }
+        } else if (ouverture === 2) {
+            if (deplacementPossible(posBotFixed[0], posBotFixed[1], posBotFixed[0], posBotFixed[1] + 1, walls)) {
+                ouverture++;
+                return new Move('move', (posBotFixed + 1).toString());
+            }
+        } else if (ouverture === 3) {
+            if (putWall(gameState, (posBotFixed - 10).toString(), 0) !== false) {
+                ouverture++;
+                return putWall(gameState, (posBotFixed - 10).toString(), 1);
+            }
+        }else if (ouverture === 4) {
+            if (putWall(gameState, (posBotFixed + 10).toString(), 0) !== false) {
+                ouverture++;
+                return putWall(gameState, (posBotFixed + 10).toString(), 1);
+            }
+        }else if(ouverture === 5){
+            if (putWall(gameState, (posBotFixed + 30).toString(), 0) !== false) {
+                ouverture++;
+                return putWall(gameState, (posBotFixed - 30).toString(), 1);
+            }
+        }
+    }
+    else if (IAplay === 2) {
+        if (ouverture === 1) {
+            if (deplacementPossible(posBotFixed[0], posBotFixed[1], posBotFixed[0], posBotFixed[1] - 1, walls)) {
+                ouverture++;
+                return new Move('move', (posBotFixed - 1).toString());
+            }
+        } else if (ouverture === 2) {
+            if (deplacementPossible(posBotFixed[0], posBotFixed[1], posBotFixed[0], posBotFixed[1] - 1, walls)) {
+                ouverture++;
+                return new Move('move', (posBotFixed - 1).toString());
+            }
+        } else if (ouverture === 3) {
+            if (putWall(gameState, (posBotFixed + 2).toString(), 1) !== false) {
+                ouverture++;
+                return putWall(gameState, (posBotFixed + 2).toString(), 1);
+            }
+        }else if (ouverture === 4) {
+            if (putWall(gameState, (posBotFixed).toString(), 1) !== false) {
+                ouverture++;
+                 return putWall(gameState, (posBotFixed).toString(), 1);
+            }
+        }
+    }
+
 }
