@@ -17,9 +17,9 @@ class gameBDD {
 }
 
 class gameState{
-    constructor(playerAWalls, playerBWalls, board) {
-        this.playerAWalls = playerAWalls;
-        this.playerBWalls = playerBWalls;
+    constructor(ownWalls, opponentWalls, board) {
+        this.ownWalls = ownWalls;
+        this.opponentWalls = opponentWalls;
         this.board = board;
     }
 }
@@ -832,7 +832,16 @@ function changeActivePlayer() {
              return movePlyerFirstTurn(res);
         }else {
             convertBoard();
-            return nextMove(gameState1);
+            if(activePlayer === "playerB"){
+                gameState1 = new gameState(playerBWalls,playerAWalls,board);
+            }
+            else{
+                gameState1 = new gameState(playerAWalls,playerBWalls,board);
+            }
+            var time = Date.now();
+            var nMove = nextMove(gameState1);
+            console.log(Date.now()- time);
+            return nMove;
         }
 
     }

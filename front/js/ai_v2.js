@@ -1,5 +1,6 @@
 var currentWall;
 var nbWalls = 10;
+var nbWallsOpponent = 10;
 var deplacement = 0;
 var positionBot = 0;
 var walls ;
@@ -65,7 +66,8 @@ function setup(AIplay){
     return player2Position;
 }
 function nextMove(gameState){
-    //TODO
+    //init des variables
+
     var opponentfound =false;
     for (let i = 0; i < gameState.board.length; i++) {
         for (let j = 0; j < gameState.board[i].length; j++) {
@@ -80,27 +82,42 @@ function nextMove(gameState){
             }
         }
     }
-
+    nbWalls = 10 - gameState.ownWalls.length;
+    nbWallsOpponent = 10 -gameState.opponentWalls.length;
     if(!opponentfound){
         positionOpponent = null;
     }
 
 
-
+//bloquer tunnel
     if(deplacement <= 4){
         var isTunnel = findTunnel(gameState);
         if(isTunnel !== '00'){
             if(putWall(gameState,isTunnel,0) !== false){
                 deplacement++;
                 console.log(putWall(gameState,isTunnel,0));
+                return putWall(gameState,isTunnel,0);
             }else {
                 console.log("HASSOUL TUNNEL DEJA BLOQUE");
             }
         }
     }
-    walls = gameState.playerAWalls.concat(gameState.playerBWalls);
-    pathFinding(positionBot,gameState.board);
-    validMoves(positionBot[0],positionBot[1]);
+    //bouger
+    walls = gameState.opponentWalls.concat(gameState.ownWalls);
+    var cheminLePlusCoutBot = pathFinding(positionBot,gameState.board);
+
+    if(cheminLePlusCoutBot === "idle" && nbWalls ===0){
+        console.log('idle');
+        return new Move('idle');
+    }else if(cheminLePlusCoutBot === "idle"){
+        //obliger de poser un mur
+        //TODO
+        return new Move('wall',"");
+    }
+    else{
+        console.log((parseInt(cheminLePlusCoutBot[0])+11));
+        return new Move('move',(parseInt(cheminLePlusCoutBot[0])+11));
+    }
 
 }
 function correction(rightMove){
@@ -111,7 +128,7 @@ function updateBoard(){
 }
 var dijkstraVisitedNode = [];
 function pathFinding(posJoueur,board){
-    console.table(walls);
+
     var ligneFinale = new Array();
     if(IAplay === 1){
         ligneFinale = board[8];
@@ -122,12 +139,41 @@ function pathFinding(posJoueur,board){
     let x =  [...board];
     //  let result =  x.concat(board.reverse().slice(1,board.length));
     console.table(board);
+   var possiblesMoves = validMoves(positionBot[0],positionBot[1]);
+   console.log(possiblesMoves);
+   var tab = hashMapVoisin(board,walls);
+   var tabRes = [];
+   for(var i = 0;i<possiblesMoves.length;i++){
+       dijkstraVisitedNode = [];
+       tabRes.push(dijkstraNode(IAplay== 1 ? "playerA" : "playerB",possiblesMoves[i],tab));
+   }
+
+   if(tabRes.length === 1){
+
+       if(!checkBonDeplacement(tabRes[0],tab)){
+
+           return "idle"; //mouvement pas bon
+       }
+
+   }
+   var indice = 999;
+   var longueur = 999;
+  for(var i =0;i<tabRes.length;i++){
+    if(tabRes[i].length<longueur){
+        longueur = tabRes[i].length;
+        indice = i;
+    }
+  }
+  if(indice ===999){
+      return "idle"; //impossible de bouger
+  }
+   return tabRes[indice];
 }
 
 
 
 function findTunnel(gameState) {
-    var walls = gameState.playerAWalls.concat(gameState.playerBWalls);
+    var walls = gameState.opponentWalls.concat(gameState.ownWalls);
     if (walls.length >= 2) {
         if (IAplay === 1) {
             const sortedPlayerBWalls = sortTabBiggerFirst(walls);
@@ -179,7 +225,7 @@ function sortTabLowerFirst(tab) {
 function putWall(gameState, pos, orientation) {
     if (nbWalls > 0) {
         let posInInt = parseInt(pos);
-        const walls = gameState.playerAWalls.concat(gameState.playerBWalls);
+        const walls = gameState.opponentWalls.concat(gameState.ownWalls);
         if (walls.length >= 1) {
             for (let i = 0; i < walls.length; i++) {
                 if (walls[i][0] === pos) {
@@ -194,20 +240,19 @@ function putWall(gameState, pos, orientation) {
             }
             walls.push(new Array(pos,orientation));
             dijkstraVisitedNode = [];
-            console.log(walls);
+
             var tab = hashMapVoisin(gameState.board,walls);
             var res1 = 0;
             if(positionOpponent !==null)
-                res1 = dijkstra1("playerA", positionOpponent, tab);
+                res1 = dijkstra1(IAplay== 2 ? "playerA" : "playerB", positionOpponent, tab);
             else{
                 res1 = 0;
             }
             dijkstraVisitedNode = [];
-            var res2 = dijkstra1("playerB", positionBot, tab);
+            var res2 = dijkstra1(IAplay== 1 ? "playerA" : "playerB", positionBot, tab);
 
             var res = Math.max(res1, res2);
-            console.log(res1);
-            console.log(res2);
+
             if (res !== 0) {
                 console.log("je peux pas placer la sinon je bloque un joueur");
             } else {
@@ -226,7 +271,7 @@ function dijkstra1(player, cellule, tab) {
 
     if (player === 'playerA') {
         if (lanePlayerBArray.includes(cellule)) {
-            console.log("ok");
+
             return 0;
         }
     }
@@ -265,7 +310,7 @@ function validMoves(positionI, positionJ) {
     const cellBackwardPlus1 = positionI + "" + (positionJ - 2);
     const cellFowardPlus1 = positionI + "" + (parseInt(positionJ) + 2);
 
-    if (positionI < 8)//impossible de monter sinon
+    if (positionJ < 8)//impossible de monter sinon
     {
         if (board[cellFoward[0]][cellFoward[1]] === 2) {
 
@@ -276,7 +321,7 @@ function validMoves(positionI, positionJ) {
                 mouvement.push(cellFoward);
         }
     }
-    if (positionI > 0)//impossible de descendre sinon
+    if (positionJ > 0)//impossible de descendre sinon
     {
         if (board[cellBackward[0]][cellBackward[1]] === 2) {
 
@@ -287,7 +332,7 @@ function validMoves(positionI, positionJ) {
                 mouvement.push(cellBackward);
         }
     }
-    if (positionJ > 0)//impossible d'aller a gauche sinon
+    if (positionI > 0)//impossible d'aller a gauche sinon
     {
         if (board[cellLeft[0]][cellLeft[1]] === 2) {
 
@@ -298,7 +343,7 @@ function validMoves(positionI, positionJ) {
                 mouvement.push(cellLeft);
         }
     }
-    if (positionJ < 8)//impossible d'aller a droite sinon
+    if (positionI < 8)//impossible d'aller a droite sinon
     {
 
         if (board[cellRight[0]][cellRight[1]] === 2) {
@@ -310,7 +355,8 @@ function validMoves(positionI, positionJ) {
                 mouvement.push(cellRight);
         }
     }
-    console.log(mouvement);
+
+    return mouvement;
 }
 
 function deplacementPossible(positionI, positionJ, mouvementI, mouvementJ,walls) {
@@ -453,7 +499,51 @@ function hashMapVoisin(board,walls){
             tab["" + i+"" + j] = tmp;
         }
     }
-    console.log(tab);
+
     return tab;
 
+}
+
+function dijkstraNode(player, start, graph) {
+    const queue = [[start]];
+    const visited = new Set([start]);
+    const lanePlayerAArray = ['00', '10', '20', '30', '40', '50', '60', '70', '80'];
+    const lanePlayerBArray = ['08', '18', '28', '38', '48', '58', '68', '78', '88'];
+    while (queue.length > 0) {
+        const path = queue.shift();
+        const node = path[path.length - 1];
+
+
+        if (player === 'playerA') {
+            if (lanePlayerBArray.includes(node)) {
+
+                return path;
+            }
+        }
+        if (player === 'playerB') {
+            if (lanePlayerAArray.includes(node)) {
+
+                return path;
+            }
+        }
+        const neighbors = graph[node];
+
+        for (const neighbor of neighbors) {
+            if (!visited.has(neighbor)) {
+                visited.add(neighbor);
+                const newPath = [...path, neighbor];
+                queue.push(newPath);
+            }
+        }
+    }
+
+    return null; // No path found
+}
+
+function checkBonDeplacement(chemin,tab){
+
+    if(chemin.length > dijkstraNode(IAplay== 1 ? "playerA" : "playerB",positionBot,tab).length){
+        return false;
+    }
+    return true;
 }
