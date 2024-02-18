@@ -840,6 +840,7 @@ function changeActivePlayer() {
             }
             var time = Date.now();
             var nMove = nextMove(gameState1);
+            console.log(nMove.then());
             console.log(Date.now()- time);
             return nMove;
         }
