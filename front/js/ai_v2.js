@@ -172,35 +172,45 @@ function pathFinding(posJoueur,board){
 
 
 
-function findTunnel(gameState) {
-    var walls = gameState.opponentWalls.concat(gameState.ownWalls);
-    if (walls.length >= 2) {
-        if (IAplay === 1) {
+function findTunnel(gameState){
+    var walls = gameState.ownWalls.concat(gameState.opponentWalls);
+    if(walls.length >= 2){
+        if(IAplay === 1){
             const sortedPlayerBWalls = sortTabBiggerFirst(walls);
-            for (let i = 0; i < sortedPlayerBWalls.length; i++) {
-                if (sortedPlayerBWalls[i + 1] !== undefined) {
-                    if ((sortedPlayerBWalls[i][0] === '89' && sortedPlayerBWalls[i + 1][0] === '87') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i + 1][1] === 1)) {
+            for(let i = 0; i < sortedPlayerBWalls.length; i++){
+                if(sortedPlayerBWalls[i+1] !== undefined){
+                    if((sortedPlayerBWalls[i][0] === '89' && sortedPlayerBWalls[i+1][0] === '87') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i+1][1] === 1)){
+                        if(sortedPlayerBWalls[i+2] !== undefined && (sortedPlayerBWalls[i+2][0] === '85' && sortedPlayerBWalls[i+2][1] === 1)) return '83';
                         return '85';
-                    } else if ((sortedPlayerBWalls[i][0] === '79' && sortedPlayerBWalls[i + 1][0] === '77') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i + 1][1] === 1)) {
+                    }else if((sortedPlayerBWalls[i][0] === '79' && sortedPlayerBWalls[i+1][0] === '77') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i+1][1] === 1)){
+                        if(sortedPlayerBWalls[i+2] !== undefined && (sortedPlayerBWalls[i+2][0] === '75' && sortedPlayerBWalls[i+2][1] === 1)) return '83';
                         return '85';
-                    } else if ((sortedPlayerBWalls[i][0] === '29' && sortedPlayerBWalls[i + 1][0] === '27') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i + 1][1] === 1)) {
+                    }else if((sortedPlayerBWalls[i][0] === '29' && sortedPlayerBWalls[i+1][0] === '27') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i+1][1] === 1)){
+                        if(sortedPlayerBWalls[i+2] !== undefined && (sortedPlayerBWalls[i+2][0] === '25' && sortedPlayerBWalls[i+2][1] === 1)) return '13';
                         return '15';
-                    } else if ((sortedPlayerBWalls[i][0] === '19' && sortedPlayerBWalls[i + 1][0] === '17') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i + 1][1] === 1)) {
+                    }
+                    else if((sortedPlayerBWalls[i][0] === '19' && sortedPlayerBWalls[i+1][0] === '17') && (sortedPlayerBWalls[i][1] === 1 && sortedPlayerBWalls[i+1][1] === 1)){
+                        if(sortedPlayerBWalls[i+2] !== undefined && (sortedPlayerBWalls[i+2][0] === '15' && sortedPlayerBWalls[i+2][1] === 1)) return '13';
                         return '15';
                     }
                 }
             }
-        } else if (IAplay === 2) {
+        }else if(IAplay === 2){
             const sortedPlayerAWalls = sortTabLowerFirst(walls);
-            for (let j = 0; j < sortedPlayerAWalls.length; j++) {
-                if (sortedPlayerAWalls[j + 1] !== undefined) {
-                    if ((sortedPlayerAWalls[j][0] === '12' && sortedPlayerAWalls[j + 1][0] === '14') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j + 1][1] === 1)) {
+            for(let j = 0; j < sortedPlayerAWalls.length; j++){
+                if(sortedPlayerAWalls[j+1] !== undefined){
+                    if((sortedPlayerAWalls[j][0] === '12' && sortedPlayerAWalls[j+1][0] === '14') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j+1][1] === 1)){
+                        if(sortedPlayerAWalls[j+2] !== undefined && (sortedPlayerAWalls[j+2][0] === '16' && sortedPlayerAWalls[j+2][1] === 1)) return '18';
                         return '16';
-                    } else if ((sortedPlayerAWalls[j][0] === '22' && sortedPlayerAWalls[j + 1][0] === '24') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j + 1][1] === 1)) {
+                    }else if((sortedPlayerAWalls[j][0] === '22' && sortedPlayerAWalls[j+1][0] === '24') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j+1][1] === 1)){
+                        if(sortedPlayerAWalls[j+2] !== undefined && (sortedPlayerAWalls[j+2][0] === '26' && sortedPlayerAWalls[j+2][1] === 1)) return '18';
                         return '16';
-                    } else if ((sortedPlayerAWalls[j][0] === '72' && sortedPlayerAWalls[j + 1][0] === '74') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j + 1][1] === 1)) {
+                    }else if((sortedPlayerAWalls[j][0] === '72' && sortedPlayerAWalls[j+1][0] === '74') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j+1][1] === 1)){
+                        if(sortedPlayerAWalls[j+2] !== undefined && (sortedPlayerAWalls[j+2][0] === '76' && sortedPlayerAWalls[j+2][1] === 1)) return '88';
                         return '86';
-                    } else if ((sortedPlayerAWalls[j][0] === '82' && sortedPlayerAWalls[j + 1][0] === '84') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j + 1][1] === 1)) {
+                    }
+                    else if((sortedPlayerAWalls[j][0] === '82' && sortedPlayerAWalls[j+1][0] === '84') && (sortedPlayerAWalls[j][1] === 1 && sortedPlayerAWalls[j+1][1] === 1)){
+                        if(sortedPlayerAWalls[j+2] !== undefined && (sortedPlayerAWalls[j+2][0] === '86' && sortedPlayerAWalls[j+2][1] === 1)) return '88';
                         return '86';
                     }
                 }
