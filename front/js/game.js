@@ -485,28 +485,6 @@ function convertBoard(){
     }
     let j = 0;
     let k = 0;
-  /*  for(let m = 0; m < 289; m++){
-        if(!(cells[m].classList.contains('odd-row') || cells[m].classList.contains('odd-col'))){
-            if(k>8) {
-                j = j + 1;
-                k = 0;
-            }
-            if(cells[m].classList.contains('fog')){
-                board[j][k] = -1;
-
-            }
-            else if(!(cells[m].classList.contains('fog'))) {
-                if (cells[m].classList.contains(activePlayer)) {
-                    board[j][k] = 1;
-                } else if (cells[m].classList.contains(opponent) || cells[m].classList.contains(opponent+'Fog')) {
-                    board[j][k] = 2;
-                } else {
-                    board[j][k] = 0;
-                }
-            }
-            k = k + 1;
-        }
-    }*/
 
     for(let m = 272; m <289; m = m-34){
 
@@ -827,10 +805,11 @@ function changeActivePlayer() {
     }
     else if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot_v2"){
         if(tour>=200){
-
-             var res = setup(2);
-             console.log(res.then());
-             return movePlyerFirstTurn(res);
+            var resPromise = setup(2);
+            resPromise.then(cellIndex => {
+                var newCellIndex = convertGameStateToPosition((cellIndex).toString());
+                movePlyerFirstTurn(newCellIndex);
+            });
         }else {
             convertBoard();
             if(activePlayer === "playerB"){
@@ -839,12 +818,33 @@ function changeActivePlayer() {
             else{
                 gameState1 = new gameState(playerAWalls,playerBWalls,board);
             }
+
             var time = Date.now();
-            var nMove = nextMove(gameState1);
-            console.log(nMove.then());
-            console.log(Date.now()- time);
-            return nMove;
-        }
+            var nMovePromise = nextMove(gameState1); // Stocker la promesse retournée par nextMove
+            nMovePromise.then(nMove => {
+                console.log(nMove);
+                console.log(Date.now() - time);
+                if(nMove.action === "move") {
+                    var pos = nMove.value;
+                    var newPos = convertGameStateToPosition(pos.toString());
+                    movePlayer(player2Position);
+                    movePlayer(newPos);
+                }
+                else if(nMove.action === "wall"){
+                    var pos = nMove.value;
+                    var wall = pos[0];
+                    var orientation = pos[1];
+                    var cellIndex = convertGameStateToPosition(wall.toString()) + 18;
+                    handleWall(cellIndex);
+                    if(orientation === 1){
+                        rotationWall(cellIndex);
+                    }
+                    validerWall();
+                }
+            }).catch(error => {
+                console.error("Erreur lors de l'exécution de nextMove:", error);
+            });
+            }
 
     }
 
@@ -963,13 +963,22 @@ function validerWall() {
 }
 
 function convertPositionToGameState(position) {
-    let ligne = position % 17 / 2;
+    let ligne = Math.floor(position % 17/ 2);
     let colonne = Math.floor(position / 17) / 2;
     colonne = 8 - colonne;
     colonne = colonne + 1;
     ligne = ligne + 1;
     return ligne + "" + colonne;
 
+}
+
+function convertGameStateToPosition(gameState) {
+    let ligne = parseInt(gameState.charAt(0)) - 1;
+    let colonne = parseInt(gameState.charAt(1)) - 1;
+    colonne = 8 - colonne;
+    colonne = colonne * 2;
+    ligne = ligne * 2;
+    return colonne * 17 + ligne;
 }
 
 function annulerWall() {
