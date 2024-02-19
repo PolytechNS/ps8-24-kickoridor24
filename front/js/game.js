@@ -17,9 +17,9 @@ class gameBDD {
 }
 
 class gameState{
-    constructor(playerAWalls, playerBWalls, board) {
-        this.playerAWalls = playerAWalls;
-        this.playerBWalls = playerBWalls;
+    constructor(ownWalls, opponentWalls, board) {
+        this.ownWalls = ownWalls;
+        this.opponentWalls = opponentWalls;
         this.board = board;
     }
 }
@@ -65,8 +65,8 @@ var nbWallPlayerB = 10;
 let isClickedCell = false;
 let murAPose = new Array(3);
 let firstTurn = true;
-let player1Position = 8;
-let player2Position = 280;
+let player1Position = 280;
+let player2Position = 8;
 
 var tour = 202;
 var dernierTourB = false;
@@ -155,8 +155,8 @@ function setUpGame(gameState) {
 
     hideAntiCheat();
     hideValider();
-    lanePlayerA = document.getElementsByClassName('top-row');
-    lanePlayerB = document.getElementsByClassName('bot-row');
+    lanePlayerA = document.getElementsByClassName('bot-row');
+    lanePlayerB = document.getElementsByClassName('top-row');
 
     dijkstraVisitedNode = [];
     activateFog();
@@ -172,8 +172,8 @@ function setUpGame(gameState) {
     });
 
     if (tour === 202) {
-        const topRows = document.querySelectorAll('.top-row');
-        topRows.forEach(row => row.classList.add('first-turn'));
+        const botRows = document.querySelectorAll('.bot-row');
+        botRows.forEach(row => row.classList.add('first-turn'));
 
         // Afficher le message pour le premier tour
         const message = document.createElement('div');
@@ -184,7 +184,7 @@ function setUpGame(gameState) {
         message.style.left = '50%';
         wrapper.appendChild(message);
         //si une case de top-row est cliquée alors on move le joueur
-        topRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
+        botRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
       //  console.log(tour);
 
     }
@@ -316,7 +316,7 @@ function handleWall(cellIndex) {
         else if(clickedCell.classList.contains('odd-row') && !clickedCell.classList.contains('odd-col') && !clickedCell.classList.value.match(/\bwall[AB]\b/)) //la cellule est une ligne
         {
             //horizontale a droite
-            if(!cells[cellIndex+2].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex+2].classList.contains('odd-row') ){
+            if(!cells[cellIndex+2].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex+2].classList.contains('odd-row') && !cells[cellIndex+1].classList.value.match(/\bwall[AB]\b/)){
 
                 clickedCell.classList.add('wallTMP');
                 murAPose[2] = cellIndex;
@@ -332,7 +332,7 @@ function handleWall(cellIndex) {
 
             }
             //horizontale a gauche
-            else if(!cells[cellIndex- 2].classList.value.match(/\bwall[AB]\b/) && cells[cellIndex-2].classList.contains('odd-row')){
+            else if(!cells[cellIndex- 2].classList.value.match(/\bwall[AB]\b/) && cells[cellIndex-2].classList.contains('odd-row') && !cells[cellIndex-1].classList.value.match(/\bwall[AB]\b/)){
 
                 clickedCell.classList.add('wallTMP');
                 murAPose[1] = cellIndex;
@@ -350,7 +350,7 @@ function handleWall(cellIndex) {
         }
         else if(!clickedCell.classList.contains('odd-row') && clickedCell.classList.contains('odd-col')&& !clickedCell.classList.value.match(/\bwall[AB]\b/)) //la cellule est une colonne
         {
-            if(cells[cellIndex-34] != undefined && !cells[cellIndex-34].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex-34].classList.contains('odd-col') ){
+            if(cells[cellIndex-34] != undefined && !cells[cellIndex-34].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex-34].classList.contains('odd-col') && !cells[cellIndex-17].classList.value.match(/\bwall[AB]\b/) ){
                 //verticale haut
 
                 clickedCell.classList.add('wallTMP');
@@ -365,7 +365,7 @@ function handleWall(cellIndex) {
                 murAPose[0] = cellIndex-17;
                 poser = true;
             }
-            else if( cells[cellIndex+34] != undefined &&!cells[cellIndex+34].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex+34].classList.contains('odd-col') ){
+            else if( cells[cellIndex+34] != undefined &&!cells[cellIndex+34].classList.value.match(/\bwall[AB]\b/)  && cells[cellIndex+34].classList.contains('odd-col') && !cells[cellIndex+17].classList.value.match(/\bwall[AB]\b/) ){
                 //verticale bas
 
                 clickedCell.classList.add('wallTMP');
@@ -427,7 +427,7 @@ function changeVisibility(rigthCell, leftCell, player, horizontale) {
         botLeftCellPlus1 = cells[parseInt(leftCellNumber) - 4];
        // console.log(parseInt(rigthCellNumber) + " " + (parseInt(rigthCellNumber) - 2) +" " + parseInt(leftCellNumber))
     }
-    if(player == "playerA"){
+    if(player == "playerB"){
 
         if(topRightCell != undefined && topRightCell.hasAttribute('visibility'))
             topRightCell.setAttribute('visibility',topRightCell.getAttribute('visibility') - 2);
@@ -448,7 +448,7 @@ function changeVisibility(rigthCell, leftCell, player, horizontale) {
         if(botLeftCellPlus1 != undefined && botLeftCellPlus1.hasAttribute('visibility'))
             botLeftCellPlus1.setAttribute('visibility',botLeftCellPlus1.getAttribute('visibility') - 1);
 
-    }else if(player == "playerB"){
+    }else if(player == "playerA"){
         if(topRightCell != undefined && topRightCell.hasAttribute('visibility'))
             topRightCell.setAttribute('visibility',parseInt(topRightCell.getAttribute('visibility')) + 2);
         if(botRightCell != undefined && botRightCell.hasAttribute('visibility'))
@@ -485,29 +485,35 @@ function convertBoard(){
     }
     let j = 0;
     let k = 0;
-    for(let m = 0; m < 289; m++){
+
+    for(let m = 272; m <289; m = m-34){
+
         if(!(cells[m].classList.contains('odd-row') || cells[m].classList.contains('odd-col'))){
             if(k>8) {
                 j = j + 1;
                 k = 0;
             }
-            if(cells[m].classList.contains('fog')){
-                board[j][k] = -1;
 
-            }
-            else if(!(cells[m].classList.contains('fog'))) {
                 if (cells[m].classList.contains(activePlayer)) {
                     board[j][k] = 1;
-                } else if (cells[m].classList.contains(opponent) || cells[m].classList.contains(opponent+'Fog')) {
+                } else if (cells[m].classList.contains(opponent) ) {
                     board[j][k] = 2;
-                } else {
+                }
+                else  if(cells[m].classList.contains('fog')){
+                    board[j][k] = -1;}
+
+                    else {
                     board[j][k] = 0;
                 }
-            }
+
+
             k = k + 1;
         }
+        if(m < 17){
+            m = m + 274 + 34;
+        }
     }
-    board = board.reverse();
+  //  board = board.reverse();
 }
 
 
@@ -519,7 +525,7 @@ function changeVisibilityPlayer(remove,position,player){
     cellTop = cells[position - 34];
     cellBot = cells[position + 34];
     if (remove === true) {
-        if (player === 'playerA') {
+        if (player === 'playerB') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) + 1);
             if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/)) && cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) + 1);
@@ -533,7 +539,7 @@ function changeVisibilityPlayer(remove,position,player){
             if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cellBot.hasAttribute('visibility')) {
                 cellBot.setAttribute('visibility', parseInt(cellBot.getAttribute('visibility')) + 1);
             }
-        } else if (player === 'playerB') {
+        } else if (player === 'playerA') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) - 1);
             if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) - 1);
@@ -550,7 +556,7 @@ function changeVisibilityPlayer(remove,position,player){
         }
 
     } else if (remove === false) {
-        if (player === 'playerA') {
+        if (player === 'playerB') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) - 1);
             if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) - 1);
@@ -564,7 +570,7 @@ function changeVisibilityPlayer(remove,position,player){
             if (cellBot !== undefined && !(cells[position + 17].classList.value.match(/\bwall[AB]\b/))&& cellBot.hasAttribute('visibility')) {
                 cellBot.setAttribute('visibility', parseInt(cellBot.getAttribute('visibility')) - 1);
             }
-        } else if (player === 'playerB') {
+        } else if (player === 'playerA') {
             cellPlayer.setAttribute('visibility', parseInt(cellPlayer.getAttribute('visibility')) + 1);
             if (cellLeft !== undefined && !(cells[position - 1].classList.value.match(/\bwall[AB]\b/))&& cellLeft.hasAttribute('visibility')) {
                 cellLeft.setAttribute('visibility', parseInt(cellLeft.getAttribute('visibility')) + 1);
@@ -682,11 +688,11 @@ function movePlyerFirstTurn(cellIndex) {
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du haut et si c'est au tour du joueur A
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du bas et si c'est au tour du joueur B
 
-    if (activePlayer === 'playerA' && cellIndex >= 0 && cellIndex <= 16 && cells[cellIndex].classList.contains('first-turn')) {
+    if (activePlayer === 'playerA' && cellIndex >= 272 && cellIndex <= 288 && cells[cellIndex].classList.contains('first-turn')) {
         cells[player1Position].classList.remove('playerA');
         player1Position = cellIndex;
         cells[player1Position].classList.add('playerA');
-        const topRows = document.querySelectorAll('.top-row');
+        const topRows = document.querySelectorAll('.bot-row');
         topRows.forEach(row => row.classList.remove('first-turn'));
         const message = document.querySelector('.message');
         message.parentNode.removeChild(message);
@@ -699,12 +705,12 @@ function movePlyerFirstTurn(cellIndex) {
         socket.emit('newMove', newMove);
 
         changeActivePlayer();
-    } else if (activePlayer === 'playerB' && cellIndex >= 272 && cellIndex <= 288 && cells[cellIndex].classList.contains('first-turn')) {
+    } else if (activePlayer === 'playerB' && cellIndex >= 0 && cellIndex <= 16 && cells[cellIndex].classList.contains('first-turn')) {
 
         cells[player2Position].classList.remove('playerB');
         player2Position = cellIndex;
         cells[player2Position].classList.add('playerB');
-        const BottomRows = document.querySelectorAll('.bot-row');
+        const BottomRows = document.querySelectorAll('.top-row');
         BottomRows.forEach(row => row.classList.remove('first-turn'));
         const message = document.querySelector('.message');
         message.parentNode.removeChild(message);
@@ -799,14 +805,46 @@ function changeActivePlayer() {
     }
     else if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot_v2"){
         if(tour>=200){
-
-             var res = setup(2);
-             return movePlyerFirstTurn(res);
+            var resPromise = setup(2);
+            resPromise.then(cellIndex => {
+                var newCellIndex = convertGameStateToPosition((cellIndex).toString());
+                movePlyerFirstTurn(newCellIndex);
+            });
         }else {
             convertBoard();
-            return nextMove(gameState1);
+            if(activePlayer === "playerB"){
+                gameState1 = new gameState(playerBWalls,playerAWalls,board);
+            }
+            else{
+                gameState1 = new gameState(playerAWalls,playerBWalls,board);
+            }
 
-        }
+            var time = Date.now();
+            var nMovePromise = nextMove(gameState1); // Stocker la promesse retournée par nextMove
+            nMovePromise.then(nMove => {
+                console.log(nMove);
+                console.log(Date.now() - time);
+                if(nMove.action === "move") {
+                    var pos = nMove.value;
+                    var newPos = convertGameStateToPosition(pos.toString());
+                    movePlayer(player2Position);
+                    movePlayer(newPos);
+                }
+                else if(nMove.action === "wall"){
+                    var pos = nMove.value;
+                    var wall = pos[0];
+                    var orientation = pos[1];
+                    var cellIndex = convertGameStateToPosition(wall.toString()) + 18;
+                    handleWall(cellIndex);
+                    if(orientation === 1){
+                        rotationWall(cellIndex);
+                    }
+                    validerWall();
+                }
+            }).catch(error => {
+                console.error("Erreur lors de l'exécution de nextMove:", error);
+            });
+            }
 
     }
 
@@ -925,13 +963,22 @@ function validerWall() {
 }
 
 function convertPositionToGameState(position) {
-    let ligne = position % 17 / 2;
+    let ligne = Math.floor(position % 17/ 2);
     let colonne = Math.floor(position / 17) / 2;
     colonne = 8 - colonne;
     colonne = colonne + 1;
     ligne = ligne + 1;
     return ligne + "" + colonne;
 
+}
+
+function convertGameStateToPosition(gameState) {
+    let ligne = parseInt(gameState.charAt(0)) - 1;
+    let colonne = parseInt(gameState.charAt(1)) - 1;
+    colonne = 8 - colonne;
+    colonne = colonne * 2;
+    ligne = ligne * 2;
+    return colonne * 17 + ligne;
 }
 
 function annulerWall() {
@@ -960,37 +1007,37 @@ function showAntiCheat() {
 }
 
 function activateFog() {
-    if (activePlayer == "playerA") {
+    if (activePlayer == "playerB") {
         for (let i = 0; i < cells.length; i++) {
             if (cells[i].getAttribute('visibility') <= "0") {
                 cells[i].classList.remove('fog');
             }
-            if (i=== player1Position) {
-                cells[i].classList.add('playerA');
-                cells[i].classList.remove('playerAFog');
+            if (i=== player2Position) {
+                cells[i].classList.add('playerB');
+                cells[i].classList.remove('playerBFog');
             }
             if (cells[i].getAttribute('visibility') > "0") {
                 cells[i].classList.add('fog');
-                if (cells[i].classList.contains('playerB') && cells[i].classList.contains('fog') && !checkJoueurColle()) {
-                    cells[i].classList.remove('playerB');
-                    cells[i].classList.add('playerBFog');
+                if (cells[i].classList.contains('playerA') && cells[i].classList.contains('fog') && !checkJoueurColle()) {
+                    cells[i].classList.remove('playerA');
+                    cells[i].classList.add('playerAFog');
                 }
             }
         }
-    } else if (activePlayer == "playerB") {
+    } else if (activePlayer == "playerA") {
         for (let i = 0; i < cells.length; i++) {
-            if (i === player2Position) {
-                cells[i].classList.add('playerB');
-                cells[i].classList.remove('playerBFog');
+            if (i === player1Position) {
+                cells[i].classList.add('playerA');
+                cells[i].classList.remove('playerAFog');
             }
             if (cells[i].getAttribute('visibility') >= "0") {
                 cells[i].classList.remove('fog');
             }
             if (cells[i].getAttribute('visibility') < "0") {
                 cells[i].classList.add('fog');
-                if (cells[i].classList.contains('playerA') && cells[i].classList.contains('fog') && !checkJoueurColle()) {
-                    cells[i].classList.remove('playerA');
-                    cells[i].classList.add('playerAFog');
+                if (cells[i].classList.contains('playerB') && cells[i].classList.contains('fog') && !checkJoueurColle()) {
+                    cells[i].classList.remove('playerB');
+                    cells[i].classList.add('playerBFog');
                 }
             }
         }
@@ -1195,8 +1242,8 @@ async function supprimerAnciennePartie(user){
 function checkTour201(){
     if(tour === 201){
         firstTurn = true;
-        const bottomRows = document.querySelectorAll('.bot-row');
-        bottomRows.forEach(row => row.classList.add('first-turn'));
+        const topRows = document.querySelectorAll('.top-row');
+        topRows.forEach(row => row.classList.add('first-turn'));
 
         // Afficher le message pour le premier tour
         const message = document.createElement('div');
@@ -1208,7 +1255,7 @@ function checkTour201(){
         wrapper.appendChild(message);
         //si une case de top-row est cliquée alors on move le joueur
 
-        bottomRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
+        topRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
 
     }
 }
