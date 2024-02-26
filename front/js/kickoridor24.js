@@ -7,7 +7,7 @@ var walls;
 var IAplay;
 var dijkstraVisitedNode = [];
 var positionOpponent = null;
-
+var opponentNextMove = [];
 var ouverture = 1;
 
 
@@ -92,10 +92,27 @@ function nextMove(gameState) {
         }
     }
     nbWalls = 10 - gameState.ownWalls.length;
-    nbWallsOpponent = 10 - gameState.opponentWalls.length;
-    if (!opponentfound) {
-        positionOpponent = null;
+    var opponentWallPlaced = true;
+    var nbwallOpponentTMP = 10 - gameState.opponentWalls.length;
+    if(nbWallsOpponent > nbwallOpponentTMP){
+        opponentWallPlaced = false;
+
     }
+    nbWallsOpponent = nbwallOpponentTMP;
+    if (!opponentfound ) {
+        if(!opponentWallPlaced){//il a pas bougé, surement caché derriere un mur
+
+             }
+        else if(positionOpponent = null)
+            positionOpponent = null;
+        else{
+        //on connaissait sa position + il a bougé
+            determineOpponentPosition(gameState);
+
+        }
+
+    }
+    console.log("position opponent : " + positionOpponent);
     walls = gameState.opponentWalls.concat(gameState.ownWalls);
 
     if (ouverture <= 5) {
@@ -116,6 +133,7 @@ function nextMove(gameState) {
         }
         var resultat = ouvertureProcess(gameState);
         //console.log(resultat);
+
         return new Promise((resolve, reject) => {
             resolve(resultat);
         });
@@ -161,6 +179,26 @@ function correction(rightMove) {
 }
 
 function updateBoard(gameState) {
+    walls = gameState.opponentWalls.concat(gameState.ownWalls);
+    var found = false;
+    for (let i = 0; i < gameState.board.length; i++) {
+        for (let j = 0; j < gameState.board[i].length; j++) {
+            if (gameState.board[i][j] === 2) {
+                positionOpponent = i;
+                positionOpponent += "" + j;
+                found = true;
+            }
+        }
+    }
+    if(found) {
+        var chemins = allchemin(positionOpponent, gameState.board, "opponent", walls);
+
+        opponentNextMove = [];
+        for(var i =0;i<chemins.length;i++){
+            opponentNextMove.push(chemins[i][0]);
+        }
+        console.log(opponentNextMove);
+    }
     new Promise((resolve, reject) => {
         resolve(true);
     });
@@ -322,6 +360,7 @@ function putWall(gameState, pos, orientation) {
             return false;
         } else {
             nbWalls--;
+
             return new Move('wall', [pos, orientation]);
         }
 
@@ -912,6 +951,67 @@ function ouvertureProcess(gameState) {
    return nextMove(gameState);
 
 }
+
+
+function allchemin(posJoueur, board, player, walls) {
+
+
+    if (player == "bot") {
+        var possiblesMoves = validMoves(positionBot[0], positionBot[1]);
+    } else {
+        var possiblesMoves = validMoves(positionOpponent[0], positionOpponent[1]);
+    }
+
+    var tab = hashMapVoisin(board, walls);
+    var tabRes = [];
+    for (var i = 0; i < possiblesMoves.length; i++) {
+        dijkstraVisitedNode = [];
+        if (player === "bot") {
+            tabRes.push(dijkstraNode(IAplay == 1 ? "playerA" : "playerB", possiblesMoves[i], tab));
+        } else {
+            tabRes.push(dijkstraNode(IAplay == 1 ? "playerB" : "playerA", possiblesMoves[i], tab));
+        }
+
+    }
+    if (tabRes.length === 1) {
+        if (player === "bot") {
+            if (!checkBonDeplacement(tabRes[0], tab)) {
+
+                return "idle"; //mouvement pas bon
+            }
+        }
+    }
+    var indice = 999;
+    var longueur = 999;
+    for (var i = 0; i < tabRes.length; i++) {
+        if (tabRes[i] != null && tabRes[i].length < longueur) {
+            longueur = tabRes[i].length;
+            indice = i;
+        }
+    }
+    tabRes.sort(comparerTaille);
+    if (indice === 999) {
+        return "idle"; //impossible de bouger
+    }
+    return tabRes;
+}
+function comparerTaille(a, b) {
+    return a.length - b.length;
+}
+function determineOpponentPosition(gameState){
+    for(var i = 0; i<opponentNextMove.length;i++){
+        var posI = opponentNextMove[i][0];
+        var posY = opponentNextMove[i][1];
+        console.log(gameState.board[posI][posY]);
+        if( gameState.board[posI][posY] == -1){
+
+            positionOpponent = opponentNextMove[i];
+            return;
+        }
+
+    }
+}
+
 
 exports.setup = setup;
 exports.nextMove = nextMove;

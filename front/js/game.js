@@ -1,3 +1,4 @@
+
 const socket = io('/api/game');
 
 class cellule{
@@ -766,7 +767,16 @@ function victoire(txt){
 
 
 function changeActivePlayer() {
+    if(activePlayer=="playerB" && getCookie("typeDePartie")==="bot_v2" ) {
 
+        activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
+        activateFog();
+        activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
+        activateFog();
+
+        convertBoard();
+        updateBoard(gameState1);
+    }
     activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
     document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
     if(tour<=200)
@@ -821,7 +831,12 @@ function changeActivePlayer() {
 
             var time = Date.now();
             var nMovePromise = nextMove(gameState1); // Stocker la promesse retournée par nextMove
-            nMovePromise.then(nMove => {
+            nMovePromise.then(nMove =>{
+                console.log(nMove);
+            });
+            console.log("Compute time : " +(Date.now()-time) +" ms");
+
+          /*  nMovePromise.then(nMove => {
                 console.log(nMove);
                 console.log(Date.now() - time);
                 if(nMove.action === "move") {
@@ -844,6 +859,8 @@ function changeActivePlayer() {
             }).catch(error => {
                 console.error("Erreur lors de l'exécution de nextMove:", error);
             });
+            */
+
             }
 
     }
