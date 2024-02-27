@@ -834,7 +834,11 @@ function changeActivePlayer() {
             nMovePromise.then(nMove =>{
                 console.log(nMove);
             });
-            console.log("Compute time : " +(Date.now()-time) +" ms");
+            var time2 = (Date.now()-time);
+            console.log("Compute time : " +time2 +" ms");
+            if(time2 >= 190){
+                console.log("ALLLLEEEERRRTTTTEEEE : " +time2);
+            }
 
           /*  nMovePromise.then(nMove => {
                 console.log(nMove);

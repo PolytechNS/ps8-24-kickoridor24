@@ -8,7 +8,7 @@ var IAplay;
 var dijkstraVisitedNode = [];
 var positionOpponent = null;
 var opponentNextMove = [];
-var ouverture = 1;
+var ouverture = 99;
 
 
 class Move {
@@ -112,7 +112,7 @@ function nextMove(gameState) {
         }
 
     }
-    console.log("position opponent : " + positionOpponent);
+    //console.log("position opponent : " + positionOpponent);
     walls = gameState.opponentWalls.concat(gameState.ownWalls);
 
     if (ouverture <= 5) {
@@ -139,6 +139,8 @@ function nextMove(gameState) {
         });
     } else {
         //bouger
+        var tab = hashMapVoisin(gameState.board, walls);
+
 
         var cheminLePlusCoutBot = pathFinding(positionBot, gameState.board, "bot");
 
@@ -164,7 +166,9 @@ function nextMove(gameState) {
               //  PassOrBlock(gameState, gameState.board, walls);
        //console.log();
         //console.log((parseInt(cheminLePlusCoutBot[0]) + 11));
+
         return new Promise((resolve, reject) => {
+
             resolve(PassOrBlock(gameState, gameState.board, walls));
             });
         }
@@ -197,7 +201,7 @@ function updateBoard(gameState) {
         for(var i =0;i<chemins.length;i++){
             opponentNextMove.push(chemins[i][0]);
         }
-        console.log(opponentNextMove);
+        //console.log(opponentNextMove);
     }
     new Promise((resolve, reject) => {
         resolve(true);
@@ -330,10 +334,10 @@ function putWall(gameState, pos, orientation) {
                 if (walls[i][0] === pos) {
                     return false;
                 }
-                if (orientation === 0 && (walls[i][0] === (posInInt + 10).toString() && walls[i][1] === 0) || (walls[i][0] === (posInInt - 10).toString() && walls[i][1] === 0)) {
+                if (orientation === 0 && ((walls[i][0] === (posInInt + 10).toString() && walls[i][1] === 0) || (walls[i][0] === (posInInt - 10).toString() && walls[i][1] === 0))) {
                     return false;
                 }
-                if (orientation === 1 && (walls[i][0] === (posInInt + 1).toString() && walls[i][1] === 1) || (walls[i][0] === (posInInt - 1).toString() && walls[i][1] === 1)) {
+                if (orientation === 1 && ((walls[i][0] === (posInInt + 1).toString() && walls[i][1] === 1) || (walls[i][0] === (posInInt - 1).toString() && walls[i][1] === 1))) {
                     return false;
                 }
             }
@@ -654,37 +658,35 @@ function checkBonDeplacement(chemin, tab) {
     return true;
 }
 
-function opponentVisibilty(board) {
-    const opponentPosition = [];
-    for (let j = 0; j < 17; j++) {
-        for (let k = 0; k < 17; k++) {
-            if (board[j][k] === 2) {
-                opponentPosition.push(j, k);
-                return opponentPosition;
-            }
-        }
-        if (opponentPosition.length === 0) {
-            return null;
-        }
-    }
-}
 
 function PassOrBlock(gameState, board, walls) {
     let opponentPath = [];
     let botPath = [];
     botPath = pathFinding(positionBot, board, "bot");
    //console.log("botPath : " + botPath);
+
     if (positionOpponent !== null) {
       //console.log("opponentVisibility : " + positionOpponent);
         opponentPath = pathFinding(positionOpponent, board, "opponent");
        //console.log("opponentPath : " + opponentPath);
+        if(opponentPath.length >1 && botPath.length >1){
+            var tmp = couloirBot(gameState,walls);
+            if(tmp.value != false ){
+                return tmp;
+            }
+        }
         if (opponentPath.length < botPath.length) {
             return blockOpponent(gameState, opponentPath, botPath);
         } else {
-            return new Move('move', (parseInt(botPath[0])+11));
+                return new Move('move', (parseInt(botPath[0])+11));
         }
     } else {
-        return new Move('move', (parseInt(botPath[0])+11));
+        var tmp = couloirBot(gameState,walls);
+
+        if(tmp.value == false ){
+            return new Move('move', (parseInt(botPath[0])+11));
+        }
+        return tmp;
 
     }
 }
@@ -749,31 +751,31 @@ function verifPutWall(gameState, pos, longueurCheminOpponnent, longueurCheminBot
 
         const walls = gameState.opponentWalls.concat(gameState.ownWalls);
         var murPossibles = [];
-        for (var x = -2; x <= 2; x++) {
-            for (var y = -2; y <= 2; y++) {
+        for (var x = 1; x <= 8; x++) {
+            for (var y = 2; y <= 9; y++) {
                 for (var orientation = 0; orientation < 2; orientation++) {
 
-                    var newPosI = parseInt(pos[0]) + parseInt(x);
-                    var newPosY = parseInt(pos[1]) + parseInt(y);
+                    var newPosI =x;
+                    var newPosY = y;
 
-                    if (newPosI <= 1 || newPosI >= 9 || newPosY <=1 || newPosY >= 10) {
+                    if (newPosI <= 0 || newPosI >= 9 || newPosY <=1 || newPosY >= 10) {
 
                     } else {
 
                         var newPos = newPosI.toString() + newPosY.toString();
                         let posInInt = parseInt(newPos);
-
+                        var murOk = true;
                         if (walls.length >= 1) {
-                            var murOk = true;
+
                             for (let i = 0; i < walls.length; i++) {
                                 if (walls[i][0] == posInInt) {
                                     murOk = false;
                                 }
-                                if (orientation === 0 && (walls[i][0] === (posInInt + 10).toString() && walls[i][1] === 0) || (walls[i][0] === (posInInt - 10).toString() && walls[i][1] === 0)) {
+                                if (orientation === 0 && ((walls[i][0] === (posInInt + 10).toString() && walls[i][1] === 0) || (walls[i][0] === (posInInt - 10).toString() && walls[i][1] === 0))) {
 
                                     murOk = false;
                                 }
-                                if (orientation === 1 && (walls[i][0] === (posInInt + 1).toString() && walls[i][1] === 1) || (walls[i][0] === (posInInt - 1).toString() && walls[i][1] === 1)) {
+                                if (orientation === 1 && ((walls[i][0] === (posInInt + 1).toString() && walls[i][1] === 1) || (walls[i][0] === (posInInt - 1).toString() && walls[i][1] === 1))) {
                                     murOk = false;
                                 }
                             }
@@ -1002,7 +1004,7 @@ function determineOpponentPosition(gameState){
     for(var i = 0; i<opponentNextMove.length;i++){
         var posI = opponentNextMove[i][0];
         var posY = opponentNextMove[i][1];
-        console.log(gameState.board[posI][posY]);
+      //console.log(gameState.board[posI][posY]);
         if( gameState.board[posI][posY] == -1){
 
             positionOpponent = opponentNextMove[i];
@@ -1012,6 +1014,248 @@ function determineOpponentPosition(gameState){
     }
 }
 
+function couloirBot(gameState,walls){
+
+        var possiblesMoves = validMoves(positionBot[0], positionBot[1]);
+
+
+    var tab = hashMapVoisin(board, walls);
+    var chemins = [];
+    for (var i = 0; i < possiblesMoves.length; i++) {
+        dijkstraVisitedNode = [];
+
+            chemins.push(dijkstraNode(IAplay == 1 ? "playerA" : "playerB", possiblesMoves[i], tab));
+
+
+    }
+
+chemins.sort(comparerTaille);
+
+
+    var tmp = [];
+    for (var i = 0; i < possiblesMoves.length; i++) {
+        var path = null;
+        dijkstraVisitedNode = [];
+        if(possiblesMoves[i] !== chemins[0][0]){
+
+             path = dijkstraNodeUniquePath(IAplay == 1 ? "playerA" : "playerB", possiblesMoves[i], tab,chemins[0])
+        }
+        if(path != null)
+            tmp.push(path);
+    }
+    tmp.push(chemins[0]);
+    tmp.sort(comparerTaille);
+
+  //console.log( tmp);
+    if(tmp.length===2 || tmp.length===3){
+        //tester de placer des murs de partout jusqua voir si je peux n'avoir qu'un seul chemin minimale
+      var resulat =   verifPutWallToOneWay(gameState,tmp[0]);
+     //console.log("resultat de one way = " + resulat);
+      var retour = new Move("wall",resulat);
+      return retour;
+    }
+    return new Move("wall",false);
+
+}
+
+function dijkstraNodeUniquePath(player, start, graph,chemin) {
+    const queue = [[start]];
+    const visited = new Set([start]);
+    for(var i =0;i<chemin.length;i++){
+        visited.add(chemin[i]);
+    }
+
+    const lanePlayerAArray = ['00', '10', '20', '30', '40', '50', '60', '70', '80'];
+    const lanePlayerBArray = ['08', '18', '28', '38', '48', '58', '68', '78', '88'];
+    while (queue.length > 0) {
+        const path = queue.shift();
+        const node = path[path.length - 1];
+
+
+        if (player === 'playerA') {
+            if (lanePlayerBArray.includes(node)) {
+                dijkstraVisitedNode = visited;
+                return path;
+            }
+        }
+        if (player === 'playerB') {
+            if (lanePlayerAArray.includes(node)) {
+                dijkstraVisitedNode = visited;
+                return path;
+            }
+        }
+        const neighbors = graph[node];
+
+        for (const neighbor of neighbors) {
+            if (!visited.has(neighbor)) {
+                visited.add(neighbor);
+                const newPath = [...path, neighbor];
+                queue.push(newPath);
+            }
+        }
+    }
+
+    return null; // No path found
+}
+
+function verifPutWallToOneWay(gameState, cheminMinimale) {
+
+    if (nbWalls > 0) {
+
+
+        const walls = gameState.opponentWalls.concat(gameState.ownWalls);
+        var murPossibles = [];
+        for (var x = 1; x <= 8; x++) {
+            for (var y = 2; y <= 9; y++) {
+                for (var orientation = 0; orientation < 2; orientation++) {
+
+                    var newPosI =x;
+                    var newPosY = y;
+
+                    if (newPosI <= 0 || newPosI >= 9 || newPosY <=1 || newPosY >= 10) {
+
+                    } else {
+
+                        var newPos = newPosI.toString() + newPosY.toString();
+                        let posInInt = parseInt(newPos);
+                        var murOk = true;
+                        if (walls.length >= 1) {
+
+                            for (let i = 0; i < walls.length; i++) {
+                                if (walls[i][0] == posInInt) {
+
+                                    murOk = false;
+                                }
+                                if (orientation === 0 && ((walls[i][0] === (posInInt + 10).toString() && walls[i][1] === 0) || (walls[i][0] === (posInInt - 10).toString() && walls[i][1] === 0))) {
+
+                                    murOk = false;
+                                }
+                                if (orientation === 1 &&( (walls[i][0] === (posInInt + 1).toString() && walls[i][1] === 1) || (walls[i][0] === (posInInt - 1).toString() && walls[i][1] === 1))) {
+
+                                    murOk = false;
+                                }
+                            }
+                        }
+
+                        walls.push(new Array(newPos, orientation));
+
+                        dijkstraVisitedNode = [];
+
+                        var tab = hashMapVoisin(gameState.board, walls);
+                        var res1 = 0;
+                        if (positionOpponent !== null)
+                            res1 = dijkstra1(IAplay == 2 ? "playerA" : "playerB", positionOpponent, tab);
+                        else {
+                            res1 = 0;
+                        }
+                        dijkstraVisitedNode = [];
+                        var res2 = dijkstra1(IAplay == 1 ? "playerA" : "playerB", positionBot, tab);
+
+                        var res = Math.max(res1, res2);
+
+                        if (res === 0 && murOk) {
+
+                            murPossibles.push(new Array(newPos, orientation));
+                        }
+                        walls.splice(walls.indexOf(new Array(newPos, orientation)), 1);
+
+
+                    }
+                }
+            }
+
+        }
+
+        var possiblesMoves = validMoves(positionBot[0], positionBot[1]);
+        var indice = 999;
+
+        for (var a = 0; a < murPossibles.length; a++) {
+           //console.log("murPossibles :" + murPossibles[a]);
+            walls.push(murPossibles[a]);
+
+
+            var tab = hashMapVoisin(board, walls);
+            var chemins = [];
+            for (var i = 0; i < possiblesMoves.length; i++) {
+                dijkstraVisitedNode = [];
+                if(deplacementPossible(positionBot[0], positionBot[1],possiblesMoves[i][0],possiblesMoves[i][1],walls)) {
+                    chemins.push(dijkstraNode(IAplay == 1 ? "playerA" : "playerB", possiblesMoves[i], tab));
+                }
+
+            }
+
+            chemins.sort(comparerTaille);
+
+            if(chemins[0].length <=cheminMinimale.length) {
+
+                var tmp = [];
+                for (var i = 0; i < possiblesMoves.length; i++) {
+                    var path = null;
+                    dijkstraVisitedNode = [];
+                    if(deplacementPossible(positionBot[0], positionBot[1],possiblesMoves[i][0],possiblesMoves[i][1],walls)) {
+                    if (possiblesMoves[i] !== chemins[0][0]) {
+                        path = dijkstraNodeUniquePath(IAplay == 1 ? "playerA" : "playerB", possiblesMoves[i], tab, chemins[0])
+                    }
+                    }
+
+                    if (path != null)
+                        tmp.push(path);
+                }
+                tmp.push(chemins[0]);
+                if (tmp.length === 1) {
+                    //nbsrotire
+                    var nbS = 0;
+                    if(IAplay == 1){
+                        const lanePlayerBArray = ['08', '18', '28', '38', '48', '58', '68', '78', '88'];
+                        for(var u = 0;u<lanePlayerBArray.length;u++){
+                            dijkstraVisitedNode = [];
+                           nbS += dijkstra1Sortie(chemins[0][0],tab,lanePlayerBArray[u]);
+                        }
+                    }else{
+                        const lanePlayerAArray = ['00', '10', '20', '30', '40', '50', '60', '70', '80'];
+                        for(var u = 0;u<lanePlayerAArray.length;u++){
+                            dijkstraVisitedNode = [];
+                            nbS += dijkstra1Sortie(chemins[0][0],tab,lanePlayerAArray[u]);
+                        }
+                    }
+
+                   if(nbS <=2 && nbS >=1)
+                        indice = a;
+                }
+            }
+
+            walls.splice(walls.indexOf(new Array(newPos, orientation)), 1);
+        }
+        //console.log("res = " + murPossibles[indice]);
+        if(indice===999){
+
+            return false;
+        }
+        return murPossibles[indice];
+    }
+
+    return false;
+}
+
+function dijkstra1Sortie( cellule, tab,end) {
+    if(cellule == end){
+        return 1;
+    }
+
+    if (dijkstraVisitedNode.includes(cellule)) {
+
+        return 0;
+    } else {
+        var tmpTab = [];
+        dijkstraVisitedNode.push(cellule);
+
+        for (var voisin in tab["" + cellule]) {
+
+            tmpTab.push(dijkstra1Sortie(tab["" + cellule][voisin], tab,end));
+        }
+        return Math.max.apply(null, tmpTab);
+    }
+}
 
 exports.setup = setup;
 exports.nextMove = nextMove;
