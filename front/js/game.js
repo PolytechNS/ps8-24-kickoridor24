@@ -589,8 +589,9 @@ function changeVisibilityPlayer(remove,position,player){
 }
 
 function handleCellClick(cellIndex, position) {
-    const validMoves = getValidMoves(position);
-    /*socket.emit('getValidMoves', activePlayer, activePlayer === 'playerA' ? player1Position : player2Position, grid, validGrid);
+    //const validMoves = getValidMoves(position);
+    let validMoves;
+    socket.emit('getValidMoves', activePlayer, activePlayer === 'playerA' ? player1Position : player2Position, grid, validGrid);
     socket.on('validMoves', function (validMoves) {
         console.log("ValidMoves : " + validMoves);
         if (isClickedCell) {
@@ -605,8 +606,7 @@ function handleCellClick(cellIndex, position) {
                 }
             });
         }
-    })*/
-   // console.log("ValidMoves : " + validMoves);
+    })
     if (isClickedCell) {
         cells.forEach(cell => cell.classList.remove('possible-move'));
         isClickedCell = false;
@@ -643,6 +643,7 @@ function movePlayer(cellIndex) {
     // Vérifier si la cellule cliquée a la classe 'possible-move'
     if (clickedCell.classList.contains('possible-move')) {
 
+        socket.emit('newMove', gameState1, convertPositionToGameState(cellIndex));
         // Retirer le joueur actif de sa position actuelle
         const currentPlayerPosition = activePlayer === 'playerA' ? player1Position : player2Position;
         cells[currentPlayerPosition].classList.remove(activePlayer);
@@ -653,19 +654,8 @@ function movePlayer(cellIndex) {
         // Mettre à jour la position du joueur actif
         if (activePlayer === 'playerA') {
             player1Position = cellIndex;
-            newMove.player = 'playerA';
-            newMove.type = 'move';
-            newMove.position = player1Position;
-
-            socket.emit('newMove', newMove);
-
         } else {
             player2Position = cellIndex;
-            newMove.player = 'playerB';
-            newMove.type = 'move';
-            newMove.position = player2Position;
-
-            socket.emit('newMove', newMove);
         }
 
         // Ajouter le joueur actif à sa nouvelle position
@@ -680,6 +670,7 @@ function movePlayer(cellIndex) {
         //console.log(board);
         changeVisibilityPlayer(false, activePlayer === 'playerA' ? player1Position : player2Position, activePlayer);
         changeActivePlayer();
+
     }
 
 }
@@ -1330,7 +1321,7 @@ function checkTour201(){
 
 
     //TODO : A RETIRER
-
+/*
 function getValidMoves(position) {
     const row = Math.floor(position / 17);
     const col = position % 17;
@@ -1379,5 +1370,5 @@ function getValidMoves(position) {
 
 
     return moves;
-}
+}*/
 
