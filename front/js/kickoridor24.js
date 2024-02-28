@@ -9,8 +9,8 @@ var dijkstraVisitedNode = [];
 var positionOpponent = null;
 var opponentNextMove = [];
 var ouverture = 99;
-
-
+var oneWay = false;
+var opponentWallPlaced = false;
 class Move {
     constructor(action, value) {
         this.action = action;
@@ -92,21 +92,22 @@ function nextMove(gameState) {
         }
     }
     nbWalls = 10 - gameState.ownWalls.length;
-    var opponentWallPlaced = true;
+
     var nbwallOpponentTMP = 10 - gameState.opponentWalls.length;
     if(nbWallsOpponent > nbwallOpponentTMP){
-        opponentWallPlaced = false;
+        opponentWallPlaced = true;
 
     }
     nbWallsOpponent = nbwallOpponentTMP;
     if (!opponentfound ) {
-        if(!opponentWallPlaced){//il a pas bougé, surement caché derriere un mur
+        if(opponentWallPlaced){//il a pas bougé, surement caché derriere un mur
 
              }
         else if(positionOpponent = null)
             positionOpponent = null;
         else{
         //on connaissait sa position + il a bougé
+
             determineOpponentPosition(gameState);
 
         }
@@ -183,6 +184,7 @@ function correction(rightMove) {
 }
 
 function updateBoard(gameState) {
+    opponentNextMove = [];
     walls = gameState.opponentWalls.concat(gameState.ownWalls);
     var found = false;
     for (let i = 0; i < gameState.board.length; i++) {
@@ -203,6 +205,15 @@ function updateBoard(gameState) {
         }
         //console.log(opponentNextMove);
     }
+    else if(!found && opponentWallPlaced && positionOpponent != null){
+        var chemins = allchemin(positionOpponent, gameState.board, "opponent", walls);
+
+        opponentNextMove = [];
+        for(var i =0;i<chemins.length;i++){
+            opponentNextMove.push(chemins[i][0]);
+        }
+    }
+    opponentWallPlaced = false;
     new Promise((resolve, reject) => {
         resolve(true);
     });
@@ -328,7 +339,7 @@ function putWall(gameState, pos, orientation) {
     }
     if (nbWalls > 0) {
         let posInInt = parseInt(pos);
-        const walls = gameState.opponentWalls.concat(gameState.ownWalls);
+        var walls = gameState.opponentWalls.concat(gameState.ownWalls);
         if (walls.length >= 1) {
             for (let i = 0; i < walls.length; i++) {
                 if (walls[i][0] === pos) {
@@ -363,7 +374,6 @@ function putWall(gameState, pos, orientation) {
             //console.log("je peux pas placer la sinon je bloque un joueur");
             return false;
         } else {
-            nbWalls--;
 
             return new Move('wall', [pos, orientation]);
         }
@@ -669,29 +679,39 @@ function PassOrBlock(gameState, board, walls) {
       //console.log("opponentVisibility : " + positionOpponent);
         opponentPath = pathFinding(positionOpponent, board, "opponent");
        //console.log("opponentPath : " + opponentPath);
-        if(opponentPath.length >1 && botPath.length >1){
+        if(opponentPath.length >1 && !oneWay){
+
             var tmp = couloirBot(gameState,walls);
             if(tmp.value != false ){
+                oneWay = true;
+                console.log("icicciciic");
                 return tmp;
             }
         }
         if (opponentPath.length < botPath.length) {
-            return blockOpponent(gameState, opponentPath, botPath);
+            var res = blockOpponent(gameState, opponentPath, botPath);
+            console.log("res presumé F : " + res);
+            return res;
         } else {
                 return new Move('move', (parseInt(botPath[0])+11));
         }
     } else {
-        var tmp = couloirBot(gameState,walls);
-
+        console.log("laaaaaaa");
+        var tmp = false;
+        if(!oneWay) {
+            tmp = couloirBot(gameState, walls);
+        }
         if(tmp.value == false ){
             return new Move('move', (parseInt(botPath[0])+11));
         }
+        oneWay = true;
         return tmp;
 
     }
 }
 
 function blockOpponent(gameState, opponentPath, botPath) {
+
     //ralonger le chemin de l'adversaire pour qu'il soit plus long que celui du bot en ajoutant des murs si possible devant lui
     //console.log("blockOpponent");
     //prochain move vertical ou horizontal
@@ -705,21 +725,25 @@ function blockOpponent(gameState, opponentPath, botPath) {
     //console.log("positionOpponent[0][1] : " + positionOpponent[1]);
     //console.log("nextMoveI : " + nextMoveI);
     //console.log("nextMoveJ : " + nextMoveJ);
+
+
     if (nextMoveI === 1) {
         orientation = 1;
-        posWall = (parseInt(positionOpponent[0]) + 1) + "" + positionOpponent[1];
+        posWall = (parseInt(positionOpponent[0])) + "" + positionOpponent[1];
     } else if (nextMoveI === -1) {
         orientation = 1;
         posWall = (parseInt(positionOpponent[0]) - 1) + "" + positionOpponent[1];
     } else {
         if (nextMoveJ === -1) {
             orientation = 0;
-            posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) - 1);
+            posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) );
         } else if (nextMoveJ === 1) {
             //console.log("positionOpponent[1] : " + positionOpponent[1]);
             //console.log("positionOpponent[0] : " + positionOpponent[0]);
+
             orientation = 0;
             posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) + 1);
+
             //console.log("posWall : " + posWall);
         } else {
             posWall = null;
@@ -727,21 +751,30 @@ function blockOpponent(gameState, opponentPath, botPath) {
         }
     }
     if (posWall !== null) {
+
         if (putWall(gameState, (parseInt(posWall) + 11).toString(), orientation) !== false) {
             //console.log(putWall(gameState, (parseInt(posWall) + 11).toString(), orientation));
-            return putWall(gameState, (parseInt(posWall) + 11).toString(), orientation);
-        } else {
-            var wallIntelligent = verifPutWall(gameState, posWall, opponentPath.length, botPath.length);
-            if ( wallIntelligent !== false) {
-                return new Move('wall',wallIntelligent);
+            console.log("héohhhhh2" + putWall(gameState, (parseInt(posWall) + 11).toString(), orientation));
+            var wallsTMP = gameState.ownWalls.concat(gameState.opponentWalls);
+            wallsTMP.push(new Array((parseInt(posWall) + 11).toString(),orientation));
+            var tab = hashMapVoisin(gameState.board,walls);
+            var tmpOpponentPath = dijkstraNode(IAplay == 2 ? "playerA" : "playerB",positionOpponent,tab);
+            console.log("héohhhhh3" + putWall(gameState, (parseInt(posWall) + 11).toString(), orientation));
+            if(tmpOpponentPath.length>opponentPath.length){
+
+                return putWall(gameState, (parseInt(posWall) + 11).toString(), orientation);
             }
 
-            return new Move('move', (parseInt(botPath[0])+11));
         }
-    } else {
+    }
+    console.log("CHHHAATTTEEE");
+        var wallIntelligent = verifPutWall(gameState, posWall, opponentPath.length, botPath.length);
+        if ( wallIntelligent !== false) {
+            return new Move('wall',wallIntelligent);
+        }
+    console.log("???????????");
         return new Move('move', (parseInt(botPath[0])+11));
 
-    }
 }
 
 function verifPutWall(gameState, pos, longueurCheminOpponnent, longueurCheminBot) {
@@ -1001,6 +1034,7 @@ function comparerTaille(a, b) {
     return a.length - b.length;
 }
 function determineOpponentPosition(gameState){
+    //console.log("opponentNextMove : " + opponentNextMove);
     for(var i = 0; i<opponentNextMove.length;i++){
         var posI = opponentNextMove[i][0];
         var posY = opponentNextMove[i][1];
@@ -1203,24 +1237,44 @@ function verifPutWallToOneWay(gameState, cheminMinimale) {
                 }
                 tmp.push(chemins[0]);
                 if (tmp.length === 1) {
+
                     //nbsrotire
                     var nbS = 0;
+                    var sortieTrouvee = [];
                     if(IAplay == 1){
                         const lanePlayerBArray = ['08', '18', '28', '38', '48', '58', '68', '78', '88'];
                         for(var u = 0;u<lanePlayerBArray.length;u++){
                             dijkstraVisitedNode = [];
-                           nbS += dijkstra1Sortie(chemins[0][0],tab,lanePlayerBArray[u]);
+                            for(var k = 0;k<sortieTrouvee.length;k++){
+                                dijkstraVisitedNode.push(sortieTrouvee[k]);
+                            }
+                            var sortieBool = dijkstra1Sortie(chemins[0][0],tab,lanePlayerBArray[u]);
+                            if(sortieBool === 1){
+                               sortieTrouvee.push(lanePlayerBArray[u]) ;
+                            }
+                           nbS += sortieBool;
+
                         }
                     }else{
                         const lanePlayerAArray = ['00', '10', '20', '30', '40', '50', '60', '70', '80'];
                         for(var u = 0;u<lanePlayerAArray.length;u++){
                             dijkstraVisitedNode = [];
-                            nbS += dijkstra1Sortie(chemins[0][0],tab,lanePlayerAArray[u]);
+                            for(var k = 0;k<sortieTrouvee.length;k++){
+                                dijkstraVisitedNode.push(sortieTrouvee[k]);
+                            }
+                            var sortieBool = dijkstra1Sortie(chemins[0][0],tab,lanePlayerAArray[u]);
+                            if(sortieBool === 1){
+                                sortieTrouvee.push(lanePlayerAArray[u]) ;
+                            }
+                            nbS += sortieBool;
                         }
                     }
 
-                   if(nbS <=2 && nbS >=1)
-                        indice = a;
+                   if(nbS <=2 && nbS >=1){
+
+                       indice = a;
+                   }
+
                 }
             }
 

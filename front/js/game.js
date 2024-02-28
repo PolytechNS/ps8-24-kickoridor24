@@ -831,16 +831,12 @@ function changeActivePlayer() {
 
             var time = Date.now();
             var nMovePromise = nextMove(gameState1); // Stocker la promesse retournée par nextMove
-            nMovePromise.then(nMove =>{
+           nMovePromise.then(nMove =>{
                 console.log(nMove);
             });
-            var time2 = (Date.now()-time);
-            console.log("Compute time : " +time2 +" ms");
-            if(time2 >= 190){
-                console.log("ALLLLEEEERRRTTTTEEEE : " +time2);
-            }
 
-          /*  nMovePromise.then(nMove => {
+/*
+            nMovePromise.then(nMove => {
                 console.log(nMove);
                 console.log(Date.now() - time);
                 if(nMove.action === "move") {
@@ -863,8 +859,12 @@ function changeActivePlayer() {
             }).catch(error => {
                 console.error("Erreur lors de l'exécution de nextMove:", error);
             });
-            */
 
+            var time2 = (Date.now()-time);
+            console.log("Compute time : " +time2 +" ms");
+            if(time2 >= 190){
+                console.log("ALLLLEEEERRRTTTTEEEE : " +time2);
+            }*/
             }
 
     }
