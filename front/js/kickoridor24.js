@@ -8,7 +8,7 @@ var IAplay;
 var dijkstraVisitedNode = [];
 var positionOpponent = null;
 var opponentNextMove = [];
-var ouverture = 99;
+var ouverture = 0;
 var oneWay = false;
 var opponentWallPlaced = false;
 class Move {
@@ -117,6 +117,7 @@ function nextMove(gameState) {
     walls = gameState.opponentWalls.concat(gameState.ownWalls);
 
     if (ouverture <= 5) {
+        ouverture++;
         //bloquer tunnel
         if (deplacement <= 4) {
             var isTunnel = findTunnel(gameState);
@@ -132,13 +133,13 @@ function nextMove(gameState) {
                 }
             }
         }
-        var resultat = ouvertureProcess(gameState);
+      /*  var resultat = ouvertureProcess(gameState);
         //console.log(resultat);
 
         return new Promise((resolve, reject) => {
             resolve(resultat);
-        });
-    } else {
+        });*/
+    }
         //bouger
         var tab = hashMapVoisin(gameState.board, walls);
 
@@ -173,7 +174,7 @@ function nextMove(gameState) {
             resolve(PassOrBlock(gameState, gameState.board, walls));
             });
         }
-    }
+
 }
 
 function correction(rightMove) {
@@ -701,7 +702,7 @@ function PassOrBlock(gameState, board, walls) {
         if(!oneWay) {
             tmp = couloirBot(gameState, walls);
         }
-        if(tmp.value == false ){
+        if(tmp == false || tmp.value == false ){
             return new Move('move', (parseInt(botPath[0])+11));
         }
         oneWay = true;
@@ -754,25 +755,26 @@ function blockOpponent(gameState, opponentPath, botPath) {
 
         if (putWall(gameState, (parseInt(posWall) + 11).toString(), orientation) !== false) {
             //console.log(putWall(gameState, (parseInt(posWall) + 11).toString(), orientation));
-            console.log("héohhhhh2" + putWall(gameState, (parseInt(posWall) + 11).toString(), orientation));
+
             var wallsTMP = gameState.ownWalls.concat(gameState.opponentWalls);
             wallsTMP.push(new Array((parseInt(posWall) + 11).toString(),orientation));
             var tab = hashMapVoisin(gameState.board,walls);
             var tmpOpponentPath = dijkstraNode(IAplay == 2 ? "playerA" : "playerB",positionOpponent,tab);
-            console.log("héohhhhh3" + putWall(gameState, (parseInt(posWall) + 11).toString(), orientation));
-            if(tmpOpponentPath.length>opponentPath.length){
 
+            if(tmpOpponentPath.length>opponentPath.length){
+                console.log("mur réfléchi mais pas trop");
                 return putWall(gameState, (parseInt(posWall) + 11).toString(), orientation);
             }
 
         }
     }
-    console.log("CHHHAATTTEEE");
+
         var wallIntelligent = verifPutWall(gameState, posWall, opponentPath.length, botPath.length);
         if ( wallIntelligent !== false) {
+            console.log("wallIntelligent1");
             return new Move('wall',wallIntelligent);
         }
-    console.log("???????????");
+
         return new Move('move', (parseInt(botPath[0])+11));
 
 }

@@ -831,11 +831,11 @@ function changeActivePlayer() {
 
             var time = Date.now();
             var nMovePromise = nextMove(gameState1); // Stocker la promesse retournée par nextMove
-           nMovePromise.then(nMove =>{
+         /*   nMovePromise.then(nMove =>{
                 console.log(nMove);
-            });
+            });*/
 
-/*
+
             nMovePromise.then(nMove => {
                 console.log(nMove);
                 console.log(Date.now() - time);
@@ -864,7 +864,7 @@ function changeActivePlayer() {
             console.log("Compute time : " +time2 +" ms");
             if(time2 >= 190){
                 console.log("ALLLLEEEERRRTTTTEEEE : " +time2);
-            }*/
+            }
             }
 
     }
