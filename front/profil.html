@@ -1,0 +1,94 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Kick'Oridor - Menu</title>
+    <link rel="stylesheet" type="text/css" href="css/profil.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
+</head>
+<body>
+<header>
+    <div class="cnt-header">
+        <div class="nav">
+            <img id="home" src="images/home.png" onclick="redirectToMenu()">
+            <div class="logo">
+                <img src="images/kickoridor24.png">
+            </div>
+        </div>
+        <div class="connection">
+            <div id="se-connecter" class="connexion" onclick="redirectToLogin()">
+                <p class="btn"> Se connecter</p>
+            </div>
+            <div id="se-deconnecter" class="connexion" style="display: none" onclick="redirectToLogin()">
+                <p class="btn"> Se déconnecter</p>
+            </div>
+            <div class="name">
+                <p id="name">Invité</p>
+            </div>
+            <div class="mitro">
+                <img src="images/mitro.jpg" alt="">
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <img src="images/header.png" alt="" class="bg-header">
+    </div>
+</header>
+
+<div class="all">
+    <div class="navClass">
+        <div id="info" class="topButton" onclick="showInfo()">
+            <a class="navButton">Informations</a>
+        </div>
+
+        <div id="photo" class="topButton" onclick="showPhoto()">
+            <a class="navButton">Photo de Profil</a>
+        </div>
+        <div id="celeb" class="topButton" onclick="showCeleb()">
+            <a class="navButton">Célébration</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="info" style="display: flex">
+            <div class="Play">
+                <h2 class="btnJouer"> Info resumer</h2>
+            </div>
+            <div class="Play">
+                <h2 class="btnJouer"> Formulaire a faire</h2>
+            </div>
+        </div>
+
+        <div class="photo" style="display: none">
+            <div class="Play">
+                <h2 class="btnJouer"> Photos actuelle</h2>
+            </div>
+
+            <div class="Play">
+                <h2 class="btnJouer"> Liste des photos</h2>
+            </div>
+        </div>
+
+        <div class="celebration" style="display: none">
+            <div class="Play">
+                <h2 class="btnJouer"> Celebration actuelle</h2>
+            </div>
+
+            <div class="Play">
+                <h2 class="btnJouer"> Liste des celebrations</h2>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="footer">
+    <img id="param" src="images/param.png">
+</div>
+</body>
+</html>
+<script src="js/cookie.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/authentification.js"></script>
+<script src="js/profil.js"></script>

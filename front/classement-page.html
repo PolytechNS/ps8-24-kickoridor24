@@ -21,11 +21,8 @@
             <div id="se-deconnecter" class="connexion" style="display: none" onclick="redirectToLogin()">
                 <p class="btn"> Se déconnecter</p>
             </div>
-            <div class="name" onclick="redirectToProfil()">
+            <div class="name">
                 <p id="name">Invité</p>
-            </div>
-            <div class="mitro">
-                <img src="images/mitro.jpg" alt="">
             </div>
         </div>
     </div>
@@ -36,16 +33,8 @@
 </header>
 
 <div class="container">
-    <div class="Play" onclick="redirectToPlayPage()">
-        <h2 class="btnJouer"> JOUER</h2>
-    </div>
-
-    <div class="Play" onclick="redirectToRegle()">
-        <h2 class="btnJouer"> LES REGLES</h2>
-    </div>
-
-    <div id="classement" class="Play" onclick="redirectToClassement()">
-        <h2 class="btnJouer"> CLASSEMENTS</h2>
+    <div class="Play" onclick="redirectToGame('typeDePartie','bot',7)">
+        <h2 class="btnJouer"> Classement a faire</h2>
     </div>
 </div>
 
