@@ -644,9 +644,9 @@ function dijkstraNode(player, start, graph) {
 }
 
 function checkBonDeplacement(chemin, tab) {
-        if(chemin == null){
-            return false;
-        }
+    if(chemin == null){
+        return false;
+    }
     if (chemin.length > dijkstraNode(IAplay == 1 ? "playerA" : "playerB", positionBot, tab).length) {
         return false;
     }
@@ -665,7 +665,7 @@ function PassOrBlock(gameState, board, walls) {
         //console.log("opponentVisibility : " + positionOpponent);
         opponentPath = pathFinding(positionOpponent, board, "opponent");
         //console.log("opponentPath : " + opponentPath);
-        if(opponentPath.length >1 && !oneWay) {//&& (nbWalls>=nbWallsOpponent) && botPath.length>1)
+        if(opponentPath.length >1 && !oneWay && (nbWalls>=nbWallsOpponent) && botPath.length>1 && nbWallsOpponent >0) {
 
             var tmp = couloirBot(gameState,walls);
 
@@ -713,65 +713,65 @@ function blockOpponent(gameState, opponentPath, botPath) {
     //console.log("nextMoveI : " + nextMoveI);
     //console.log("nextMoveJ : " + nextMoveJ);
     var posWall2 = null;
-/*
-    if (nextMoveI === 1) {
-        orientation = 1;
-        posWall = (parseInt(positionOpponent[0])) + "" + positionOpponent[1];
-        posWall2 = (parseInt(positionOpponent[0])) + "" + (parseInt(positionOpponent[1])+1);
-    } else if (nextMoveI === -1) {
-        orientation = 1;
-        posWall = (parseInt(positionOpponent[0]) - 1) + "" + positionOpponent[1];
-        posWall2 = (parseInt(positionOpponent[0]) - 1) + "" + (parseInt(positionOpponent[1])+1);
-    } else {
-        if (nextMoveJ === -1) {
-            orientation = 0;
-            posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) );
-            posWall2 =(parseInt(positionOpponent[0]) - 1) + "" + (parseInt(positionOpponent[1]) );
-        } else if (nextMoveJ === 1) {
-            //console.log("positionOpponent[1] : " + positionOpponent[1]);
-            //console.log("positionOpponent[0] : " + positionOpponent[0]);
-
-            orientation = 0;
-            posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) + 1);
-            posWall2 = (parseInt(positionOpponent[0]) - 1) + "" + (parseInt(positionOpponent[1]) + 1);
-
-            //console.log("posWall : " + posWall);
+    /*
+        if (nextMoveI === 1) {
+            orientation = 1;
+            posWall = (parseInt(positionOpponent[0])) + "" + positionOpponent[1];
+            posWall2 = (parseInt(positionOpponent[0])) + "" + (parseInt(positionOpponent[1])+1);
+        } else if (nextMoveI === -1) {
+            orientation = 1;
+            posWall = (parseInt(positionOpponent[0]) - 1) + "" + positionOpponent[1];
+            posWall2 = (parseInt(positionOpponent[0]) - 1) + "" + (parseInt(positionOpponent[1])+1);
         } else {
-            posWall = null;
-            //console.log("prochain move pas possible");
-        }
-    }
-    if (posWall !== null) {
+            if (nextMoveJ === -1) {
+                orientation = 0;
+                posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) );
+                posWall2 =(parseInt(positionOpponent[0]) - 1) + "" + (parseInt(positionOpponent[1]) );
+            } else if (nextMoveJ === 1) {
+                //console.log("positionOpponent[1] : " + positionOpponent[1]);
+                //console.log("positionOpponent[0] : " + positionOpponent[0]);
 
-        if (putWall(gameState, (parseInt(posWall) + 11).toString(), orientation) !== false) {
-            //console.log(putWall(gameState, (parseInt(posWall) + 11).toString(), orientation));
+                orientation = 0;
+                posWall = positionOpponent[0] + "" + (parseInt(positionOpponent[1]) + 1);
+                posWall2 = (parseInt(positionOpponent[0]) - 1) + "" + (parseInt(positionOpponent[1]) + 1);
 
-            var wallsTMP = gameState.ownWalls.concat(gameState.opponentWalls);
-            wallsTMP.push(new Array((parseInt(posWall) + 11).toString(),orientation));
-            var tab = hashMapVoisin(gameState.board,walls);
-            var tmpOpponentPath = dijkstraNode(IAplay == 2 ? "playerA" : "playerB",positionOpponent,tab);
-
-            if(tmpOpponentPath.length>opponentPath.length){
-                //console.log("premier choix : " );
-                return putWall(gameState, (parseInt(posWall) + 11).toString(), orientation);
+                //console.log("posWall : " + posWall);
+            } else {
+                posWall = null;
+                //console.log("prochain move pas possible");
             }
-
         }
-        if (putWall(gameState, (parseInt(posWall2) + 11).toString(), orientation) !== false) {
-            //console.log(putWall(gameState, (parseInt(posWall) + 11).toString(), orientation));
+        if (posWall !== null) {
 
-            var wallsTMP = gameState.ownWalls.concat(gameState.opponentWalls);
-            wallsTMP.push(new Array((parseInt(posWall2) + 11).toString(),orientation));
-            var tab = hashMapVoisin(gameState.board,walls);
-            var tmpOpponentPath = dijkstraNode(IAplay == 2 ? "playerA" : "playerB",positionOpponent,tab);
+            if (putWall(gameState, (parseInt(posWall) + 11).toString(), orientation) !== false) {
+                //console.log(putWall(gameState, (parseInt(posWall) + 11).toString(), orientation));
 
-            if(tmpOpponentPath.length>opponentPath.length){
-               //.log("second choix : " );
-                return putWall(gameState, (parseInt(posWall2) + 11).toString(), orientation);
+                var wallsTMP = gameState.ownWalls.concat(gameState.opponentWalls);
+                wallsTMP.push(new Array((parseInt(posWall) + 11).toString(),orientation));
+                var tab = hashMapVoisin(gameState.board,walls);
+                var tmpOpponentPath = dijkstraNode(IAplay == 2 ? "playerA" : "playerB",positionOpponent,tab);
+
+                if(tmpOpponentPath.length>opponentPath.length){
+                    //console.log("premier choix : " );
+                    return putWall(gameState, (parseInt(posWall) + 11).toString(), orientation);
+                }
+
             }
+            if (putWall(gameState, (parseInt(posWall2) + 11).toString(), orientation) !== false) {
+                //console.log(putWall(gameState, (parseInt(posWall) + 11).toString(), orientation));
 
-        }
-    }*/
+                var wallsTMP = gameState.ownWalls.concat(gameState.opponentWalls);
+                wallsTMP.push(new Array((parseInt(posWall2) + 11).toString(),orientation));
+                var tab = hashMapVoisin(gameState.board,walls);
+                var tmpOpponentPath = dijkstraNode(IAplay == 2 ? "playerA" : "playerB",positionOpponent,tab);
+
+                if(tmpOpponentPath.length>opponentPath.length){
+                   //.log("second choix : " );
+                    return putWall(gameState, (parseInt(posWall2) + 11).toString(), orientation);
+                }
+
+            }
+        }*/
 
     var wallIntelligent = verifPutWall(gameState, posWall, opponentPath.length, botPath.length);
     if ( wallIntelligent !== false) {
@@ -894,6 +894,10 @@ function verifPutWall(gameState, pos, longueurCheminOpponnent, longueurCheminBot
         if(indice===999){
             return false;
         }
+        if(longueurCheminOpponnent === MaxOpponent){
+            return false;
+        }
+
         return murPossibles[indice];
     }
     return false;
@@ -1258,6 +1262,14 @@ function verifPutWallToOneWay(gameState, cheminMinimale) {
 
             }
         }
+        if(nbSortieInitaiale >= 3 ){
+            var premiereSortie = parseInt(sortieTrouvee2[0]);
+            var derniereSortie = parseInt(sortieTrouvee2[sortieTrouvee2.length-1]);
+            var ecartSortie = Math.abs(derniereSortie - premiereSortie);
+            if(cheminMinimale.length>(ecartSortie/10))
+                return false;
+        }
+
         //console.log("SortieInitiale : " + nbSortieInitaiale);
 
         for (var a = 0; a < murPossibles.length; a++) {
@@ -1276,8 +1288,15 @@ function verifPutWallToOneWay(gameState, cheminMinimale) {
             }
 
             chemins.sort(comparerTaille);
-
-            if(chemins[0].length <=cheminMinimale.length) {
+            //console.log(chemins)
+            var taille;
+            if(chemins.length === 0){
+                taille = 99;
+            }
+            else{
+                taille = chemins[0].length
+            }
+            if(taille <=cheminMinimale.length) {
 
                 var tmp = [];
                 for (var i = 0; i < possiblesMoves.length; i++) {
@@ -1429,6 +1448,8 @@ function hasWallAdjacent(pos,orientation,walls){
 
 function distanceEntrePositions(pos1,pos2,walls,board){
     //console.log("pos1 : " + pos1 +"  pos2 : " + pos2);
+    pos1 = parseInt(pos1)-11;
+    pos2 = parseInt(pos2)-11;
     var graph = hashMapVoisin(board,walls);
     const queue = [[pos1]];
     const visited = new Set([pos1]);
