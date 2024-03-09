@@ -1449,7 +1449,13 @@ function hasWallAdjacent(pos,orientation,walls){
 function distanceEntrePositions(pos1,pos2,walls,board){
     //console.log("pos1 : " + pos1 +"  pos2 : " + pos2);
     pos1 = parseInt(pos1)-11;
+    if(pos1 <10){
+        pos1 = '0' +pos1;
+    }
     pos2 = parseInt(pos2)-11;
+    if(pos2 <10){
+        pos2 = '0' +pos2;
+    }
     var graph = hashMapVoisin(board,walls);
     const queue = [[pos1]];
     const visited = new Set([pos1]);
