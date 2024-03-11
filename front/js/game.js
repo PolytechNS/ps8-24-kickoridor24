@@ -1,3 +1,4 @@
+
 const socket = io('/api/game');
 
 class cellule{
@@ -7,6 +8,7 @@ class cellule{
         this.visibility =visibilite;
     }
 }
+setup(1)
 class gameBDD {
     constructor(username,board,tour,typeDePartie) {
         this.username = username;
@@ -766,7 +768,16 @@ function victoire(txt){
 
 
 function changeActivePlayer() {
+    if(activePlayer=="playerA" && getCookie("typeDePartie")==="bot_v2" ) {
 
+        activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
+        activateFog();
+        activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
+        activateFog();
+
+        convertBoard();
+        updateBoard(gameState1);
+    }
     activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
     document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
     if(tour<=200)
@@ -803,9 +814,9 @@ function changeActivePlayer() {
             });
         }
     }
-    else if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot_v2"){
-        if(tour>=200){
-            var resPromise = setup(2);
+    else if(activePlayer === "playerA" && getCookie("typeDePartie")==="bot_v2"){
+        if(tour>200){
+            var resPromise = setup(1);
             resPromise.then(cellIndex => {
                 var newCellIndex = convertGameStateToPosition((cellIndex).toString());
                 movePlyerFirstTurn(newCellIndex);
@@ -821,13 +832,18 @@ function changeActivePlayer() {
 
             var time = Date.now();
             var nMovePromise = nextMove(gameState1); // Stocker la promesse retournée par nextMove
+         /*   nMovePromise.then(nMove =>{
+                console.log(nMove);
+            });*/
+
+
             nMovePromise.then(nMove => {
                 console.log(nMove);
                 console.log(Date.now() - time);
                 if(nMove.action === "move") {
                     var pos = nMove.value;
                     var newPos = convertGameStateToPosition(pos.toString());
-                    movePlayer(player2Position);
+                    movePlayer(player1Position);
                     movePlayer(newPos);
                 }
                 else if(nMove.action === "wall"){
@@ -844,6 +860,12 @@ function changeActivePlayer() {
             }).catch(error => {
                 console.error("Erreur lors de l'exécution de nextMove:", error);
             });
+
+            var time2 = (Date.now()-time);
+            console.log("Compute time : " +time2 +" ms");
+            if(time2 >= 190){
+                console.log("ALLLLEEEERRRTTTTEEEE : " +time2);
+            }
             }
 
     }
