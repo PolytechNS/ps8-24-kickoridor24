@@ -3,16 +3,29 @@ function setup(AIplay){
     // This function has to return a Promise that is resolved into a position string (see below), indicating its placement,
     // in less than 1000ms.
     if(AIplay === 1){
-        return Promise.resolve("59");
+        return Promise.resolve("41");
     }else if(AIplay === 2){
-        return Promise.resolve("15");
+        return Promise.resolve("49");
     }
 }
-
+class Move {
+    constructor(action, value) {
+        this.action = action;
+        this.value = value;
+    }
+}
+var boole = 0;
 function nextMove(gameState){
-    //which takes 1 argument which is a gameState object (see below) representing the state of the game after
-    //your opponent's action. This function has 200ms to return a Promise that is resolved into a move object
-    //representing your AI's next move.
+    if(boole ==1) {
+        boole = 0;
+        return new Promise((resolve, reject) => {
+            resolve(new Move("move", "61"));
+        });
+    }else{boole = 1;
+        return new Promise((resolve, reject) => {
+            resolve(new Move("move", "51"));
+        });
+    }
 }
 
 function correction(rightMove) {
@@ -20,14 +33,18 @@ function correction(rightMove) {
     //move, to give you the random move you did instead (if your AI tries to play an impossible move, a random
     //legal move will be played instead by the server). This function has 50ms to return a Promise that is resolved
     //into the boolean true, indicating it is ready to continue
+    return new Promise((resolve, reject) => {
+        resolve(true);
+    });
 }
 
 function updateBoard(gameState) {
-    //taking 1 argument which is a gameState object representing the state of the game after your move.
-    //The function must return a Promise resolved into the boolean true in 50ms maximum.
+    return  new Promise((resolve, reject) => {
+        resolve(true);
+    });
 }
 
-exports.setupAI = setup;
-exports.nextMoveAI = nextMove;
-exports.correctionAI = correction;
-exports.updateBoardAI = updateBoard;
+exports.setup = setup;
+exports.nextMove = nextMove;
+exports.correction = correction;
+exports.updateBoard = updateBoard;
