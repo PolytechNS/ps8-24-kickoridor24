@@ -12,12 +12,49 @@ function redirectToLogin() {
 
 function redirectToBotPage() {
     window.location.href = "bot-page.html";
+}
+
+function redirectToClassement() {
+    window.location.href = "classement-page.html";
+}
+
+function redirectToRegle() {
+    window.location.href = "regle-page.html";
+}
+
+function redirectToPlayPage() {
+    window.location.href = "play-page.html";
 
 }
 
 function redirectToMenu() {
     window.location.href = "index.html";
 }
+
+function redirectToProfil(){
+    window.location.href = "profil.html";
+
+}
+
+function showOnlinePlay(){
+    document.getElementsByClassName("onlinePlay")[0].style.display = "flex";
+    document.getElementsByClassName("horsLignePlay")[0].style.display = "none";
+    document.getElementById("ligne").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("hors").style.borderBottom = "none";
+    document.getElementById("hors").style.backgroundColor = "#E4E5E7";
+    document.getElementById("ligne").style.backgroundColor = "#3EE4F0";
+}
+
+function showHorsLignePlay(){
+    document.getElementsByClassName("horsLignePlay")[0].style.display = "flex";
+    document.getElementsByClassName("onlinePlay")[0].style.display = "none";
+    document.getElementById("hors").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("ligne").style.borderBottom = "none";
+    document.getElementById("hors").style.backgroundColor = "#3EE4F0";
+    document.getElementById("ligne").style.backgroundColor = "#E4E5E7";
+}
+
+
 
 async function checkResumegame(){
     var div =  document.getElementById("resumeGameButton");

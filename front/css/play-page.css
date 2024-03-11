@@ -9,6 +9,8 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 97vh;
+
+    font-family: 'Roboto Condensed', sans-serif;
 }
 
 header {
@@ -149,14 +151,9 @@ header {
     font-size: 1.2em;
     /*changer couleur du texte*/
     color: #eb4f61;
-    width: 24%;
-    height: 34%;
-    margin: 0.5em;
     box-shadow: 0 3px 3px 0 #676767;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    transition: background-color 0.3s ease; /* Animation de transition pour un effet plus fluide */
+
+    padding: 0.2em 4em 6em 0.4em;
 
 }
 
@@ -173,52 +170,62 @@ header {
     margin: 0.4em 0.3em 0.3em 0.3em;
 }
 
-.btnJouer{
-    margin: 0.3em 0.3em 0.3em 0.3em;
-}
-
-.container {
+.onlinePlay, .horsLignePlay{
     display: flex;
-    /*placer les div au centre horizontalement et verticalement*/
+    flex-direction: row;
+    justify-content: flex-start;
     align-items: center;
-    min-height: 70vh;
-    justify-content: center;
+    gap: 10px;
+    width: 700px;
+    font-size: 1.2em;
+    /*changer couleur du texte*/
+    color: #eb4f61;
 }
 
-#classement {
-    background-image: url("../images/ucl.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    color: #dddddd;
-    transition: filter 0.3s ease; /* Animation de transition pour un effet plus fluide */
+.navClass{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+    /*width qui rempli tout l'espace dispo*/
+    width: 100%;
 }
 
-#classement:hover {
-    filter: brightness(70%); /* Appliquer un filtre de luminosité de 80% (plus clair) */
-}
-
-#name:hover {
-    cursor: pointer;
+.topButton{
+    background-color:  #E4E5E7;
+    font-size: 1.5em;
     font-weight: bold;
+    padding: 0.2em 0.5em;
+    margin-bottom: 0.2em;
+    /*ajouter une bordure en bas*/
 }
 
-.name{
-    margin-right: 1em;
-    margin-left: 1em;
+.topButton:hover{
+    /*background-color: #3EE4F0;
+    color: #000000;*/
+    cursor: pointer;
 }
 
-.mitro {
-    width: 35px; /* ajustez la taille du cercle selon vos besoins */
-    height: 35px; /* assurez-vous que la largeur et la hauteur soient les mêmes pour obtenir un cercle parfait */
-    overflow: hidden; /* assurez-vous que l'image est coupée si elle dépasse les limites du cercle */
-    border-radius: 50%; /* définir le rayon du cercle */
-    margin-bottom: 0.4em;
-    margin-right: -4em;
+#ligne{
+    background-color: #3EE4F0;
+    color: #000000;
+    border-bottom: 4px solid #eb4f61;
 }
 
-.mitro img {
-    width: 150%; /* assurez-vous que l'image remplit complètement le cercle */
-    margin-left: -10px;
+.all{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto;
+    /*centrer verticalement*/
+    height: 70%;
+
 }
+
+.btnJouer{
+    margin : 0;
+}
+
+
 
