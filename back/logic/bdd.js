@@ -47,8 +47,6 @@ async function handleBDD(request, response){
                     username: data.username,
                     elo : '0',
                     img : 'images/mitro.jpg',
-                    listFriend : '',
-                    demandesAmis :'',
                     token: token
                 }
                 saveUser(dataToSend).then(r => {
@@ -216,7 +214,7 @@ async function handleBDD(request, response){
             try {
                 const data = JSON.parse(body);
                 const players = await askFriendsList(data);
-                console.log("PLAYERS : " + players);
+
                 if (players != null) {
                     response.setHeader('Content-Type', 'application/json');
                     response.write(JSON.stringify(players));
@@ -226,6 +224,81 @@ async function handleBDD(request, response){
                     response.end("User not found");
                 }
             } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if(request.method === "POST" && request.url === "/api/deleteAskFriend"){
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            let token;
+            try {
+                const data = JSON.parse(body);
+                await deleteAskFriend(data);
+                response.end();
+            }catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if(request.method === "POST" && request.url === "/api/validateAskFriend"){
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            let token;
+            try {
+                const data = JSON.parse(body);
+                await validateAskFriend(data);
+                response.end();
+            }catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if(request.method === "POST" && request.url === "/api/friendsList"){
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+                const players = await friendsList(data);
+
+                if (players != null) {
+                    response.setHeader('Content-Type', 'application/json');
+                    response.write(JSON.stringify(players));
+                    response.end();
+                }else{
+                    response.statusCode = 404;
+                    response.end("User not found");
+                }
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if(request.method === "POST" && request.url === "/api/deleteFriend"){
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            let token;
+            try {
+                const data = JSON.parse(body);
+                await deleteFriend(data);
+                response.end();
+            }catch (error) {
                 console.error(error.message);
                 response.statusCode = 400;
                 response.end("Invalid JSON");
@@ -291,9 +364,13 @@ async function deleteGameState(data) {
 
 async function findFriends(data) {
     try {
+        const currentUser = await findUser(data);
         await client.connect();
         return await client.db("kickoridor").collection("users").find({
-            username: { $regex: "^" + data.username.toString() }
+            username: {
+                $regex: "^" + data.recherche.toString(),
+                $nin: [currentUser["username"].toString(), ...currentUser["friendList"]] //
+            }
         }).toArray();
     } finally {
         await client.close();
@@ -331,7 +408,60 @@ async function askFriendsList(data) {
         await client.close();
     }
 }
+async function deleteAskFriend(data) {
+    try {
+        await client.connect();
+        return await client.db("kickoridor").collection("users").updateOne(
+            { username: data.emetteur.toString() },
+            { $pull: { demandes: data.receveur.toString() } }
+        );
+    } finally {
+        await client.close();
+    }
+}
 
+async function validateAskFriend(data) {
+    try {
+        await client.connect();
+         await client.db("kickoridor").collection("users").updateOne(
+            { username: data.emetteur.toString() },
+            { $pull: { demandes: data.receveur.toString() }
+            }
+        );
+         await client.db("kickoridor").collection("users").updateOne(
+            { username: data.emetteur.toString() },
+            { $addToSet: { friendList: data.receveur.toString() } }
+        );
+        return await client.db("kickoridor").collection("users").updateOne(
+            { username: data.receveur.toString() },
+            { $addToSet: { friendList: data.emetteur.toString() } }
+        );
+
+    } finally {
+        await client.close();
+    }
+}
+
+async function friendsList(data) {
+    try {
+        await client.connect();
+        const user = await client.db("kickoridor").collection("users").findOne({
+            username: data.username.toString()
+        });
+
+        if (user && user.friendList) {
+            // Utiliser Promise.all pour exécuter les requêtes findUser de manière asynchrone
+            const friendsDetails = await Promise.all(user.friendList.map(async (friend) => {
+                return await findUser({ username: friend });
+            }));
+            return friendsDetails;
+        } else {
+            return []; // Retourner un tableau vide si l'utilisateur n'a pas de demandes ou si l'utilisateur n'existe pas
+        }
+    } finally {
+        await client.close();
+    }
+}
 function generateAccessToken(data) {
     const payload = {
         email: data.email,
@@ -343,6 +473,17 @@ function generateAccessToken(data) {
     return jwt.sign(payload, secret);
 }
 
+async function deleteFriend(data) {
+    try {
+        await client.connect();
+        return await client.db("kickoridor").collection("users").updateOne(
+            { username: data.emetteur.toString() },
+            { $pull: { friendList: data.receveur.toString() } }
+        );
+    } finally {
+        await client.close();
+    }
+}
 
 function verifyAccessToken(token) {
     const secret = 'kc-blue-wall';
