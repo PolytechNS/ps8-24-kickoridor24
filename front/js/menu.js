@@ -54,6 +54,9 @@ function showHorsLignePlay(){
     document.getElementById("ligne").style.backgroundColor = "#E4E5E7";
 }
 
+function redirectToFriendsPage() {
+    window.location.href = "friends-page.html";
+}
 
 
 async function checkResumegame(){
@@ -83,3 +86,40 @@ async function checkResumegame(){
  }
 }
 checkResumegame();
+
+
+function showFriendsList(){
+    document.getElementsByClassName("friendsList")[0].style.display = "flex";
+    document.getElementsByClassName("friendsAdd")[0].style.display = "none";
+    document.getElementsByClassName("friendsDemands")[0].style.display = "none";
+    document.getElementById("amisBTN").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("ajouterBTN").style.borderBottom = "none";
+    document.getElementById("ajouterBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("demandesBTN").style.borderBottom = "none";
+    document.getElementById("demandesBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("amisBTN").style.backgroundColor = "#3EE4F0";
+}
+
+function showFriendsAdd(){
+    document.getElementsByClassName("friendsAdd")[0].style.display = "flex";
+    document.getElementsByClassName("friendsList")[0].style.display = "none";
+    document.getElementsByClassName("friendsDemands")[0].style.display = "none";
+    document.getElementById("ajouterBTN").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("amisBTN").style.borderBottom = "none";
+    document.getElementById("amisBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("demandesBTN").style.borderBottom = "none";
+    document.getElementById("demandesBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("ajouterBTN").style.backgroundColor = "#3EE4F0";
+}
+
+function showFriendsDemands(){
+    document.getElementsByClassName("friendsDemands")[0].style.display = "flex";
+    document.getElementsByClassName("friendsList")[0].style.display = "none";
+    document.getElementsByClassName("friendsAdd")[0].style.display = "none";
+    document.getElementById("demandesBTN").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("amisBTN").style.borderBottom = "none";
+    document.getElementById("amisBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("ajouterBTN").style.borderBottom = "none";
+    document.getElementById("ajouterBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("demandesBTN").style.backgroundColor = "#3EE4F0";
+}
