@@ -235,7 +235,7 @@ header {
 }
 
 #amisDiv{
-    background-color: #B9C0C6;
+    background-color: #3EE4F0;
     margin-bottom: 7px;
     margin-right: 5px;
     width: fit-content;
@@ -317,5 +317,25 @@ header {
     height: 50px;
 }
 
+.notification-demandes {
+    position: relative;
+    top: -10px;
+    right:10px;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    display: none;
+}
 
+.notification-badge {
+    position: relative;
+    top: 0;
+    right: 100px;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    display: none;
+}
 

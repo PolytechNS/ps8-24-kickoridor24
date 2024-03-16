@@ -127,8 +127,9 @@ async function demandesAmisListe(){
                     var para = document.createElement("p");
                     para.textContent = "Aucune demande d'amis trouvée";
                     cont.appendChild(para);
+                    document.getElementsByClassName("notification-demandes")[0].style.display ='none';
                 }else {
-
+                    document.getElementsByClassName("notification-demandes")[0].style.display ='flex';
                     for (var i = 0; i < data.length; i++) {
                         var div= document.createElement("div");
                         div.classList.add("profilAmis");

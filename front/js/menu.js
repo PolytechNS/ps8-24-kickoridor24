@@ -123,3 +123,54 @@ function showFriendsDemands(){
     document.getElementById("ajouterBTN").style.backgroundColor = "#E4E5E7";
     document.getElementById("demandesBTN").style.backgroundColor = "#3EE4F0";
 }
+
+async function checkFriends(){
+
+    if(getCookie("username") == null){
+        var amisDiv =   document.getElementById("amisDiv");
+      amisDiv.style.display = 'none';
+
+
+        return ;
+    }else{
+        console.log("okkkk");
+        var amisDiv =   document.getElementById("amisDiv");
+        amisDiv.style.display = 'flex';
+
+
+    }
+
+    const formDataJSON = {};
+    formDataJSON["username"] = getCookie("username");
+    try {
+        const response = await fetch('/api/askFriendsList', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur de réseau ou HTTP: ' + response.status);
+            }
+
+            return response.json(); // Convertit la réponse en JSON
+        })
+            .then(data => {
+                var amisDiv =   document.getElementById("amisDiv");
+                if(data.length > 0){
+                    amisDiv.getElementsByTagName('span')[0].style.display = 'flex';
+                }else{
+                    amisDiv.getElementsByTagName('span')[0].style.display = 'none';
+                }
+
+            })
+            .catch(error => {
+                console.error('Une erreur est survenue lors de la récupération des demandes d\'amis : ', error);
+            });
+
+    } catch (e) {
+        alert(e.message);
+    }
+}
+checkFriends();
