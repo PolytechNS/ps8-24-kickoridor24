@@ -389,6 +389,35 @@ header {
     background: #678288;
 }
 
+.barreChat{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+    height: 5vh;
+    border-radius: 15px;
+    border: none;
+    outline: none;
+    background-color: #E4E5E7;
+    margin-left: 1vh;
+}
+
+.envoyer{
+    cursor: pointer;
+    width: 5vh;
+}
+
+.inputEcrire{
+    width: 88%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background-color: #E4E5E7;
+    border-radius: 15px;
+    margin-bottom: 1vh;
+    margin-top: 0.5vh;
+}
+
 
 
 

@@ -141,7 +141,8 @@ async function handleBDD(request, response){
                 response.end("Invalid JSON");
             }
         });
-    }else if(request.method === "POST" && request.url === "/api/gameDelete"){
+
+    }else if(request.method === "POST" && request.url === "/api/gameDelete") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -152,7 +153,7 @@ async function handleBDD(request, response){
                 const deleteGame = await deleteGameState(data);
                 if (deleteGame != null) {
                     response.end("ok");
-                }else{
+                } else {
                     response.statusCode = 404;
                     response.end("User not found");
                 }
@@ -162,6 +163,27 @@ async function handleBDD(request, response){
                 response.end("Invalid JSON");
             }
         });
+    }else if(request.method === "POST" && request.url === "/api/sendMessage") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+                const dataToSend = {
+                    username: data.username,
+                    message: data.message
+                }
+                response.statusCode = 200;
+                response.end("ok");
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+
     }
 
 }
