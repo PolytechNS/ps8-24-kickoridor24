@@ -54,7 +54,54 @@ function showHorsLignePlay(){
     document.getElementById("ligne").style.backgroundColor = "#E4E5E7";
 }
 
+function showMatchChat(){
+    document.getElementsByClassName("matchMsg")[0].style.display = "flex";
+    document.getElementsByClassName("amisMsg")[0].style.display = "none";
+    document.getElementsByClassName("chatAmiMsg")[0].style.display = "none";
+    document.getElementById("matchChat").style.backgroundColor = "#3EE4F0";
+    document.getElementById("amisChat").style.backgroundColor = "#E4E5E7";
+    document.getElementById("matchChat").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("amisChat").style.borderBottom = "none";
+}
 
+function openChat() {
+    var chatMenu = document.getElementById("chatMenu");
+    var chat = document.getElementById("chat");
+
+    if (chatMenu.classList.contains("show")) {
+        chatMenu.classList.remove("show");
+        chat.style.width = "10%";
+    } else {
+        chatMenu.classList.add("show");
+        chat.style.width = "22%";
+    }
+}
+
+function openAmiChat() {
+    document.getElementsByClassName("matchMsg")[0].style.display = "none";
+    document.getElementsByClassName("amisMsg")[0].style.display = "none";
+    document.getElementsByClassName("chatAmiMsg")[0].style.display = "flex";
+}
+
+function showAmisChat(){
+    document.getElementsByClassName("amisMsg")[0].style.display = "flex";
+    document.getElementsByClassName("matchMsg")[0].style.display = "none";
+    document.getElementsByClassName("chatAmiMsg")[0].style.display = "none";
+    document.getElementById("amisChat").style.backgroundColor = "#3EE4F0";
+    document.getElementById("matchChat").style.backgroundColor = "#E4E5E7";
+    document.getElementById("amisChat").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("matchChat").style.borderBottom = "none";
+}
+
+function scrollToBott(){
+    const element = document.getElementById("chatAmiID");
+    element.scrollTop = element.scrollHeight;
+}
+
+function scrollToBottMatch(){
+    const element = document.getElementById("matchChattID");
+    element.scrollTop = element.scrollHeight;
+}
 
 async function checkResumegame(){
     var div =  document.getElementById("resumeGameButton");
