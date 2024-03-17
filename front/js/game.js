@@ -60,8 +60,6 @@ var cells = [];
 var validGrid = [];
 var grid = [];
 let activePlayer = 'playerA';
-var nbWallPlayerA = 10;
-var nbWallPlayerB = 10;
 let isClickedCell = false;
 let murAPose = new Array(3);
 let firstTurn = true;
@@ -165,8 +163,10 @@ function setUpGame(gameState) {
         document.getElementById('nbTour').textContent = `Tour : n°${tour}`;
 
     cells.forEach((cell, index) => {
-        if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col'))
+        if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col')){
+            console.log("ok");
             cell.addEventListener('click', () => handleWall(index));
+        }
         else
             cell.addEventListener('click', () => movePlayer(index));
     });
@@ -238,8 +238,42 @@ function rotationWall(cellIndex) {
 
 }
 
+socket.on('wallPlaced', (resultHandleWall) => {
+    if(resultHandleWall === "firstTurn"){
+        alert("Vous ne pouvez pas poser de mur au premier tour !");
+        return;
+    }
+    if(resultHandleWall === "noWall"){
+        alert("Vous n'avez plus de murs !");
+        return;
+    }
+});
+
+socket.on("wallTMP", (cellIndex) => {
+    console.log("wallTMP : " + cellIndex);
+    cells[cellIndex].classList.add('wallTMP');
+});
+
+socket.on("rotation", (cellIndex) => {
+    console.log("rotation : " + cellIndex);
+    cells[cellIndex].classList.add('rotation');
+});
+
+socket.on("nbWallPlayerA", (nbWallPlayerA) => {
+    document.getElementById('nbWallPlayerA').textContent = `Murs restants : ${nbWallPlayerA}`;
+});
+
+socket.on("nbWallPlayerB", (nbWallPlayerB) => {
+    document.getElementById('nbWallPlayerB').textContent = `Murs restants : ${nbWallPlayerB}`;
+});
+
 function handleWall(cellIndex) {
-    const row = Math.floor(cellIndex / 17);
+
+    socket.emit('newWall', cellIndex, grid, validGrid);
+
+
+
+    /*const row = Math.floor(cellIndex / 17);
     const col = cellIndex % 17;
 
     const clickedCell = cells[cellIndex];
@@ -398,7 +432,7 @@ function handleWall(cellIndex) {
                 annulerWall();
             }
 
-        }
+        }*/
 
 }
 
@@ -826,6 +860,7 @@ function changeActivePlayer() {
                     var wall = pos[0];
                     var orientation = pos[1];
                     var cellIndex = convertGameStateToPosition(wall.toString()) + 18;
+                    console.log("HOHOHOOH");
                     handleWall(cellIndex);
                     if(orientation === 1){
                         rotationWall(cellIndex);
@@ -881,15 +916,9 @@ function hideValider() {
     murAPose = new Array(3);
 }
 
-function showValider() {
-    var id = "#valider";
-    if (activePlayer === 'playerA')
-        id += "A";
-    else
-        id += "B";
+socket.on('showValider', (id) => {
     document.querySelector(id).style.display = 'grid';
-
-}
+})
 
 function validerWall() {
     const clickedCell = cells[murAPose[0]];
