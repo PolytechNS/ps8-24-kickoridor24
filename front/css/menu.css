@@ -63,3 +63,44 @@
     margin-left: 1em;
 }
 
+
+.mitro {
+    width: 35px; /* ajustez la taille du cercle selon vos besoins */
+    height: 35px; /* assurez-vous que la largeur et la hauteur soient les mêmes pour obtenir un cercle parfait */
+    overflow: hidden; /* assurez-vous que l'image est coupée si elle dépasse les limites du cercle */
+    border-radius: 50%; /* définir le rayon du cercle */
+    margin-bottom: 0.4em;
+    margin-right: -4em;
+}
+
+.mitro img {
+    width: 150%; /* assurez-vous que l'image remplit complètement le cercle */
+    margin-left: -10px;
+}
+
+#amisDiv{
+
+    background-color: #B9C0C6;
+    margin-bottom: 7px;
+    margin-right: 5px;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+}
+#amisImg{
+    width: 50%;
+    height: 50%;
+}
+#amisTexte{
+    font-family: 'Roboto Condensed', sans-serif;
+}
+.notification-badge {
+    position: relative;
+    top: 0;
+    right: 100px;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    display: none;
+}

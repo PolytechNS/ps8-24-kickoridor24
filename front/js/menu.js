@@ -54,6 +54,7 @@ function showHorsLignePlay(){
     document.getElementById("ligne").style.backgroundColor = "#E4E5E7";
 }
 
+
 function showMatchChat(){
     document.getElementsByClassName("matchMsg")[0].style.display = "flex";
     document.getElementsByClassName("amisMsg")[0].style.display = "none";
@@ -121,6 +122,10 @@ async function openAmiChat() {
             }
         });
     scrollToBott();
+
+function redirectToFriendsPage() {
+    window.location.href = "friends-page.html";
+
 }
 
 function showAmisChat(){
@@ -171,3 +176,91 @@ async function checkResumegame(){
  }
 }
 checkResumegame();
+
+
+function showFriendsList(){
+    document.getElementsByClassName("friendsList")[0].style.display = "flex";
+    document.getElementsByClassName("friendsAdd")[0].style.display = "none";
+    document.getElementsByClassName("friendsDemands")[0].style.display = "none";
+    document.getElementById("amisBTN").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("ajouterBTN").style.borderBottom = "none";
+    document.getElementById("ajouterBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("demandesBTN").style.borderBottom = "none";
+    document.getElementById("demandesBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("amisBTN").style.backgroundColor = "#3EE4F0";
+}
+
+function showFriendsAdd(){
+    document.getElementsByClassName("friendsAdd")[0].style.display = "flex";
+    document.getElementsByClassName("friendsList")[0].style.display = "none";
+    document.getElementsByClassName("friendsDemands")[0].style.display = "none";
+    document.getElementById("ajouterBTN").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("amisBTN").style.borderBottom = "none";
+    document.getElementById("amisBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("demandesBTN").style.borderBottom = "none";
+    document.getElementById("demandesBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("ajouterBTN").style.backgroundColor = "#3EE4F0";
+}
+
+function showFriendsDemands(){
+    document.getElementsByClassName("friendsDemands")[0].style.display = "flex";
+    document.getElementsByClassName("friendsList")[0].style.display = "none";
+    document.getElementsByClassName("friendsAdd")[0].style.display = "none";
+    document.getElementById("demandesBTN").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("amisBTN").style.borderBottom = "none";
+    document.getElementById("amisBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("ajouterBTN").style.borderBottom = "none";
+    document.getElementById("ajouterBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("demandesBTN").style.backgroundColor = "#3EE4F0";
+}
+
+async function checkFriends(){
+
+    if(getCookie("username") == null){
+        var amisDiv =   document.getElementById("amisDiv");
+      amisDiv.style.display = 'none';
+
+
+        return ;
+    }else{
+        console.log("okkkk");
+        var amisDiv =   document.getElementById("amisDiv");
+        amisDiv.style.display = 'flex';
+
+
+    }
+
+    const formDataJSON = {};
+    formDataJSON["username"] = getCookie("username");
+    try {
+        const response = await fetch('/api/askFriendsList', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur de réseau ou HTTP: ' + response.status);
+            }
+
+            return response.json(); // Convertit la réponse en JSON
+        })
+            .then(data => {
+                var amisDiv =   document.getElementById("amisDiv");
+                if(data.length > 0){
+                    amisDiv.getElementsByTagName('span')[0].style.display = 'flex';
+                }else{
+                    amisDiv.getElementsByTagName('span')[0].style.display = 'none';
+                }
+
+            })
+            .catch(error => {
+                console.error('Une erreur est survenue lors de la récupération des demandes d\'amis : ', error);
+            });
+
+    } catch (e) {
+        alert(e.message);
+    }
+}
+checkFriends();
