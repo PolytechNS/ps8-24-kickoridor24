@@ -149,7 +149,34 @@ function scrollToBottMatch(){
     const element = document.getElementById("matchChattID");
     element.scrollTop = element.scrollHeight;
 }
+async function checkResumegame(){
+    var div =  document.getElementById("resumeGameButton");
+    if(getCookie("username") != null){
+        const formDataJSON = {};
+        formDataJSON["username"] = getCookie("username");
+        try {
+            const response = await fetch('/api/gameRetrieve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataJSON)
+            }).then(response => {
+                if (!response.ok) {
+                    // div.onclick = null;
+                    div.style.opacity = 0.5;
+                    div.style.backgroundColor = "#ccc"; // Change la couleur de fond en gris clair
+                    div.style.pointerEvents = "none";
+                }});}catch (e) {
 
+        }
+    }else{
+
+        div.style.display = 'none';
+    }
+}
+if(window.location.href.includes("play-page.html"))
+checkResumegame();
 function showFriendsList(){
     document.getElementsByClassName("friendsList")[0].style.display = "flex";
     document.getElementsByClassName("friendsAdd")[0].style.display = "none";
@@ -232,5 +259,6 @@ async function checkFriends(){
         alert(e.message);
     }
 }
-if(window.location.href !== "friends-page.html")
-checkFriends();
+if(!window.location.href.includes("friends-page.html")) {
+    checkFriends();
+}

@@ -100,7 +100,7 @@ async function askFriend(emetteur,receveur){
 
 
 async function demandesAmisListe(){
-    const formDataJSON = {};
+    var formDataJSON = {};
     var user = getCookie("username");
     formDataJSON["username"] = user;
     try {
@@ -131,6 +131,7 @@ async function demandesAmisListe(){
                     document.getElementsByClassName("notification-demandes")[0].style.display ='none';
                 }else {
                     document.getElementsByClassName("notification-demandes")[0].style.display ='flex';
+                    document.getElementsByClassName("notification-badge")[0].style.display ='flex';
                     for (var i = 0; i < data.length; i++) {
                         var div= document.createElement("div");
                         div.classList.add("profilAmis");
@@ -241,7 +242,9 @@ async function validateAskFriend(emetteur,receveur){
 }
 async function listeAmis(){
     const formDataJSON = {};
-    formDataJSON["username"] = getCookie("username");
+    var user = getCookie("username");
+    formDataJSON["username"] = user;
+
     try {
         const response = await fetch('/api/friendsList', {
             method: 'POST',
@@ -265,7 +268,7 @@ async function listeAmis(){
 
                 if(data.length === 0){
                     var para = document.createElement("p");
-                    para.textContent = "Aucun amis trouvé";
+                    para.textContent = "Aucun ami trouvé";
                     cont.appendChild(para);
                 }else {
 
@@ -341,12 +344,13 @@ async function deleteFriend(emetteur,receveur){
         alert(error.message);
     }
 }
+
 document.addEventListener('DOMContentLoaded', async () => {
     // Appeler vos fonctions asynchrones ici
     await listeAmis();
-    await demandesAmisListe();
-       // et ainsi de suite...
-});
 
+     await demandesAmisListe();
+    // et ainsi de suite...
+});
 
 

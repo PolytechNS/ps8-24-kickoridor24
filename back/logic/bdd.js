@@ -23,6 +23,7 @@ const client = new MongoClient(uri,  {
 );
 
 async function handleBDD(request, response){
+    await client.connect();
     if(request.method === "POST" && request.url === "/api/signup"){
         let body = "";
         request.on("data", chunk => {
@@ -47,7 +48,9 @@ async function handleBDD(request, response){
                     username: data.username,
                     elo : '0',
                     img : 'images/mitro.jpg',
-                    token: token
+                    token: token,
+                    friendList: [],
+                    demandes : []
                 }
                 saveUser(dataToSend).then(r => {
                     response.statusCode = 200;
@@ -252,7 +255,7 @@ async function handleBDD(request, response){
         request.on("end", async () => {
             try {
                 const data = JSON.parse(body);
-                console.log(body);
+
                 const players = await askFriendsList(data);
 
                 if (players != null) {
@@ -265,8 +268,7 @@ async function handleBDD(request, response){
                 }
             } catch (error) {
                 console.error(error.message);
-                console.log("ERRREEURRR");
-                console.log(body);
+
                 response.statusCode = 400;
                 response.end("Invalid JSON");
             }
@@ -313,8 +315,9 @@ async function handleBDD(request, response){
         request.on("end", async () => {
             try {
                 const data = JSON.parse(body);
-                const players = await friendsList(data);
+                var players = await friendsList(data);
                 if (players != null) {
+
                     response.setHeader('Content-Type', 'application/json');
                     response.write(JSON.stringify(players));
                     response.end();
@@ -447,7 +450,7 @@ async function findFriends(data) {
         return await client.db("kickoridor").collection("users").find({
             username: {
                 $regex: "^" + data.recherche.toString(),
-                $nin: [currentUser["username"].toString(), ...currentUser["friendList"]] //
+                $nin: [currentUser["username"].toString(), ...currentUser["friendList"], ...currentUser["demandes"]] //
             }
         }).toArray();
     } finally {
