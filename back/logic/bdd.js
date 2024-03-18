@@ -252,6 +252,7 @@ async function handleBDD(request, response){
         request.on("end", async () => {
             try {
                 const data = JSON.parse(body);
+                console.log(body);
                 const players = await askFriendsList(data);
 
                 if (players != null) {
@@ -264,6 +265,8 @@ async function handleBDD(request, response){
                 }
             } catch (error) {
                 console.error(error.message);
+                console.log("ERRREEURRR");
+                console.log(body);
                 response.statusCode = 400;
                 response.end("Invalid JSON");
             }
@@ -311,7 +314,6 @@ async function handleBDD(request, response){
             try {
                 const data = JSON.parse(body);
                 const players = await friendsList(data);
-
                 if (players != null) {
                     response.setHeader('Content-Type', 'application/json');
                     response.write(JSON.stringify(players));
@@ -349,7 +351,7 @@ async function handleBDD(request, response){
 async function getMessages(data){
     try {
         await client.connect();
-        console.log(data.conversationID+"fffffffffffffffffffffff");
+
         return await client.db("kickoridor").collection("chat").find({
             conversationID: data._id
         }).toArray();
@@ -504,6 +506,13 @@ async function validateAskFriend(data) {
             { $pull: { demandes: data.receveur.toString() }
             }
         );
+         await client.db("kickoridor").collection("conversation").insertOne(
+             {
+                 ami1 : data.emetteur,
+                 ami2 : data.receveur
+             }
+
+         )
          await client.db("kickoridor").collection("users").updateOne(
             { username: data.emetteur.toString() },
             { $addToSet: { friendList: data.receveur.toString() } }
@@ -552,6 +561,16 @@ function generateAccessToken(data) {
 async function deleteFriend(data) {
     try {
         await client.connect();
+        await client.db("kickoridor").collection("conversation").deleteOne(
+            { $or: [
+            { "ami1": data.emetteur.toString(), "ami2": data.receveur.toString() },
+            { "ami1": data.receveur.toString(), "ami2": data.emetteur.toString() }
+        ] }
+        );
+        await client.db("kickoridor").collection("users").updateOne(
+            { username: data.receveur.toString() },
+            { $pull: { friendList: data.emetteur.toString() } }
+        );
         return await client.db("kickoridor").collection("users").updateOne(
             { username: data.emetteur.toString() },
             { $pull: { friendList: data.receveur.toString() } }

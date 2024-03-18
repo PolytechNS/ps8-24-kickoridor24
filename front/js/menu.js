@@ -121,8 +121,9 @@ async function openAmiChat() {
                 chat.appendChild(div);
             }
         });
-    scrollToBott();
 
+    scrollToBott();
+}
 function redirectToFriendsPage() {
     window.location.href = "friends-page.html";
 
@@ -148,35 +149,6 @@ function scrollToBottMatch(){
     const element = document.getElementById("matchChattID");
     element.scrollTop = element.scrollHeight;
 }
-
-async function checkResumegame(){
-    var div =  document.getElementById("resumeGameButton");
- if(getCookie("username") != null){
-     const formDataJSON = {};
-     formDataJSON["username"] = getCookie("username");
-     try {
-         const response = await fetch('/api/gameRetrieve', {
-             method: 'POST',
-             headers: {
-                 'Content-Type': 'application/json'
-             },
-             body: JSON.stringify(formDataJSON)
-         }).then(response => {
-             if (!response.ok) {
-               // div.onclick = null;
-                 div.style.opacity = 0.5;
-                 div.style.backgroundColor = "#ccc"; // Change la couleur de fond en gris clair
-                 div.style.pointerEvents = "none";
-             }});}catch (e) {
-
-     }
- }else{
-
-     div.style.display = 'none';
- }
-}
-checkResumegame();
-
 
 function showFriendsList(){
     document.getElementsByClassName("friendsList")[0].style.display = "flex";
@@ -223,15 +195,12 @@ async function checkFriends(){
 
         return ;
     }else{
-        console.log("okkkk");
         var amisDiv =   document.getElementById("amisDiv");
         amisDiv.style.display = 'flex';
-
-
     }
-
     const formDataJSON = {};
-    formDataJSON["username"] = getCookie("username");
+    var user = getCookie("username");
+    formDataJSON["username"] = user;
     try {
         const response = await fetch('/api/askFriendsList', {
             method: 'POST',
@@ -263,4 +232,5 @@ async function checkFriends(){
         alert(e.message);
     }
 }
+if(window.location.href !== "friends-page.html")
 checkFriends();

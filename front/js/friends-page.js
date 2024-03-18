@@ -101,7 +101,8 @@ async function askFriend(emetteur,receveur){
 
 async function demandesAmisListe(){
     const formDataJSON = {};
-    formDataJSON["username"] = getCookie("username");
+    var user = getCookie("username");
+    formDataJSON["username"] = user;
     try {
         const response = await fetch('/api/askFriendsList', {
             method: 'POST',
