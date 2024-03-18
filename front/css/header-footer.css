@@ -418,6 +418,10 @@ header {
     margin-top: 0.5vh;
 }
 
+.chatMenu > :last-child {
+    margin-top: auto;
+}
+
 
 
 

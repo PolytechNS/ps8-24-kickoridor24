@@ -83,7 +83,7 @@
                     <span class="nom">Amis2</span>
                 </div>
                 <div class="notif-poubelle">
-                    <img src="images/chat-notif.png" alt="" class="notif" onclick="openAmiChat()">
+                    <img src="images/chat-notif.png" alt="" class="notif" onclick="openAmiChat(); scrollToBott()">
                     <img src="images/poubelle.png" alt="" class="poubelle">
                 </div>
             </div>
@@ -97,7 +97,7 @@
                     <span class="nom">Amis3</span>
                 </div>
                 <div class="notif-poubelle">
-                    <img src="images/chat-notif.png" alt="" class="notif" onclick="openAmiChat()">
+                    <img src="images/chat-notif.png" alt="" class="notif" onclick="openAmiChat(); scrollToBott()">
                     <img src="images/poubelle.png" alt="" class="poubelle">
                 </div>
             </div>
@@ -106,7 +106,7 @@
     <div class="matchMsg" style="display: none">
         <div class="matchChatt" id="matchChattID">
             <div class="msgAmis">
-                <p class="sesMsg" onclick="scrollToBott()">Message 1fgsnhnrtshsrzbzrbhrsbrbesfffffffffffffffffff</p>
+                <p class="sesMsg">Message 1fgsnhnrtshsrzbzrbhrsbrbesfffffffffffffffffff</p>
             </div>
             <div class="mesMsg">
                 <p class="msgMoi">Message 2</p>
@@ -135,10 +135,6 @@
             <div class="msgAmis">
                 <p class="sesMsg">Message 3</p>
             </div>
-        </div>
-        <div class="inputEcrire" style="display: flex">
-            <input type="text" class="barreChat" placeholder="Ecrire un message">
-            <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChat()">
         </div>
     </div>
     <div class="chatAmiMsg" style="display: none">
@@ -148,13 +144,13 @@
                     <div class="mitroChat">
                         <img src="images/mitro.jpg" alt="">
                     </div>
-                    <span class="nom">Amis1</span>
+                    <span class="nom" id="nomAmiID">Amis1</span>
                 </div>
             </div>
         </div>
         <div class="chatAmi" id="chatAmiID">
             <div class="msgAmis">
-                <p class="sesMsg" onclick="scrollToBott()">Message 1fgsnhnrtshsrzbzrbhrsbrbesfffffffffffffffffff</p>
+                <p class="sesMsg">Message 1fgsnhnrtshsrzbzrbhrsbrbesfffffffffffffffffff</p>
             </div>
             <div class="mesMsg">
                 <p class="msgMoi">Message 2</p>
@@ -184,10 +180,10 @@
                 <p class="sesMsg">Message 3</p>
             </div>
         </div>
-        <div class="inputEcrire" style="display: flex">
-            <input type="text" class="barreChat" placeholder="Ecrire un message">
-            <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChat()">
-        </div>
+    </div>
+    <div class="inputEcrire" style="display: none">
+        <input type="text" class="barreChat" id="messageInput" placeholder="Ecrire un message">
+        <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChat()">
     </div>
 </div>
 
@@ -204,3 +200,4 @@
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/authentification.js"></script>
+<script src="js/chat.js"></script>
