@@ -143,7 +143,8 @@ async function handleBDD(request, response){
                 response.end("Invalid JSON");
             }
         });
-    }else if(request.method === "POST" && request.url === "/api/gameDelete"){
+
+    }else if(request.method === "POST" && request.url === "/api/gameDelete") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -154,7 +155,7 @@ async function handleBDD(request, response){
                 const deleteGame = await deleteGameState(data);
                 if (deleteGame != null) {
                     response.end("ok");
-                }else{
+                } else {
                     response.statusCode = 404;
                     response.end("No player found");
                 }
@@ -164,6 +165,44 @@ async function handleBDD(request, response){
                 response.end("Invalid JSON");
             }
         });
+    }else if(request.method === "POST" && request.url === "/api/sendMessage") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+                const conversationID = await getConversationID(data);
+                const dataToSend = await sendMessageData(data, conversationID._id);
+                response.statusCode = 200;
+                response.end("ok");
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if(request.method === "POST" && request.url === "/api/getMessages") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+                const conversationID = await getConversationID(data);
+                const messages = await getMessages(conversationID);
+                response.setHeader('Content-Type', 'application/json');
+                response.write(JSON.stringify(messages));
+                response.end();
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+
     }
     else if(request.method === "POST" && request.url === "/api/FindFriends"){
         let body = "";
@@ -307,6 +346,43 @@ async function handleBDD(request, response){
     }
 }
 
+async function getMessages(data){
+    try {
+        await client.connect();
+        console.log(data.conversationID+"fffffffffffffffffffffff");
+        return await client.db("kickoridor").collection("chat").find({
+            conversationID: data._id
+        }).toArray();
+    } finally {
+        await client.close();
+    }
+}
+
+async function getConversationID(data){
+    try {
+        await client.connect();
+        return await client.db("kickoridor").collection("conversation").findOne();
+    } finally {
+        await client.close();
+    }
+}
+
+async function sendMessageData(data, conversationID){
+    try {
+        await client.connect();
+        await client.db("kickoridor").collection("chat").insertOne({
+            conversationID: conversationID,
+            message: data.message,
+            username: data.username,
+            ami: data.ami
+        }, function (err, res) {
+            if (err) throw err;
+            console.log("1 document inserted");
+        });
+    } finally {
+        await client.close();
+    }
+}
 
 async function saveUser(data) {
     try {
