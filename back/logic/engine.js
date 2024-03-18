@@ -28,6 +28,8 @@ module.exports = function (io) {
         sockets=socket;
         console.log('A user connected');
 
+        setupGame();
+
         socket.on('disconnect', () => {
             console.log('user disconnected');
         });
@@ -47,6 +49,18 @@ module.exports = function (io) {
     });
 
 };
+
+function setupGame(){
+    board = [];
+    playerAWalls = [];
+    playerBWalls = [];
+    nbWallPlayerA = 10;
+    nbWallPlayerB = 10;
+    activePlayer = 'playerA';
+    tour = 202;
+    firstTurn = true;
+    murAPose = new Array(3);
+}
 
 function getValidMoves(activePlayer, position, grid, validGrid) {
     position = position - 1;
@@ -129,6 +143,7 @@ function handleWall(cellIndex, grid, validGrid) {
     //pour placer a l'horizontale
 
     if(validGrid[clickedCell] !==2 && validGrid[rightCell] !==2 && validGrid[leftCell] !==2) {
+        console.log("A");
         //clickedCell.classList.add('wallTMP');
         //clickedCell.classList.add('rotation');
         sockets.emit('wallTMP', clickedCell);
@@ -150,9 +165,10 @@ function handleWall(cellIndex, grid, validGrid) {
     }
 
     //pour placer en verticale
-    else if((validGrid[clickedCell] !==2 && validGrid[rightCell] !==2 || validGrid[leftCell] !==2)
+    else if((validGrid[clickedCell] !==2 && (validGrid[rightCell] ===2 || validGrid[leftCell] ===2))
         && (validGrid[upCell] !== 2 && validGrid[downCell] !== 2))
     {
+        console.log("B");
         //clickedCell.classList.add('wallTMP');
         //clickedCell.classList.add('rotation');
         sockets.emit('wallTMP', clickedCell);
@@ -173,6 +189,7 @@ function handleWall(cellIndex, grid, validGrid) {
 
     else if(validGrid[clickedCell] !== 2) //la cellule est une ligne
     {
+        console.log("C");
         //horizontale a droite
         if(validGrid[cellIndex + 2] !== 2  && validGrid[cellIndex + 1] !== 2){
 
@@ -183,6 +200,7 @@ function handleWall(cellIndex, grid, validGrid) {
                 //rightCell.classList.add('wallTMP');
                 //rightCell.classList.add('rotation');
                 sockets.emit('wallTMP', rightCell);
+                sockets.emit('rotation', rightCell);
                 murAPose[0] = cellIndex+1;
             }
             if(validGrid[cellIndex + 2] !== 2){
@@ -195,8 +213,9 @@ function handleWall(cellIndex, grid, validGrid) {
 
         }
         //horizontale a gauche
-        else if(validGrid[cellIndex - 2] !== 2 ){
+        else if(validGrid[cellIndex - 2] !== 2 && validGrid[cellIndex - 1] !== 2){
 
+            console.log("D");
             //clickedCell.classList.add('wallTMP');
             sockets.emit('wallTMP', clickedCell);
             murAPose[1] = cellIndex;
@@ -217,7 +236,9 @@ function handleWall(cellIndex, grid, validGrid) {
     }
     else if(validGrid[clickedCell] !== 2) //la cellule est une colonne
     {
+        console.log("E");
         if(validGrid[clickedCell - 34] !== undefined && validGrid[clickedCell - 34] !== 2 && validGrid[clickedCell - 17] !== 2){
+            console.log("F");
             //verticale haut
             //clickedCell.classList.add('wallTMP');
             sockets.emit('wallTMP', clickedCell);
@@ -238,7 +259,7 @@ function handleWall(cellIndex, grid, validGrid) {
         }
         else if( validGrid[clickedCell + 34] !== undefined && validGrid[clickedCell + 34] !== 2  && validGrid[clickedCell + 17] !== 2){
             //verticale bas
-
+            console.log("G");
             //clickedCell.classList.add('wallTMP');
             sockets.emit('wallTMP', clickedCell);
             murAPose[1] = cellIndex;
