@@ -61,6 +61,7 @@ async function ajouterAmisListe(){
                             };
                         }());
 
+
                         div.appendChild(btn);
                         cont.appendChild(div);
                     }
@@ -260,6 +261,7 @@ async function listeAmis(){
             return response.json(); // Convertit la réponse en JSON
         })
             .then(data => {
+
                 var friendsDemands = document.getElementsByClassName("friendsList")[0];
                 var cont = friendsDemands.getElementsByClassName("cont")[0];
 
@@ -350,7 +352,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     await listeAmis();
 
      await demandesAmisListe();
-    // et ainsi de suite...
+
+
 });
 
 

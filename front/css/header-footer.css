@@ -208,15 +208,16 @@ header {
 
 .listeAmis{
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     width: 94%;
     font-size: 1.2em;
     margin-top: 1vh;
     padding: 0.8vh;
     color: #000000;
     background-color: #E4E5E7;
+    cursor: pointer;
 }
 
 .nom{

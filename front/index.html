@@ -59,6 +59,7 @@
         En match
     </div>
     </div>
+
     <div class="amisMsg" style="display: flex">
         <span class="listeAmis">
             <div class="ami">
@@ -138,7 +139,7 @@
         </div>
     </div>
     <div class="chatAmiMsg" style="display: none">
-        <div class="listeAmis" id="nomAmi">
+        <div class="listeAmis" id="nomAmi" onclick=" showAmisChat();getConversation();">
             <div class="ami">
                 <div style="display: flex">
                     <div class="mitroChat">
@@ -196,7 +197,7 @@
         <p id="amisTexte">AMIS</p>
         <span class="notification-badge"> </span>
     </div>
-    <div id="chat" onclick="openChat()">
+    <div id="chat" onclick="openChat() ; getConversation()">
         <img src="images/chat.png">
         <p id="chatting">CHAT</p>
     </div>

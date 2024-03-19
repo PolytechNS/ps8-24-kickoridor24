@@ -36,7 +36,7 @@ async function handleBDD(request, response){
                 const user = await findUser(data);
                 if(user != null){
                     response.statusCode = 400;
-                    response.end("Username already taken");
+                    await client.close();response.end("Username already taken");
                 }
                 else{
                 const dataToHash = {
@@ -44,6 +44,7 @@ async function handleBDD(request, response){
                     password: data.password
                 }
                 token = generateAccessToken(dataToHash);
+                await client.close();
                 const dataToSend = {
                     username: data.username,
                     elo : '0',
@@ -74,6 +75,7 @@ async function handleBDD(request, response){
                 const user = await findUser(data)
                 if (user != null) {
                     const token = verifyAccessToken(user.token);
+                    await client.close();
                     if (token.data.password === data.password) {
                         response.statusCode = 200;
                         response.end("ok");
@@ -96,7 +98,7 @@ async function handleBDD(request, response){
         request.on("data", chunk => {
             body += chunk.toString();
         });
-        request.on("end", () => {
+        request.on("end",  async () => {
             let token;
             try {
                 const data = JSON.parse(body);
@@ -106,12 +108,14 @@ async function handleBDD(request, response){
                     typeDePartie : data.typeDePartie
                 }
                 token = generateAccessToken(dataToHash);
+                await client.close();
                 const dataToSend = {
                     username: data.username,
                     board: data.board,
                     tour: data.tour,
                     typeDePartie : data.typeDePartie
                 }
+
                 saveGameState(dataToSend).then(r => {
                     response.statusCode = 200;
                     response.end("ok");
@@ -131,6 +135,7 @@ async function handleBDD(request, response){
             try {
                 const data = JSON.parse(body);
                 const gameState = await findGameState(data)
+                await client.close();
                 if (gameState != null) {
 
                      response.setHeader('Content-Type', 'application/json');
@@ -156,6 +161,7 @@ async function handleBDD(request, response){
             try {
                 const data = JSON.parse(body);
                 const deleteGame = await deleteGameState(data);
+                await client.close();
                 if (deleteGame != null) {
                     response.end("ok");
                 } else {
@@ -178,6 +184,7 @@ async function handleBDD(request, response){
                 const data = JSON.parse(body);
                 const conversationID = await getConversationID(data);
                 const dataToSend = await sendMessageData(data, conversationID._id);
+                await client.close();
                 response.statusCode = 200;
                 response.end("ok");
             } catch (error) {
@@ -196,6 +203,7 @@ async function handleBDD(request, response){
                 const data = JSON.parse(body);
                 const conversationID = await getConversationID(data);
                 const messages = await getMessages(conversationID);
+                await client.close();
                 response.setHeader('Content-Type', 'application/json');
                 response.write(JSON.stringify(messages));
                 response.end();
@@ -216,6 +224,7 @@ async function handleBDD(request, response){
             try {
                 const data = JSON.parse(body);
                 const players = await findFriends(data);
+                await client.close();
                 if (players != null) {
                     response.setHeader('Content-Type', 'application/json');
                     response.write(JSON.stringify(players));
@@ -240,6 +249,7 @@ async function handleBDD(request, response){
             try {
                 const data = JSON.parse(body);
                  await askFriend(data);
+                await client.close();
                 response.end();
                  }catch (error) {
                 console.error(error.message);
@@ -257,7 +267,7 @@ async function handleBDD(request, response){
                 const data = JSON.parse(body);
 
                 const players = await askFriendsList(data);
-
+                await client.close();
                 if (players != null) {
                     response.setHeader('Content-Type', 'application/json');
                     response.write(JSON.stringify(players));
@@ -283,6 +293,7 @@ async function handleBDD(request, response){
             try {
                 const data = JSON.parse(body);
                 await deleteAskFriend(data);
+                await client.close();
                 response.end();
             }catch (error) {
                 console.error(error.message);
@@ -300,6 +311,7 @@ async function handleBDD(request, response){
             try {
                 const data = JSON.parse(body);
                 await validateAskFriend(data);
+                await client.close();
                 response.end();
             }catch (error) {
                 console.error(error.message);
@@ -315,12 +327,17 @@ async function handleBDD(request, response){
         request.on("end", async () => {
             try {
                 const data = JSON.parse(body);
+
                 var players = await friendsList(data);
+                await client.close();
+
                 if (players != null) {
 
                     response.setHeader('Content-Type', 'application/json');
                     response.write(JSON.stringify(players));
+
                     response.end();
+
                 }else{
                     response.statusCode = 404;
                     response.end("User not found");
@@ -341,6 +358,7 @@ async function handleBDD(request, response){
             try {
                 const data = JSON.parse(body);
                 await deleteFriend(data);
+                await client.close();
                 response.end();
             }catch (error) {
                 console.error(error.message);
@@ -353,61 +371,66 @@ async function handleBDD(request, response){
 
 async function getMessages(data){
     try {
-        await client.connect();
+        
 
         return await client.db("kickoridor").collection("chat").find({
             conversationID: data._id
-        }).toArray();
+        }).sort({ date: 1 }).toArray();
     } finally {
-        await client.close();
+        
     }
 }
 
 async function getConversationID(data){
     try {
-        await client.connect();
+        
         return await client.db("kickoridor").collection("conversation").findOne();
     } finally {
-        await client.close();
+        
     }
 }
 
 async function sendMessageData(data, conversationID){
     try {
-        await client.connect();
+        
         await client.db("kickoridor").collection("chat").insertOne({
             conversationID: conversationID,
             message: data.message,
-            username: data.username,
-            ami: data.ami
+            emetteur: data.username,
+            receveur: data.ami,
+            date : Date.now()
         }, function (err, res) {
             if (err) throw err;
             console.log("1 document inserted");
         });
+        await client.db("kickoridor").collection("conversation").updateOne(
+        { "_id": conversationID },
+        { $set: { "date": Date.now() } }
+        )
     } finally {
-        await client.close();
+        
     }
 }
 
 async function saveUser(data) {
     try {
-        await client.connect();
+        
         await client.db("kickoridor").collection("users").insertOne(data, function (err, res) {
             if (err) throw err;
             console.log("1 document inserted");
         });
     } finally {
-        await client.close();
+        
     }
 }
 async function findUser(data) {
     try {
-        await client.connect();
+       // 
         return await client.db("kickoridor").collection("users").findOne({
             username: data.username
         });
     } finally {
-        await client.close();
+       // 
     }
 }
 
@@ -424,61 +447,61 @@ async function saveGameState(data) {
 }
 async function findGameState(data) {
     try {
-        await client.connect();
+        
         return await client.db("kickoridor").collection("gameState").findOne({
             username: data.username.toString()
         });
     } finally {
-        await client.close();
+        
     }
 }
 async function deleteGameState(data) {
     try {
-        await client.connect();
+        
         return await client.db("kickoridor").collection("gameState").deleteOne({
             username: data.username.toString()
         });
     } finally {
-        await client.close();
+        
     }
 }
 
 async function findFriends(data) {
     try {
         const currentUser = await findUser(data);
-        await client.connect();
+        
         return await client.db("kickoridor").collection("users").find({
             username: {
                 $regex: "^" + data.recherche.toString(),
                 $nin: [currentUser["username"].toString(), ...currentUser["friendList"], ...currentUser["demandes"]] //
             }
-        }).toArray();
+        }).sort({username : 1} ).toArray();
     } finally {
-        await client.close();
+        
     }
 }
 
 async function askFriend(data) {
     try {
-        await client.connect();
+        
         return await client.db("kickoridor").collection("users").updateOne(
             { username: data.receveur.toString() },
             { $addToSet: { demandes: data.emetteur.toString() } }
         );
     } finally {
-        await client.close();
+        
     }
 }
 async function askFriendsList(data) {
     try {
-        await client.connect();
+        
         const user = await client.db("kickoridor").collection("users").findOne({
             username: data.username.toString()
         });
 
         if (user && user.demandes) {
             // Utiliser Promise.all pour exécuter les requêtes findUser de manière asynchrone
-            const demandeDetails = await Promise.all(user.demandes.map(async (demande) => {
+            const demandeDetails = await Promise.all(user.demandes.sort().map(async (demande) => {
                 return await findUser({ username: demande });
             }));
             return demandeDetails;
@@ -486,24 +509,24 @@ async function askFriendsList(data) {
             return []; // Retourner un tableau vide si l'utilisateur n'a pas de demandes ou si l'utilisateur n'existe pas
         }
     } finally {
-        await client.close();
+        
     }
 }
 async function deleteAskFriend(data) {
     try {
-        await client.connect();
+        
         return await client.db("kickoridor").collection("users").updateOne(
             { username: data.emetteur.toString() },
             { $pull: { demandes: data.receveur.toString() } }
         );
     } finally {
-        await client.close();
+        
     }
 }
 
 async function validateAskFriend(data) {
     try {
-        await client.connect();
+        
          await client.db("kickoridor").collection("users").updateOne(
             { username: data.emetteur.toString() },
             { $pull: { demandes: data.receveur.toString() }
@@ -526,20 +549,22 @@ async function validateAskFriend(data) {
         );
 
     } finally {
-        await client.close();
+        
     }
 }
 
 async function friendsList(data) {
     try {
-        await client.connect();
+        
         const user = await client.db("kickoridor").collection("users").findOne({
             username: data.username.toString()
         });
 
         if (user && user.friendList) {
+            var friends = user.friendList;
             // Utiliser Promise.all pour exécuter les requêtes findUser de manière asynchrone
-            const friendsDetails = await Promise.all(user.friendList.map(async (friend) => {
+            const friendsDetails = await Promise.all(friends.sort().map(async (friend) => {
+
                 return await findUser({ username: friend });
             }));
             return friendsDetails;
@@ -547,7 +572,7 @@ async function friendsList(data) {
             return []; // Retourner un tableau vide si l'utilisateur n'a pas de demandes ou si l'utilisateur n'existe pas
         }
     } finally {
-        await client.close();
+        
     }
 }
 function generateAccessToken(data) {
@@ -563,7 +588,7 @@ function generateAccessToken(data) {
 
 async function deleteFriend(data) {
     try {
-        await client.connect();
+        
         await client.db("kickoridor").collection("conversation").deleteOne(
             { $or: [
             { "ami1": data.emetteur.toString(), "ami2": data.receveur.toString() },
@@ -579,7 +604,7 @@ async function deleteFriend(data) {
             { $pull: { friendList: data.receveur.toString() } }
         );
     } finally {
-        await client.close();
+        
     }
 }
 

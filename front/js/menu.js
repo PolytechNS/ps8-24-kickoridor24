@@ -79,66 +79,13 @@ function openChat() {
     }
 }
 
-async function openAmiChat() {
-    document.getElementsByClassName("matchMsg")[0].style.display = "none";
-    document.getElementsByClassName("amisMsg")[0].style.display = "none";
-    document.getElementsByClassName("chatAmiMsg")[0].style.display = "flex";
-    document.getElementsByClassName("inputEcrire")[0].style.display = "flex";
 
-
-    //charger les messages de la conversation dans la base de donnée
-    var username = getCookie("username");
-    var ami = document.getElementById("nomAmiID").textContent;
-    const formDataJSON = {};
-    formDataJSON["username"] = username;
-    formDataJSON["ami"] = ami;
-
-    const response = await fetch('/api/getMessages', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formDataJSON)
-    }).then(response => response.json())
-        .then(data => {
-            var chat = document.getElementById("chatAmiID");
-            chat.innerHTML = "";
-            for (var i = 0; i < data.length; i++) {
-                var div = document.createElement("div");
-                if (data[i].username === username) {
-                    div.classList.add("mesMsg");
-                    var p = document.createElement("p");
-                    p.classList.add("msgMoi");
-                    p.textContent = data[i].message;
-                    div.appendChild(p);
-                } else {
-                    div.classList.add("autreMsg");
-                    var p = document.createElement("p");
-                    p.classList.add("msgAutre");
-                    p.textContent = data[i].message;
-                    div.appendChild(p);
-                }
-                chat.appendChild(div);
-            }
-        });
-
-    scrollToBott();
-}
 function redirectToFriendsPage() {
     window.location.href = "friends-page.html";
 
 }
 
-function showAmisChat(){
-    document.getElementsByClassName("amisMsg")[0].style.display = "flex";
-    document.getElementsByClassName("matchMsg")[0].style.display = "none";
-    document.getElementsByClassName("chatAmiMsg")[0].style.display = "none";
-    document.getElementsByClassName("inputEcrire")[0].style.display = "none";
-    document.getElementById("amisChat").style.backgroundColor = "#3EE4F0";
-    document.getElementById("matchChat").style.backgroundColor = "#E4E5E7";
-    document.getElementById("amisChat").style.borderBottom = "4px solid #eb4f61";
-    document.getElementById("matchChat").style.borderBottom = "none";
-}
+
 
 function scrollToBott(){
     const element = document.getElementById("chatAmiID");
