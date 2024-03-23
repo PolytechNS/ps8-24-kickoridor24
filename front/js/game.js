@@ -98,12 +98,18 @@ for (i = 1; i <= 289; i++) {
     }
     if (!(Math.floor((i - 1) / 17) % 2 === 0)) {
         newDiv.classList.add('odd-row');
+        grid[i] = 9;
     }
     if (!(Math.floor((i - 1) % 17) % 2 === 0)) {
         newDiv.classList.add('odd-col');
+        if(!(newDiv.classList.contains('odd-row'))){
+            grid[i] = 8;
+        }else{
+            grid[i] = 7;
+        }
     } else if (!(newDiv.classList.contains('odd-row'))) {
         newDiv.classList.add('cell');
-        grid[i] = 0;
+
     }
     newDiv.setAttribute('id', i);
 
@@ -268,7 +274,6 @@ socket.on("nbWallPlayerB", (nbWallPlayerB) => {
 });
 
 function handleWall(cellIndex) {
-
     socket.emit('newWall', cellIndex, grid, validGrid);
 
 
