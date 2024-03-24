@@ -66,18 +66,6 @@ function showMatchChat(){
     document.getElementById("amisChat").style.borderBottom = "none";
 }
 
-function openChat() {
-    var chatMenu = document.getElementById("chatMenu");
-    var chat = document.getElementById("chat");
-
-    if (chatMenu.classList.contains("show")) {
-        chatMenu.classList.remove("show");
-        chat.style.width = "10%";
-    } else {
-        chatMenu.classList.add("show");
-        chat.style.width = "22%";
-    }
-}
 
 
 function redirectToFriendsPage() {
@@ -206,6 +194,67 @@ async function checkFriends(){
         alert(e.message);
     }
 }
+var affichageNotifChat = false;
+async function getConversationNotif(){
+
+    const formDataJSON = {};
+    var user = getCookie("username");
+    formDataJSON["username"] = user;
+
+    try {
+        const response = await fetch('/api/getConversation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur de réseau ou HTTP: ' + response.status);
+            }
+
+            return response.json(); // Convertit la réponse en JSON
+        })
+            .then(async data => {
+                affichageNotif = false;
+                for (var i = 0; i < data.length; i++) {
+
+                    if(data[i]["lastMsg"] != undefined ){
+                        const message = await getMessageById(data[i]["lastMsg"]);
+                        if(message["lu"] == false && message["emetteur"] !== user) {
+                            affichageNotifChat = true;
+                            showHideNotif();
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Une erreur est survenue lors de la récupération des conversations : ', error);
+            });
+
+    } catch (e) {
+        alert(e.message);
+    }
+}
+function showHideNotif(data){
+    var chatbtn =  document.getElementById("chat");
+    var notif = chatbtn.getElementsByClassName('notification-badge')[0];
+    if(data == "close"){
+        notif.style.display = 'none';
+    }
+    else if(affichageNotifChat) {
+        notif.style.display = 'flex';
+    }
+    else{
+        notif.style.display = 'none';
+
+    }
+}
+
 if(!window.location.href.includes("friends-page.html")) {
-    checkFriends();
+    notif();
+}
+async function notif() {
+    await checkFriends();
+    await getConversationNotif();
 }

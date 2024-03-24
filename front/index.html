@@ -61,82 +61,10 @@
     </div>
 
     <div class="amisMsg" style="display: flex">
-        <span class="listeAmis">
-            <div class="ami">
-                <div style="display: flex">
-                    <div class="mitroChat">
-                        <img src="images/mitro.jpg" alt="">
-                    </div>
-                    <span class="nom">Amis1</span>
-                </div>
-                <div class="notif-poubelle">
-                    <img src="images/chat-notif.png" alt="" class="notif" onclick="openAmiChat(); scrollToBott()">
-                    <img src="images/poubelle.png" alt="" class="poubelle">
-                </div>
-            </div>
-        </span>
-        <span class="listeAmis">
-            <div class="ami">
-                <div style="display: flex">
-                    <div class="mitroChat">
-                        <img src="images/mitro.jpg" alt="">
-                    </div>
-                    <span class="nom">Amis2</span>
-                </div>
-                <div class="notif-poubelle">
-                    <img src="images/chat-notif.png" alt="" class="notif" onclick="openAmiChat(); scrollToBott()">
-                    <img src="images/poubelle.png" alt="" class="poubelle">
-                </div>
-            </div>
-        </span>
-        <span class="listeAmis">
-            <div class="ami">
-                <div style="display: flex">
-                    <div class="mitroChat">
-                        <img src="images/mitro.jpg" alt="">
-                    </div>
-                    <span class="nom">Amis3</span>
-                </div>
-                <div class="notif-poubelle">
-                    <img src="images/chat-notif.png" alt="" class="notif" onclick="openAmiChat(); scrollToBott()">
-                    <img src="images/poubelle.png" alt="" class="poubelle">
-                </div>
-            </div>
-        </span>
+
     </div>
     <div class="matchMsg" style="display: none">
-        <div class="matchChatt" id="matchChattID">
-            <div class="msgAmis">
-                <p class="sesMsg">Message 1fgsnhnrtshsrzbzrbhrsbrbesfffffffffffffffffff</p>
-            </div>
-            <div class="mesMsg">
-                <p class="msgMoi">Message 2</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 4</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-        </div>
+
     </div>
     <div class="chatAmiMsg" style="display: none">
         <div class="listeAmis" id="nomAmi" onclick=" showAmisChat();getConversation();">
@@ -150,36 +78,7 @@
             </div>
         </div>
         <div class="chatAmi" id="chatAmiID">
-            <div class="msgAmis">
-                <p class="sesMsg">Message 1fgsnhnrtshsrzbzrbhrsbrbesfffffffffffffffffff</p>
-            </div>
-            <div class="mesMsg">
-                <p class="msgMoi">Message 2</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 4</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
-            <div class="msgAmis">
-                <p class="sesMsg">Message 3</p>
-            </div>
+
         </div>
     </div>
     <div class="inputEcrire" style="display: none">
@@ -197,9 +96,10 @@
         <p id="amisTexte">AMIS</p>
         <span class="notification-badge"> </span>
     </div>
-    <div id="chat" onclick="openChat() ; getConversation()">
+    <div id="chat" onclick="openChat()">
         <img src="images/chat.png">
         <p id="chatting">CHAT</p>
+        <span class="notification-badge"> </span>
     </div>
 
 
@@ -211,5 +111,6 @@
 <script src="js/cookie.js"></script>
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>
-<script src="js/authentification.js"></script>
 <script src="js/chat.js"></script>
+
+<script src="js/authentification.js"></script>

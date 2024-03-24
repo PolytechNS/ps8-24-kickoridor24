@@ -1,4 +1,5 @@
-
+const socket = io("/api/game");
+socket.emit('login', getCookie("username"));
 var input = document.getElementById("messageInput");
 
 // Ajout d'un écouteur d'événements sur l'événement keydown
@@ -37,6 +38,7 @@ async function envoyerChat(){
                 div.appendChild(p);
                 document.getElementById("chatAmiID").appendChild(div);
                 scrollToBott();
+                socket.emit('message',{ senderId: username, ami, message });
 
     } catch (e) {
         alert(e.message);
@@ -50,7 +52,7 @@ async function getConversation(){
     formDataJSON["username"] = user;
 
     try {
-        const response = await fetch('/api/friendsList', {
+        const response = await fetch('/api/getConversation', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -63,7 +65,8 @@ async function getConversation(){
 
             return response.json(); // Convertit la réponse en JSON
         })
-            .then(data => {
+            .then(async data => {
+
                 var chatMenu = document.getElementById("chatMenu");
                 var amisMsg = chatMenu.getElementsByClassName("amisMsg")[0];
 
@@ -107,13 +110,25 @@ async function getConversation(){
                         divBouton.classList.add("notif-poubelle");
                         var imgChat = document.createElement("img");
                         imgChat.classList.add("notif");
-                        imgChat.src = "images/chat-notif.png";
+                        imgChat.src = "images/chatMsg.png";
+
+                        if(data[i]["lastMsg"] != undefined ){
+
+                            const message = await getMessageById(data[i]["lastMsg"]);
+
+                            if(message["lu"] == false && message["emetteur"] !== user) {
+                                imgChat.src = "images/chat-notif.png";
+                              //  showHideNotif("true");
+                            }
+                        }
+
                         var dataTMP = data[i];
 
                         div.addEventListener("click", function() {
                             var dataFNC = dataTMP;
 
                             return function() {
+
                                 openAmiChat(dataFNC);
                                 scrollToBott();
                             };
@@ -161,6 +176,7 @@ async function openAmiChat(data) {
         body: JSON.stringify(formDataJSON)
     }).then(response => response.json())
         .then(data => {
+
             var chat = document.getElementById("chatAmiID");
             chat.innerHTML = "";
             for (var i = 0; i < data.length; i++) {
@@ -184,6 +200,24 @@ async function openAmiChat(data) {
 
     scrollToBott();
 }
+
+async function getMessageById(id){
+    const formDataJSON = {};
+    formDataJSON["idMsg"] = id.toString();
+
+    const response = await fetch('/api/getMsgById', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formDataJSON)
+    });
+    const data = await response.json();
+
+    // Retourner les données
+    return data;
+
+}
 function showAmisChat(){
     document.getElementsByClassName("amisMsg")[0].style.display = "flex";
     document.getElementsByClassName("matchMsg")[0].style.display = "none";
@@ -193,4 +227,92 @@ function showAmisChat(){
     document.getElementById("matchChat").style.backgroundColor = "#E4E5E7";
     document.getElementById("amisChat").style.borderBottom = "4px solid #eb4f61";
     document.getElementById("matchChat").style.borderBottom = "none";
+}
+
+async function openChat() {
+
+    if(affichageNotifChat) {
+        showHideNotif("close");
+    }
+    var chatMenu = document.getElementById("chatMenu");
+    var chat = document.getElementById("chat");
+
+    if (chatMenu.classList.contains("show")) {
+        chatMenu.classList.remove("show");
+        chat.style.width = "10%";
+        getConversationNotif();
+    } else {
+        chatMenu.classList.add("show");
+        chat.style.width = "22%";
+        getConversation();
+    }
+}
+
+
+
+
+
+
+socket.on('newMessage', async (data) => {
+    const { senderId, message } = data;
+    var chatMenu = document.getElementById("chatMenu");
+    var amisMsg = chatMenu.getElementsByClassName("amisMsg")[0];
+   var chatAmisMsg = document.getElementsByClassName("chatAmiMsg")[0];
+
+ if(!chatMenu.classList.contains("show")){
+     await getConversationNotif();
+    }else if (amisMsg.style.display == 'flex'){
+       await getConversation();
+    }
+    else if(chatAmisMsg.style.display == 'flex'){
+
+       var amiTXT =  document.getElementById("nomAmiID").textContent;
+       if(amiTXT == senderId){
+           await updateMessage(data);
+       }else{
+           await getConversation();
+       }
+   }
+
+
+});
+
+async function updateMessage(data){
+    var username = getCookie("username");
+
+    const formDataJSON = {};
+    formDataJSON["username"] = username;
+    formDataJSON["ami"] =  data["senderId"];
+
+    const response = await fetch('/api/getMessages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formDataJSON)
+    }).then(response => response.json())
+        .then(data => {
+
+            var chat = document.getElementById("chatAmiID");
+            chat.innerHTML = "";
+            for (var i = 0; i < data.length; i++) {
+                var div = document.createElement("div");
+                if (data[i]["emetteur"] === username) {
+                    div.classList.add("mesMsg");
+                    var p = document.createElement("p");
+                    p.classList.add("msgMoi");
+                    p.textContent = data[i].message;
+                    div.appendChild(p);
+                } else {
+                    div.classList.add("msgAmis");
+                    var p = document.createElement("p");
+                    p.classList.add("sesMsg");
+                    p.textContent = data[i].message;
+                    div.appendChild(p);
+                }
+                chat.appendChild(div);
+            }
+        });
+
+    scrollToBott();
 }
