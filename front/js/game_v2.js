@@ -15,6 +15,8 @@ var board = [];
 let i;
 var tmpLigne = [];
 let n;
+var cellsString = [];
+var cellsGrid = [];
 
 class cellule {
     constructor(id, classes, visibilite) {
@@ -56,8 +58,8 @@ let nbWallPlayerB = 10;
 let activePlayer = 'playerA'
 let tour = 202;
 let firstTurn = true;
-let player1Position = 0;
-let player2Position = 0;
+let player1Position = 280;
+let player2Position = 8;
 var dernierTourB = false;
 /**--------------- SETUP GAME --------------------**/
 
@@ -80,7 +82,8 @@ socket.on('setupGame', () => {
 
     socket.emit('getPlayersPosition');
     socket.on('getPlayersPositionResponse', (player1Position, player2Position) => {
-        var cellsTest = [];
+        cellsString = [];
+        cellsGrid = [];
         for (i = 1; i <= 289; i++) {
             var type = '';
             var newDiv = document.createElement('div');
@@ -110,6 +113,7 @@ socket.on('setupGame', () => {
                 grid[i] = 0;
             }
             newDiv.setAttribute('id', i);
+            type += 'id:' + i + ',';
 
             if (!(newDiv.classList.contains('odd-row') || newDiv.classList.contains('odd-col'))) {
                 if (i > 0 && i <= 119) {
@@ -130,12 +134,13 @@ socket.on('setupGame', () => {
                 validGrid.push(0);
             }
             //cells.push(newDiv);
-            cellsTest.push(type);
+            cellsString.push(type);
+            cellsGrid.push(newDiv)
             wrapper.appendChild(newDiv);
         }
         //console.log(cellsTest);
         //console.log(cells);
-        socket.emit('addCellFirtTime', cellsTest);
+        socket.emit('addCellFirtTime', cellsString);
     });
 
     socket.on('setupTheGame', () => {
@@ -173,8 +178,8 @@ function createDivsWithClassesAndAttributes(classLists) {
             }
 
             // Ajout des attributs à la div
-            if (item.includes('=')) {
-                let [key, value] = item.split('=');
+            if (item.includes(':')) {
+                let [key, value] = item.split(':');
                 div.setAttribute(key.trim(), value.trim());
             }
         });
@@ -183,10 +188,37 @@ function createDivsWithClassesAndAttributes(classLists) {
     });
 }
 
+function mettreAJourTableau(tableau1, tableau2) {
+    // Vérifier que les deux tableaux ont la même longueur
+    if (tableau1.length !== tableau2.length) {
+        console.error("Les tableaux n'ont pas la même longueur.");
+        return;
+    }
+
+    // Parcourir le tableau1
+    tableau1.forEach(div1 => {
+        let divID = div1.getAttribute('id');
+        let div2 = tableau2.find(div => div.getAttribute('id') === divID);
+
+        if (div2) {
+            div1.classList = div2.classList;
+
+            for (let i = 0; i < div2.attributes.length; i++) {
+                let attr = div2.attributes[i];
+                div1.setAttribute(attr.name, attr.value);
+            }
+        } else {
+            console.warn(`Le div avec l'ID ${divID} n'a pas été trouvé dans le tableau2.`);
+        }
+    });
+}
+
 function setUpGame(gameState) {
     socket.emit('setUpGame');
     socket.on('setUpGameResponse', (activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells) => {
         cells = createDivsWithClassesAndAttributes(cells);
+        //mettreAJourGrilleAvecAttribut(cellsGrid, cells);
+        cellsGrid[0].classList.add('test');
         if (gameState === undefined) {
 
         } else {
@@ -207,6 +239,10 @@ function setUpGame(gameState) {
         document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
         document.querySelector('#nbWallPlayerA').innerText = "Murs restants : " + nbWallPlayerA;
         document.querySelector('#nbWallPlayerB').innerText = "Murs restants : " + nbWallPlayerB;
+        console.log(player1Position);
+        console.log(player2Position);
+        console.log(cells[player1Position]);
+        console.log(cells[player2Position]);
         cells[player1Position].classList.add('playerA');
         cells[player2Position].classList.add('playerB');
 
@@ -248,6 +284,7 @@ function setUpGame(gameState) {
         checkTour201();
         checkCrossing(player1Position, player2Position);
     });
+    mettreAJourTableau(cellsGrid, cells);
     socket.emit('endSetupGame');
 }
 
