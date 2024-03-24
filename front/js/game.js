@@ -1,4 +1,6 @@
+/*
 const socket = io('/api/game');
+
 
 class cellule{
     constructor(id,classes,visibilite) {
@@ -440,7 +442,7 @@ function handleWall(cellIndex) {
         }*/
 
 }
-
+/*
 function changeVisibility(rigthCell, leftCell, player, horizontale) {
     rigthCellNumber = rigthCell.getAttribute('id');
     leftCellNumber = leftCell.getAttribute('id');
@@ -960,7 +962,7 @@ function validerWall() {
 
         socket.emit('newMove', newMove);
 
-       
+
         const newWallA = [convertPositionToGameState(wallPosition), horizontale ? 0 : 1];
         playerAWalls.push(newWallA);
        // console.log(playerAWalls);

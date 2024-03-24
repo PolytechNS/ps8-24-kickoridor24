@@ -1,4 +1,4 @@
-let gameNamespace;
+/*let gameNamespace;
 let sockets;
 
 let board = [];
@@ -33,9 +33,9 @@ module.exports = function (io) {
         socket.on('disconnect', () => {
             console.log('user disconnected');
         });
-        /*socket.on('computeMoveRandom', (move) => {
+        socket.on('computeMoveRandom', (move) => {
             aiRandom.move(move);
-        });*/
+        });
         socket.on('getValidMoves', (activePlayer, playerPosition, grid, validGrid) => {
             socket.emit('validMoves', getValidMoves(activePlayer, playerPosition, grid, validGrid));
         });
@@ -123,7 +123,7 @@ function handleWall(cellIndex, grid, validGrid) {
     const downCell = cellIndex + 17;
 
     //TODO
-    /*if(clickedCell.classList.contains("rotation")){
+    if(clickedCell.classList.contains("rotation")){
 
         return rotationWall(cellIndex);
     }
@@ -133,7 +133,7 @@ function handleWall(cellIndex, grid, validGrid) {
     if (isClickedCell) {
         cells.forEach(cell => cell.classList.remove('possible-move'));
         isClickedCell = false;
-    }*/
+    }
     if ((activePlayer === 'playerA' && nbWallPlayerA === 0) || (activePlayer === 'playerB' && nbWallPlayerB === 0)) {
         return "noWall";
     }
@@ -290,12 +290,12 @@ function handleWall(cellIndex, grid, validGrid) {
             sockets.emit('nbWallPlayerB', nbWallPlayerB);
         }
 
-        /*if(wallPlacable()===0){
+        if(wallPlacable()===0){
             showValider();
         }else{
             alert("Vous ne pouvez pas poser ce mur au risque de bloquer un joueur");
             annulerWall();
-        }*/
+        }
 
     }
 }
@@ -311,4 +311,4 @@ function showValider() {
 }
 
 
-exports.getValidMoves = getValidMoves;
+exports.getValidMoves = getValidMoves;*/
