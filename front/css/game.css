@@ -99,8 +99,10 @@ body {
     display: grid;
     /*grid-template-columns: repeat(8, 40px 5px) 40px;
     grid-template-rows: repeat(14, 40px 5px);*/
-    grid-template-columns: 60px 10px 60px 10px 60px 10px 60px 10px 60px 10px 60px 10px 60px 10px 60px 10px 60px;
-    grid-template-rows: 60px 10px 60px 10px 60px 10px 60px 10px 60px 10px 60px 10px 60px 10px 60px 10px 60px;
+    grid-template-columns: 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px 50px;
+    grid-template-rows: 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px 50px;
+   /* grid-template-columns: 3.5vw 0.5vw 3.5vw 0.5vw 3.5vw 0.5vw 3.5vw 0.5vw 3.5vw 0.5vw 3.5vw 0.5vw 3.5vw 0.5vw 3.5vw 0.5vw 3.5vw;
+    grid-template-rows: 7vh 1vh 7vh 1vh 7vh 1vh 7vh 1vh 7vh 1vh 7vh 1vh 7vh 1vh 7vh 1vh 7vh;*/
 
     /*grid-template-columns: repeat(17, 40px);
     grid-template-rows: repeat(17, 40px);*/
@@ -171,8 +173,8 @@ h3 {
 .profilA, .profilB {
     background-color: #E4E5E7;
     /*augmenter la largeur de la div et reduire sa hauteur*/
-    width: 100%;
-    height: 100%;
+    width: 20%;
+    height: 20%;
     /*baisser sa position*/
 }
 
@@ -245,19 +247,20 @@ background-color: #f1c758;
 
 .center {
     text-align: center;
+    justify-content: space-evenly;
     background-color: #E4E5E7;
-    padding: 0.1em;
     font-family: 'Roboto Condensed', sans-serif;
-    font-size: 0.9em;
+    font-size: 0.7em;
     width: 30%;
     margin: 10px auto;
-
+    display: flex;
+    flex-direction: row;
 }
 
 .anti-cheat {
     background-color: #E4E5E7;
-    width: 300%;
-    height: 600px;
+    width: 100%;
+    height: 500px;
     margin: 10px auto;
     text-align: center;
     font-family: 'Roboto Condensed', sans-serif;

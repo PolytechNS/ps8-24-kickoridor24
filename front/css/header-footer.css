@@ -425,10 +425,10 @@ header {
 
 .notification-badge {
     position: relative;
-    top: -10px;
-    right: 135px;
-    width: 3vw;
-    height: 2vh;
+    top: -1vh;
+    right: 9.5vw;
+    width: 2vw;
+    height: 1vw;
     background-color: red;
     border-radius: 50%;
     display: none;

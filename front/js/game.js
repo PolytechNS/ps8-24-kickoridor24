@@ -768,7 +768,7 @@ function victoire(txt){
 
 
 function changeActivePlayer() {
-    if(activePlayer=="playerA" && getCookie("typeDePartie")==="bot_v2" ) {
+    if(activePlayer=="playerB" && getCookie("typeDePartie")==="bot_v2" ) {
 
         activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
         activateFog();
@@ -814,9 +814,9 @@ function changeActivePlayer() {
             });
         }
     }
-    else if(activePlayer === "playerA" && getCookie("typeDePartie")==="bot_v2"){
+    else if(activePlayer === "playerB" && getCookie("typeDePartie")==="bot_v2"){
         if(tour>200){
-            var resPromise = setup(1);
+            var resPromise = setup(2);
             resPromise.then(cellIndex => {
                 var newCellIndex = convertGameStateToPosition((cellIndex).toString());
                 movePlyerFirstTurn(newCellIndex);
@@ -843,7 +843,7 @@ function changeActivePlayer() {
                 if(nMove.action === "move") {
                     var pos = nMove.value;
                     var newPos = convertGameStateToPosition(pos.toString());
-                    movePlayer(player1Position);
+                    movePlayer(player2Position);
                     movePlayer(newPos);
                 }
                 else if(nMove.action === "wall"){

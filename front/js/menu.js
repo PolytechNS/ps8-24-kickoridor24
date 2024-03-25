@@ -196,7 +196,16 @@ async function checkFriends(){
 }
 var affichageNotifChat = false;
 async function getConversationNotif(){
+    if(getCookie("username") == null){
+        var chat =   document.getElementById("chat");
+        chat.style.display = 'none';
 
+
+        return ;
+    }else{
+        var chat =   document.getElementById("chat");
+        chat.style.display = 'flex';
+    }
     const formDataJSON = {};
     var user = getCookie("username");
     formDataJSON["username"] = user;
