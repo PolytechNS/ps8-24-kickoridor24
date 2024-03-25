@@ -1,16 +1,32 @@
+const clients = {};
 module.exports = function(io) {
     const gameNamespace = io.of('/api/game');
-
     gameNamespace.on('connection', (socket) => {
-        console.log('A user connected');
+        console.log('A user connected : ', socket.id);
+        socket.on('login', (userId) => {
+            console.log('Utilisateur', userId, 'connecté');
+            // Associer l'ID de l'utilisateur à sa socket
+            clients[userId] = socket;
+        });
         socket.on('disconnect', () => {
-            console.log('user disconnected');
+            console.log('Utilisateur déconnecté:', socket.id);
+
         });
         /*socket.on('computeMoveRandom', (move) => {
             aiRandom.move(move);
         });*/
         socket.on('getValidMoves', (activePlayer, playerPosition, grid, validGrid) => {
             socket.emit('validMoves', getValidMoves(activePlayer, playerPosition, grid, validGrid));
+        });
+        socket.on('message', (data) => {
+            const { senderId, ami, message } = data;
+            console.log(data);
+            console.log('Message de', senderId, 'à', ami, ':', message);
+
+            // Notifier le destinataire s'il est connecté
+            if (clients[ami]) {
+                clients[ami].emit('newMessage', { senderId, message });
+            }
         });
         socket.on('newWall', (newWall) => {
             console.log('New wall received: ', newWall);

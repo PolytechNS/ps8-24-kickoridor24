@@ -55,31 +55,215 @@ function showHorsLignePlay(){
 }
 
 
+function showMatchChat(){
+    document.getElementsByClassName("matchMsg")[0].style.display = "flex";
+    document.getElementsByClassName("amisMsg")[0].style.display = "none";
+    document.getElementsByClassName("chatAmiMsg")[0].style.display = "none";
+    document.getElementsByClassName("inputEcrire")[0].style.display = "flex";
+    document.getElementById("matchChat").style.backgroundColor = "#3EE4F0";
+    document.getElementById("amisChat").style.backgroundColor = "#E4E5E7";
+    document.getElementById("matchChat").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("amisChat").style.borderBottom = "none";
+}
 
+
+
+function redirectToFriendsPage() {
+    window.location.href = "friends-page.html";
+
+}
+
+
+
+function scrollToBott(){
+    const element = document.getElementById("chatAmiID");
+    element.scrollTop = element.scrollHeight;
+}
+
+function scrollToBottMatch(){
+    const element = document.getElementById("matchChattID");
+    element.scrollTop = element.scrollHeight;
+}
 async function checkResumegame(){
     var div =  document.getElementById("resumeGameButton");
- if(getCookie("username") != null){
-     const formDataJSON = {};
-     formDataJSON["username"] = getCookie("username");
-     try {
-         const response = await fetch('/api/gameRetrieve', {
-             method: 'POST',
-             headers: {
-                 'Content-Type': 'application/json'
-             },
-             body: JSON.stringify(formDataJSON)
-         }).then(response => {
-             if (!response.ok) {
-               // div.onclick = null;
-                 div.style.opacity = 0.5;
-                 div.style.backgroundColor = "#ccc"; // Change la couleur de fond en gris clair
-                 div.style.pointerEvents = "none";
-             }});}catch (e) {
+    if(getCookie("username") != null){
+        const formDataJSON = {};
+        formDataJSON["username"] = getCookie("username");
+        try {
+            const response = await fetch('/api/gameRetrieve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataJSON)
+            }).then(response => {
+                if (!response.ok) {
+                    // div.onclick = null;
+                    div.style.opacity = 0.5;
+                    div.style.backgroundColor = "#ccc"; // Change la couleur de fond en gris clair
+                    div.style.pointerEvents = "none";
+                }});}catch (e) {
 
-     }
- }else{
+        }
+    }else{
 
-     div.style.display = 'none';
- }
+        div.style.display = 'none';
+    }
 }
+if(window.location.href.includes("play-page.html"))
 checkResumegame();
+function showFriendsList(){
+    document.getElementsByClassName("friendsList")[0].style.display = "flex";
+    document.getElementsByClassName("friendsAdd")[0].style.display = "none";
+    document.getElementsByClassName("friendsDemands")[0].style.display = "none";
+    document.getElementById("amisBTN").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("ajouterBTN").style.borderBottom = "none";
+    document.getElementById("ajouterBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("demandesBTN").style.borderBottom = "none";
+    document.getElementById("demandesBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("amisBTN").style.backgroundColor = "#3EE4F0";
+}
+
+function showFriendsAdd(){
+    document.getElementsByClassName("friendsAdd")[0].style.display = "flex";
+    document.getElementsByClassName("friendsList")[0].style.display = "none";
+    document.getElementsByClassName("friendsDemands")[0].style.display = "none";
+    document.getElementById("ajouterBTN").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("amisBTN").style.borderBottom = "none";
+    document.getElementById("amisBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("demandesBTN").style.borderBottom = "none";
+    document.getElementById("demandesBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("ajouterBTN").style.backgroundColor = "#3EE4F0";
+}
+
+function showFriendsDemands(){
+    document.getElementsByClassName("friendsDemands")[0].style.display = "flex";
+    document.getElementsByClassName("friendsList")[0].style.display = "none";
+    document.getElementsByClassName("friendsAdd")[0].style.display = "none";
+    document.getElementById("demandesBTN").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("amisBTN").style.borderBottom = "none";
+    document.getElementById("amisBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("ajouterBTN").style.borderBottom = "none";
+    document.getElementById("ajouterBTN").style.backgroundColor = "#E4E5E7";
+    document.getElementById("demandesBTN").style.backgroundColor = "#3EE4F0";
+}
+
+async function checkFriends(){
+
+    if(getCookie("username") == null){
+        var amisDiv =   document.getElementById("amisDiv");
+      amisDiv.style.display = 'none';
+
+
+        return ;
+    }else{
+        var amisDiv =   document.getElementById("amisDiv");
+        amisDiv.style.display = 'flex';
+    }
+    const formDataJSON = {};
+    var user = getCookie("username");
+    formDataJSON["username"] = user;
+    try {
+        const response = await fetch('/api/askFriendsList', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur de réseau ou HTTP: ' + response.status);
+            }
+
+            return response.json(); // Convertit la réponse en JSON
+        })
+            .then(data => {
+                var amisDiv =   document.getElementById("amisDiv");
+                if(data.length > 0){
+                    amisDiv.getElementsByTagName('span')[0].style.display = 'flex';
+                }else{
+                    amisDiv.getElementsByTagName('span')[0].style.display = 'none';
+                }
+
+            })
+            .catch(error => {
+                console.error('Une erreur est survenue lors de la récupération des demandes d\'amis : ', error);
+            });
+
+    } catch (e) {
+        alert(e.message);
+    }
+}
+var affichageNotifChat = false;
+async function getConversationNotif(){
+    if(getCookie("username") == null){
+        var chat =   document.getElementById("chat");
+        chat.style.display = 'none';
+
+
+        return ;
+    }else{
+        var chat =   document.getElementById("chat");
+        chat.style.display = 'flex';
+    }
+    const formDataJSON = {};
+    var user = getCookie("username");
+    formDataJSON["username"] = user;
+
+    try {
+        const response = await fetch('/api/getConversation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur de réseau ou HTTP: ' + response.status);
+            }
+
+            return response.json(); // Convertit la réponse en JSON
+        })
+            .then(async data => {
+                affichageNotif = false;
+                for (var i = 0; i < data.length; i++) {
+
+                    if(data[i]["lastMsg"] != undefined ){
+                        const message = await getMessageById(data[i]["lastMsg"]);
+                        if(message["lu"] == false && message["emetteur"] !== user) {
+                            affichageNotifChat = true;
+                            showHideNotif();
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Une erreur est survenue lors de la récupération des conversations : ', error);
+            });
+
+    } catch (e) {
+        alert(e.message);
+    }
+}
+function showHideNotif(data){
+    var chatbtn =  document.getElementById("chat");
+    var notif = chatbtn.getElementsByClassName('notification-badge')[0];
+    if(data == "close"){
+        notif.style.display = 'none';
+    }
+    else if(affichageNotifChat) {
+        notif.style.display = 'flex';
+    }
+    else{
+        notif.style.display = 'none';
+
+    }
+}
+
+if(!window.location.href.includes("friends-page.html")) {
+    notif();
+}
+async function notif() {
+    await checkFriends();
+    await getConversationNotif();
+}
