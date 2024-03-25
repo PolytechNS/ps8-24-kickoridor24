@@ -50,6 +50,9 @@ async function ajouterAmisListe(){
                             div.style.background ='url("images/europa.jpg")';
                         }else{
                             div.style.background ='url("images/conference.png")';
+                            div.style.backgroundSize = 'cover';
+                            div.style.backgroundRepeat = 'no-repeat';
+                            div.style.backgroundPosition = 'center';
                         }
 
                         var btn = document.createElement("button");
@@ -164,6 +167,9 @@ async function demandesAmisListe(){
                             div.style.background ='url("images/europa.jpg")';
                         }else{
                             div.style.background ='url("images/conference.png")';
+                            div.style.backgroundSize = 'cover';
+                            div.style.backgroundRepeat = 'no-repeat';
+                            div.style.backgroundPosition = 'center';
                         }
 
                         var btnV = document.createElement("button");
@@ -295,6 +301,9 @@ async function listeAmis(){
                             div.style.background ='url("images/europa.jpg")';
                         }else{
                             div.style.background ='url("images/conference.png")';
+                            div.style.backgroundSize = 'cover';
+                            div.style.backgroundRepeat = 'no-repeat';
+                            div.style.backgroundPosition = 'center';
                         }
 
                         var btn = document.createElement("button");
