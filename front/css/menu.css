@@ -9,7 +9,7 @@
     margin: 0.5em;
     box-shadow: 0 3px 3px 0 #676767;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: flex-start;
     transition: background-color 0.3s ease; /* Animation de transition pour un effet plus fluide */
 
@@ -29,7 +29,7 @@
 }
 
 .btnJouer{
-    margin: 0.3em 0.3em 0.3em 0.3em;
+    margin: 0.2em 0.3em 0.3em 0.3em;
 }
 
 .container {
@@ -71,6 +71,30 @@
     border-radius: 50%; /* définir le rayon du cercle */
     margin-bottom: 0.4em;
     margin-right: -4em;
+}
+
+.titre{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: -8%;
+    margin-top: 5%;
+}
+
+.icon{
+    width: 20%;
+    margin-top: 13.5vh;
+}
+
+#regle{
+    width: 18%;
+}
+
+#titre{
+    width: fit-content;
+    height: fit-content;
+    max-width: 30%;
 }
 
 .mitro img {
