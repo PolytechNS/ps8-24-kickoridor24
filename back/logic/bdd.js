@@ -44,7 +44,7 @@ async function handleBDD(request, response) {
                         password: data.password
                     }
                     token = generateAccessToken(dataToHash);
-                    await client.close();
+
                     const dataToSend = {
                         username: data.username,
                         elo: '0',
@@ -53,11 +53,13 @@ async function handleBDD(request, response) {
                         friendList: [],
                         demandes: []
                     }
-                    saveUser(dataToSend).then(r => {
+                    saveUser(dataToSend).then(async() => {
                             response.statusCode = 200;
+                            await client.close();
                             response.end("ok");
                         }
                     );
+
                 }
             } catch (error) {
                 console.error(error.message);
