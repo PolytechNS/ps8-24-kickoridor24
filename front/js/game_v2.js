@@ -194,7 +194,6 @@ function mettreAJourTableau(tableau1, tableau2) {
         console.error("Les tableaux n'ont pas la même longueur.");
         return;
     }
-
     // Parcourir le tableau1
     tableau1.forEach(div1 => {
         let divID = div1.getAttribute('id');
@@ -217,8 +216,6 @@ function setUpGame(gameState) {
     socket.emit('setUpGame');
     socket.on('setUpGameResponse', (activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells) => {
         cells = createDivsWithClassesAndAttributes(cells);
-        //mettreAJourGrilleAvecAttribut(cellsGrid, cells);
-        cellsGrid[0].classList.add('test');
         if (gameState === undefined) {
 
         } else {
@@ -239,20 +236,26 @@ function setUpGame(gameState) {
         document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
         document.querySelector('#nbWallPlayerA').innerText = "Murs restants : " + nbWallPlayerA;
         document.querySelector('#nbWallPlayerB').innerText = "Murs restants : " + nbWallPlayerB;
-        console.log(player1Position);
-        console.log(player2Position);
-        console.log(cells[player1Position]);
-        console.log(cells[player2Position]);
+
         cells[player1Position].classList.add('playerA');
         cells[player2Position].classList.add('playerB');
 
         hideAntiCheat();
         hideValider();
-        lanePlayerA = document.getElementsByClassName('bot-row');
-        lanePlayerB = document.getElementsByClassName('top-row');
+
+        lanePlayerA = [];
+        lanePlayerB = [];
+
+        cells.forEach((div) => {
+            if(div.classList.contains('bot-row')) {
+                lanePlayerA.push(div);
+            }else if(div.classList.contains('top-row')) {
+                lanePlayerB.push(div);
+            }
+        });
 
         dijkstraVisitedNode = [];
-        activateFog();
+        activateFog(cells);
 
         if (tour <= 200)
             document.getElementById('nbTour').textContent = `Tour : n°${tour}`;
@@ -263,10 +266,18 @@ function setUpGame(gameState) {
             else
                 cell.addEventListener('click', () => movePlayer(index));
         });
-
+        mettreAJourTableau(cellsGrid, cells);
         if (tour === 202) {
-            const botRows = document.querySelectorAll('.bot-row');
-            botRows.forEach(row => row.classList.add('first-turn'));
+            let botRows = [];
+            lanePlayerA.forEach(row =>
+                row.classList.add('first-turn')
+            );
+
+            cellsGrid.forEach((div) => {
+                if(div.classList.contains('bot-row')) {
+                    botRows.push(div);
+                }
+            });
 
             // Afficher le message pour le premier tour
             const message = document.createElement('div');
@@ -279,12 +290,10 @@ function setUpGame(gameState) {
             //si une case de top-row est cliquée alors on move le joueur
             botRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
             //  console.log(tour);
-
         }
         checkTour201();
         checkCrossing(player1Position, player2Position);
     });
-    mettreAJourTableau(cellsGrid, cells);
     socket.emit('endSetupGame');
 }
 
@@ -708,7 +717,7 @@ function checkTour201() {
     }
 }
 
-function activateFog() {
+function activateFog(cells) {
     if (activePlayer == "playerB") {
         for (let i = 0; i < cells.length; i++) {
             if (cells[i].getAttribute('visibility') <= "0") {
@@ -744,6 +753,7 @@ function activateFog() {
             }
         }
     }
+    mettreAJourTableau(cellsGrid, cells);
 }
 
 function checkJoueurColle() {
@@ -1115,9 +1125,9 @@ function changeActivePlayer() {
     if (activePlayer == "playerA" && getCookie("typeDePartie") === "bot_v2") {
 
         activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
-        activateFog();
+        activateFog(cells);
         activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
-        activateFog();
+        activateFog(cells);
 
         //TODO JE SAIS PAS OU ELLE EST
         convertBoard();
@@ -1132,7 +1142,7 @@ function changeActivePlayer() {
     tour--;
     console.log(tour);
 
-    activateFog();
+    activateFog(cells);
     checkCrossing(player1Position, player2Position);
     if (activePlayer === "playerA") {
         showForfaitA();
@@ -1251,6 +1261,7 @@ function convertBoard() {
 }
 
 function movePlyerFirstTurn(cellIndex) {
+    console.log("ALLLLLLOOOO");
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du haut et si c'est au tour du joueur A
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du bas et si c'est au tour du joueur B
 
