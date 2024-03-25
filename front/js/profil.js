@@ -41,7 +41,7 @@ function showPhoto(){
     document.getElementById("photo").style.backgroundColor = "#3EE4F0";
     fillPhoto();
 }
-showCeleb();
+
 
 var gif = document.getElementById('gifResume');
 
