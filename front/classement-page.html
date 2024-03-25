@@ -39,12 +39,66 @@
     </div>
 </div>
 
+<div id="chatMenu" class="chatMenu">
+    <div id="menuChat">
+        <div id="amisChat" onclick="showAmisChat()">
+            Amis
+        </div>
+        <div id="matchChat" onclick="showMatchChat(); scrollToBottMatch()">
+            En match
+        </div>
+    </div>
+
+    <div class="amisMsg" style="display: flex">
+
+    </div>
+    <div class="matchMsg" style="display: none">
+
+    </div>
+    <div class="chatAmiMsg" style="display: none">
+        <div class="listeAmis" id="nomAmi" onclick=" showAmisChat();getConversation();">
+            <div class="ami">
+                <div style="display: flex">
+                    <div class="mitroChat">
+                        <img src="images/mitro.jpg" alt="">
+                    </div>
+                    <span class="nom" id="nomAmiID">Amis1</span>
+                </div>
+            </div>
+        </div>
+        <div class="chatAmi" id="chatAmiID">
+
+        </div>
+    </div>
+    <div class="inputEcrire" style="display: none">
+        <input type="text" class="barreChat" id="messageInput" placeholder="Ecrire un message">
+        <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChat()">
+    </div>
+</div>
+
 <div class="footer">
     <img id="param" src="images/param.png">
+
+
+    <div id="amisDiv" onclick="redirectToFriendsPage()">
+        <img id="amisImg" src="images/friends.png">
+        <p id="amisTexte">AMIS</p>
+        <span class="notification-badge"> </span>
+    </div>
+    <div id="chat" onclick="openChat()">
+        <img src="images/chat.png">
+        <p id="chatting">CHAT</p>
+        <span class="notification-badge"> </span>
+    </div>
+
+
+
+
 </div>
 </body>
 </html>
 <script src="js/cookie.js"></script>
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>
+<script src="js/chat.js"></script>
 <script src="js/authentification.js"></script>

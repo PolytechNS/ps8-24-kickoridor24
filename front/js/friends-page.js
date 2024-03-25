@@ -359,10 +359,8 @@ async function deleteFriend(emetteur,receveur){
 document.addEventListener('DOMContentLoaded', async () => {
     // Appeler vos fonctions asynchrones ici
     await listeAmis();
-
      await demandesAmisListe();
-
-
+     await notif();
 });
 
 
