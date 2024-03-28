@@ -118,7 +118,7 @@ async function handleBDD(request, response) {
                     jsonResponse["celebration"] = user.celebration;
                     jsonResponse["email"] = token.data.email;
                     jsonResponse["password"] = token.data.password;
-                    await client.close();
+                    //await client.close();
                         response.statusCode = 200;
                         response.write(JSON.stringify(jsonResponse));
 
@@ -574,6 +574,24 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
+    }else if (request.method === "POST" && request.url === "/api/changeName") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+
+                await changeName(data);
+                response.end("ok");
+
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
     }
 }
 
@@ -1017,6 +1035,18 @@ async function changeMail(data) {
             { $set: { token: token } }
         );
         return true;
+    } finally {
+        //
+    }
+}
+
+async function changeName(data) {
+    try {
+        //
+        await client.db("kickoridor").collection("users").updateOne(
+            { username: data.username },
+            { $set: { username: data.name } }
+        );
     } finally {
         //
     }

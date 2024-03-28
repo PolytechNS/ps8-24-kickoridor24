@@ -1,4 +1,7 @@
 var userID;
+
+var photoDeProfil = null;
+
 function redirectToGame(name, value, days) {
     setCookie(name,value,days);
     window.location.href = "game.html";
@@ -191,7 +194,7 @@ async function checkFriends(){
             });
 
     } catch (e) {
-        alert(e.message);
+        console.log(error.message);
     }
 }
 var affichageNotifChat = false;
@@ -242,7 +245,7 @@ async function getConversationNotif(){
             });
 
     } catch (e) {
-        alert(e.message);
+        console.log(error.message);
     }
 }
 function showHideNotif(data){
@@ -281,15 +284,26 @@ async function getId(){
             return response.json(); // Convertit la réponse en JSON
         }).then(data => {
             userID = data["_id"];
+            if(photoDeProfil === null){
+                majPhoto( data["img"]);
+
+            }
+
         });
 
 
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
+}
+
+function majPhoto(newImage){
+    photoDeProfil =newImage;
+    document.getElementById("petitePhoto").src = photoDeProfil;
 }
 async function notif() {
     await getId();
+
     await checkFriends();
     await getConversationNotif();
 }

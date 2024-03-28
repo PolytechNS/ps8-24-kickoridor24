@@ -304,7 +304,7 @@ async function  selectNewImg(){
             if (!response.ok) {
                 throw new Error('Une erreur est survenue lors du changement d\'image : ' + response.status);
             }
-
+            majPhoto(img);
         });
 
 
@@ -314,14 +314,14 @@ async function  selectNewImg(){
 }
 
 async function  newName(){
- /*   img = photoSelected.getElementsByTagName('img')[0].src;
+    nomDequipe =   document.getElementById("nomEquipeInput").value;
     fillData();
 
     const formDataJSON = {};
     formDataJSON["username"] = getCookie("username");
-    formDataJSON["img"] = img;
+    formDataJSON["name"] = nomDequipe;
     try {
-        const response = await fetch('/api/changeImg', {
+        const response = await fetch('/api/changeName', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -331,13 +331,14 @@ async function  newName(){
             if (!response.ok) {
                 throw new Error('Une erreur est survenue lors du changement d\'image : ' + response.status);
             }
-
+            setCookie("username",nomDequipe,7);
+            socket.emit('login', getCookie("username"));
         });
 
 
     } catch (error) {
         alert(error.message);
-    }*/
+    }
 }
 async function  newMail(){
        adresseMail = document.getElementById("mailInput").value;
