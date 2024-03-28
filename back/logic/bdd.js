@@ -36,7 +36,7 @@ async function handleBDD(request, response) {
                 const user = await findUser(data);
                 if (user != null) {
                     response.statusCode = 400;
-                    await client.close();
+                    // await client.close();
                     response.end("Username already taken");
                 } else {
                     const dataToHash = {
@@ -48,14 +48,15 @@ async function handleBDD(request, response) {
                     const dataToSend = {
                         username: data.username,
                         elo: '0',
-                        img: 'images/mitro.jpg',
+                        img: 'images/photoProfil/Mitroglu.png',
+                        celebration:'images/celebration/SIUU',
                         token: token,
                         friendList: [],
                         demandes: []
                     }
                     saveUser(dataToSend).then(async() => {
                             response.statusCode = 200;
-                            await client.close();
+                            // await client.close();
                             response.end("ok");
                         }
                     );
@@ -78,7 +79,7 @@ async function handleBDD(request, response) {
                 const user = await findUser(data)
                 if (user != null) {
                     const token = verifyAccessToken(user.token);
-                    await client.close();
+                    // await client.close();
                     if (token.data.password === data.password) {
                         response.statusCode = 200;
                         response.end("ok");
@@ -96,7 +97,42 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    } else if (request.method === "POST" && request.url === "/api/gameSave") {
+    }  else if (request.method === "POST" && request.url === "/api/retrieveUser") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+
+                const data = JSON.parse(body);
+
+                const user = await findUser(data)
+
+                if (user != null) {
+                    const token = verifyAccessToken(user.token);
+                    const jsonResponse = {};
+                    jsonResponse["username"] = user.username;
+                    jsonResponse["img"] = user.img;
+                    jsonResponse["celebration"] = user.celebration;
+                    jsonResponse["email"] = token.data.email;
+                    jsonResponse["password"] = token.data.password;
+                    await client.close();
+                        response.statusCode = 200;
+                        response.write(JSON.stringify(jsonResponse));
+
+                        response.end();
+                } else {
+                    response.statusCode = 404;
+                    response.end("User not found");
+                }
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if (request.method === "POST" && request.url === "/api/gameSave") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -111,7 +147,7 @@ async function handleBDD(request, response) {
                     typeDePartie: data.typeDePartie
                 }
                 token = generateAccessToken(dataToHash);
-                await client.close();
+                // await client.close();
                 const dataToSend = {
                     username: data.username,
                     board: data.board,
@@ -138,7 +174,7 @@ async function handleBDD(request, response) {
             try {
                 const data = JSON.parse(body);
                 const gameState = await findGameState(data)
-                await client.close();
+                // await client.close();
                 if (gameState != null) {
 
                     response.setHeader('Content-Type', 'application/json');
@@ -164,7 +200,7 @@ async function handleBDD(request, response) {
             try {
                 const data = JSON.parse(body);
                 const deleteGame = await deleteGameState(data);
-                await client.close();
+                // await client.close();
                 if (deleteGame != null) {
                     response.end("ok");
                 } else {
@@ -187,7 +223,7 @@ async function handleBDD(request, response) {
                 const data = JSON.parse(body);
                 const conversationID = await getConversationID(data);
                 const dataToSend = await sendMessageData(data, conversationID._id);
-                await client.close();
+                // await client.close();
                 response.statusCode = 200;
                 response.end("ok");
             } catch (error) {
@@ -211,7 +247,7 @@ async function handleBDD(request, response) {
                 const messages = await getMessages(data, conversationID);
 
 
-                await client.close();
+                // await client.close();
 
                 response.setHeader('Content-Type', 'application/json');
 
@@ -235,7 +271,7 @@ async function handleBDD(request, response) {
             try {
                 const data = JSON.parse(body);
                 const players = await findFriends(data);
-                await client.close();
+                // await client.close();
                 if (players != null) {
                     response.setHeader('Content-Type', 'application/json');
                     response.write(JSON.stringify(players));
@@ -260,7 +296,7 @@ async function handleBDD(request, response) {
             try {
                 const data = JSON.parse(body);
                 await askFriend(data);
-                await client.close();
+                // await client.close();
                 response.end();
             } catch (error) {
                 console.error(error.message);
@@ -278,7 +314,7 @@ async function handleBDD(request, response) {
                 const data = JSON.parse(body);
 
                 const players = await askFriendsList(data);
-                await client.close();
+                // await client.close();
                 if (players != null) {
                     response.setHeader('Content-Type', 'application/json');
                     response.write(JSON.stringify(players));
@@ -304,7 +340,7 @@ async function handleBDD(request, response) {
             try {
                 const data = JSON.parse(body);
                 await deleteAskFriend(data);
-                await client.close();
+                // await client.close();
                 response.end();
             } catch (error) {
                 console.error(error.message);
@@ -322,7 +358,7 @@ async function handleBDD(request, response) {
             try {
                 const data = JSON.parse(body);
                 await validateAskFriend(data);
-                await client.close();
+                // await client.close();
                 response.end();
             } catch (error) {
                 console.error(error.message);
@@ -340,7 +376,7 @@ async function handleBDD(request, response) {
                 const data = JSON.parse(body);
 
                 var players = await friendsList(data);
-                await client.close();
+                // await client.close();
 
                 if (players != null) {
 
@@ -369,7 +405,7 @@ async function handleBDD(request, response) {
             try {
                 const data = JSON.parse(body);
                 await deleteFriend(data);
-                await client.close();
+                // await client.close();
                 response.end();
             } catch (error) {
                 console.error(error.message);
@@ -388,7 +424,7 @@ async function handleBDD(request, response) {
 
                 var message = await getMsgById(data);
     ;
-                await client.close();
+                // await client.close();
 
                 if (message != null) {
 
@@ -418,7 +454,7 @@ async function handleBDD(request, response) {
 
                 var players = await getConversations(data);
 
-                await client.close();
+                // await client.close();
 
                 if (players != null) {
 
@@ -448,7 +484,7 @@ async function handleBDD(request, response) {
 
                 var players = await getConversations(data);
 
-                await client.close();
+                // await client.close();
 
                 if (players != null) {
 
@@ -461,6 +497,76 @@ async function handleBDD(request, response) {
                     response.statusCode = 404;
                     response.end("User not found");
                 }
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if (request.method === "POST" && request.url === "/api/changeCelebration") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+               await changeCelebration(data);
+                response.end("ok");
+
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if (request.method === "POST" && request.url === "/api/changeImg") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+                await changeImg(data)
+                response.end("ok");
+
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if (request.method === "POST" && request.url === "/api/changeMDP") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+
+                await changeMDP(data);
+                response.end("ok");
+
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if (request.method === "POST" && request.url === "/api/changeMail") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+
+                await changeMail(data);
+                response.end("ok");
+
             } catch (error) {
                 console.error(error.message);
                 response.statusCode = 400;
@@ -565,7 +671,7 @@ async function handleBDD(request, response) {
                 console.log("1 document inserted");
             });
         } finally {
-            await client.close();
+            // await client.close();
         }
     }
 
@@ -704,16 +810,7 @@ async function handleBDD(request, response) {
         }
     }
 
-    function generateAccessToken(data) {
-        const payload = {
-            email: data.email,
-            password: data.password
-        };
 
-        const secret = 'kc-blue-wall';
-
-        return jwt.sign(payload, secret);
-    }
 
     async function deleteFriend(data) {
         try {
@@ -821,6 +918,75 @@ async function getdateConversation(conversationID) {
     }
 }
 
+async function changeCelebration(data) {
+    try {
+        //
+        await client.db("kickoridor").collection("users").updateOne(
+            { username: data.username },
+            { $set: { celebration: data.celebration } }
+        );
+        return true;
+    } finally {
+        //
+    }
+}
+
+async function changeImg(data) {
+    try {
+        //
+        await client.db("kickoridor").collection("users").updateOne(
+            { username: data.username },
+            { $set: { img: data.img } }
+        );
+        return true;
+    } finally {
+        //
+    }
+}
+
+async function changeMDP(data) {
+    try {
+        //
+      const user = await client.db("kickoridor").collection("users").findOne({
+            username: data.username
+        });
+        var tokenTmp = verifyAccessToken(user.token);
+        const dataToHash = {
+            email: tokenTmp.data.email,
+            password: data.password
+        }
+        var token = generateAccessToken(dataToHash);
+        await client.db("kickoridor").collection("users").updateOne(
+            { username: data.username },
+            { $set: { token: token } }
+        );
+        return true;
+    } finally {
+        //
+    }
+}
+
+async function changeMail(data) {
+    try {
+        //
+        const user = await client.db("kickoridor").collection("users").findOne({
+            username: data.username
+        });
+        var tokenTmp = verifyAccessToken(user.token);
+        const dataToHash = {
+            email: data.email,
+            password: tokenTmp.data.password
+        }
+        var token = generateAccessToken(dataToHash);
+        await client.db("kickoridor").collection("users").updateOne(
+            { username: data.username },
+            { $set: { token: token } }
+        );
+        return true;
+    } finally {
+        //
+    }
+}
 function verifyAccessToken(token) {
     const secret = 'kc-blue-wall';
 
@@ -831,7 +997,16 @@ function verifyAccessToken(token) {
         return { success: false, error: error.message };
     }
 }
+function generateAccessToken(data) {
+    const payload = {
+        email: data.email,
+        password: data.password
+    };
 
+    const secret = 'kc-blue-wall';
+
+    return jwt.sign(payload, secret);
+}
 
 
 exports.manage = handleBDD;

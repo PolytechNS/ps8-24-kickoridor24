@@ -156,7 +156,7 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    overflow-y: auto;
+
     padding: 0.2em 2em 0em 2em;
 
 }
@@ -239,6 +239,8 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
+    overflow-y: auto;
 
 }
 #searchInput
@@ -263,20 +265,20 @@ header {
     width: fit-content;
     height: fit-content;
 }
-.cont::-webkit-scrollbar {
+#resultatRechercheAmis::-webkit-scrollbar {
     width: 15px;
     height: 30px;
 }
 
 /* Track */
-.cont::-webkit-scrollbar-track {
+#resultatRechercheAmis::-webkit-scrollbar-track {
     background: #3EE4F0;
     border-radius: 30px;
     width: 15px;
 }
 
 /* Handle */
-.cont::-webkit-scrollbar-thumb {
+#resultatRechercheAmis::-webkit-scrollbar-thumb {
     background: #eb4f61;
     border-radius: 30px;
     width: 5px;

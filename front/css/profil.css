@@ -203,7 +203,7 @@
     padding-left: 2vw ;
     gap: 1vh;
     /* padding: 0.2em 4em 6em 0.4em;*/
-
+    min-height: 350px;
 }
 .rechercheDiv{
     display: flex;
@@ -314,4 +314,17 @@
     font-weight: bold;
     font-family: 'Roboto Condensed', sans-serif;
     color: black;
+}
+
+.selected{
+    background-color: #eb4f6170 ;
+    border: 3px solid #eb4f61;
+}
+input{
+    padding-left: 2vw;
+    font-weight: bold;
+    font-family: 'Roboto Condensed', sans-serif;
+    color: black;
+    font-size: 3vh;
+
 }
