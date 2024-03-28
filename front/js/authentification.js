@@ -36,5 +36,6 @@ function getUsername(){
     if(username !== undefined){
         return username;
     }
+
     return null;
 }

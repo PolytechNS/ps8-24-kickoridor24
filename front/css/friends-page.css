@@ -179,6 +179,7 @@ header {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
+    align-content: flex-start;
     flex-direction: row;
     /*width qui rempli tout l'espace dispo*/
     width: 100%;

@@ -112,6 +112,7 @@ async function handleBDD(request, response) {
                 if (user != null) {
                     const token = verifyAccessToken(user.token);
                     const jsonResponse = {};
+                    jsonResponse["_id"] = user._id;
                     jsonResponse["username"] = user.username;
                     jsonResponse["img"] = user.img;
                     jsonResponse["celebration"] = user.celebration;
@@ -583,10 +584,11 @@ async function handleBDD(request, response) {
             const messages = await client.db("kickoridor").collection("chat").find({
                 conversationID: idConversation._id
             }).sort({date: 1}).toArray();
-
+            var receveur = await findUser({username : data.username});
+            var emetteur = await findUser({username : data.ami});
             await client.db("kickoridor").collection("chat").updateMany({
-                receveur: data.username,
-                emetteur: data.ami,
+                receveur: receveur["_id"],
+                emetteur: emetteur["_id"],
                 lu: false
             }, {
                 $set: {lu: true}
@@ -600,11 +602,12 @@ async function handleBDD(request, response) {
 
     async function getConversationID(data) {
         try {
-
+            var ami1 = await findUser({username : data.username});
+            var ami2 = await findUser({username : data.ami});
             return await client.db("kickoridor").collection("conversation").findOne({
                 $or: [
-                    {ami1: data.username, ami2: data.ami},
-                    {ami1: data.ami, ami2: data.username}
+                    {ami1: ami1["_id"], ami2: ami2["_id"]},
+                    {ami1: ami2["_id"], ami2: ami1["_id"]}
                 ]
             });
         } finally {
@@ -614,12 +617,14 @@ async function handleBDD(request, response) {
 
     async function sendMessageData(data, conversationID) {
         try {
+            var emetteur = await findUser({username : data.username});
+            var receveur = await findUser({username : data.ami});
 
             const msg = await client.db("kickoridor").collection("chat").insertOne({
                 conversationID: conversationID,
                 message: data.message,
-                emetteur: data.username,
-                receveur: data.ami,
+                emetteur: emetteur["_id"],
+                receveur: receveur["_id"],
                 date: Date.now(),
                 lu: false
             }, function (err, res) {
@@ -662,6 +667,17 @@ async function handleBDD(request, response) {
             //
         }
     }
+async function findUserById(data) {
+    try {
+        console.log(data)
+        var idTmp = new ObjectId(data._id);
+        return await client.db("kickoridor").collection("users").findOne({
+            _id: idTmp
+        });
+    } finally {
+        //
+    }
+}
 
     async function saveGameState(data) {
         try {
@@ -699,12 +715,22 @@ async function handleBDD(request, response) {
 
     async function findFriends(data) {
         try {
+            console.log(data);
             const currentUser = await findUser(data);
+            const friendListUsers = await Promise.all(currentUser.friendList.map(async (friendID) => {
+                const tmp = await findUserById({_id :friendID});
+                return tmp["username"];
+            }));
+            const demandeListUsers = await Promise.all(currentUser.demandes.map(async (friendID) => {
+                const tmp = await findUserById({_id :friendID});
+                return tmp["username"];
+            }));
+            const exclusions = [currentUser.username, ...friendListUsers, ...demandeListUsers];
 
             return await client.db("kickoridor").collection("users").find({
                 username: {
                     $regex: "^" + data.recherche.toString(),
-                    $nin: [currentUser["username"].toString(), ...currentUser["friendList"], ...currentUser["demandes"]] //
+                    $nin: exclusions
                 }
             }).sort({username: 1}).toArray();
         } finally {
@@ -715,9 +741,11 @@ async function handleBDD(request, response) {
     async function askFriend(data) {
         try {
 
+            const userTmp = await findUser({username : data.emetteur});
+
             return await client.db("kickoridor").collection("users").updateOne(
                 {username: data.receveur.toString()},
-                {$addToSet: {demandes: data.emetteur.toString()}}
+                {$addToSet: {demandes: userTmp["_id"]}}
             );
         } finally {
 
@@ -734,7 +762,7 @@ async function handleBDD(request, response) {
             if (user && user.demandes) {
                 // Utiliser Promise.all pour exécuter les requêtes findUser de manière asynchrone
                 const demandeDetails = await Promise.all(user.demandes.sort().map(async (demande) => {
-                    return await findUser({username: demande});
+                    return await findUserById({_id: demande});
                 }));
                 return demandeDetails;
             } else {
@@ -747,10 +775,11 @@ async function handleBDD(request, response) {
 
     async function deleteAskFriend(data) {
         try {
+            const userTmp = await findUser({username : data.receveur});
 
             return await client.db("kickoridor").collection("users").updateOne(
                 {username: data.emetteur.toString()},
-                {$pull: {demandes: data.receveur.toString()}}
+                {$pull: {demandes: userTmp["_id"]}}
             );
         } finally {
 
@@ -759,26 +788,30 @@ async function handleBDD(request, response) {
 
     async function validateAskFriend(data) {
         try {
-
+            const userTmp = await findUser({username : data.receveur});
             await client.db("kickoridor").collection("users").updateOne(
                 {username: data.emetteur.toString()},
                 {
-                    $pull: {demandes: data.receveur.toString()}
+                    $pull: {demandes: userTmp["_id"]}
                 }
             );
+            var ami1 = await findUser({username : data.emetteur});
+            var ami2 = await findUser({username : data.receveur});
+
             await client.db("kickoridor").collection("conversation").insertOne(
                 {
-                    ami1: data.emetteur,
-                    ami2: data.receveur
+                    ami1: ami1["_id"],
+                    ami2: ami2["_id"]
                 }
             )
             await client.db("kickoridor").collection("users").updateOne(
                 {username: data.emetteur.toString()},
-                {$addToSet: {friendList: data.receveur.toString()}}
+                {$addToSet: {friendList: userTmp["_id"]}}
             );
+            const userTmp2 = await findUser({username : data.emetteur});
             return await client.db("kickoridor").collection("users").updateOne(
                 {username: data.receveur.toString()},
-                {$addToSet: {friendList: data.emetteur.toString()}}
+                {$addToSet: {friendList: userTmp2["_id"]}}
             );
 
         } finally {
@@ -798,7 +831,7 @@ async function handleBDD(request, response) {
                 // Utiliser Promise.all pour exécuter les requêtes findUser de manière asynchrone
                 const friendsDetails = await Promise.all(friends.sort().map(async (friend) => {
 
-                    return await findUser({username: friend});
+                    return await findUserById({_id: friend});
                 }));
 
                 return friendsDetails;
@@ -814,22 +847,23 @@ async function handleBDD(request, response) {
 
     async function deleteFriend(data) {
         try {
-
+            const ami1 = await findUser({username : data.emetteur});
+            const ami2 = await findUser({username : data.receveur});
             await client.db("kickoridor").collection("conversation").deleteOne(
                 {
                     $or: [
-                        {"ami1": data.emetteur.toString(), "ami2": data.receveur.toString()},
-                        {"ami1": data.receveur.toString(), "ami2": data.emetteur.toString()}
+                        {"ami1": ami1["_id"], "ami2": ami2["_id"]},
+                        {"ami1": ami2["_id"], "ami2": ami1["_id"]}
                     ]
                 }
             );
             await client.db("kickoridor").collection("users").updateOne(
                 {username: data.receveur.toString()},
-                {$pull: {friendList: data.emetteur.toString()}}
+                {$pull: {friendList: ami1["_id"]}}
             );
             return await client.db("kickoridor").collection("users").updateOne(
                 {username: data.emetteur.toString()},
-                {$pull: {friendList: data.receveur.toString()}}
+                {$pull: {friendList: ami2["_id"]}}
             );
         } finally {
 

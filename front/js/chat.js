@@ -297,7 +297,8 @@ async function updateMessage(data){
             chat.innerHTML = "";
             for (var i = 0; i < data.length; i++) {
                 var div = document.createElement("div");
-                if (data[i]["emetteur"] === username) {
+
+                if (data[i]["emetteur"] === userID) {
                     div.classList.add("mesMsg");
                     var p = document.createElement("p");
                     p.classList.add("msgMoi");
