@@ -45,6 +45,21 @@ module.exports = function (io) {
             socket.emit('game', player1Position, player2Position, cells, playerAWalls, playerBWalls, nbWallPlayerA, nbWallPlayerB, activePlayer, tour, firstTurn, dernierTourB);
         });
 
+        socket.on('saveToBack', (activePl, nbWallPA, nbWallPB, p1Position, p2Position, lap, cels, pAWalls, pBWalls, firstLap, lastTourB) => {
+            console.log('saveToBack');
+            activePlayer = activePl;
+            nbWallPlayerA = nbWallPA;
+            nbWallPlayerB = nbWallPB;
+            player1Position = p1Position;
+            player2Position = p2Position;
+            tour = lap;
+            cells = cels;
+            playerAWalls = pAWalls;
+            playerBWalls = pBWalls;
+            firstTurn = firstLap;
+            dernierTourB = lastTourB;
+        });
+
         socket.on('disconnect',  () => {
             console.log('user disconnected');
         });
