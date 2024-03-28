@@ -63,6 +63,9 @@ let player2Position = 8;
 var dernierTourB = false;
 /**--------------- SETUP GAME --------------------**/
 
+//TODO JE SAIS OU IL FAUT LA METTRE
+//setup(1);
+
 socket.on('setupGame', () => {
     for (i = 0; i < 289; i = i + 2) {
         if (i > 135) {

@@ -27,6 +27,7 @@ module.exports = function (io) {
         socket.on('getPlayersPosition', () => {
            console.log('getPlayersPosition');
            socket.emit('getPlayersPositionResponse', player1Position, player2Position);
+
         });
 
         socket.on('addCellFirtTime', (cell) => {

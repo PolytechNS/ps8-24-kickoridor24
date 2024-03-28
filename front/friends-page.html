@@ -1,9 +1,9 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Kick'Oridor - Menu</title>
-    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <title>Kick'Oridor - Friends</title>
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
+        <link rel="stylesheet" type="text/css" href="css/friends-page.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
 <body>
@@ -23,7 +23,7 @@
                 <p class="btn"> Se déconnecter</p>
             </div>
             <div class="name" onclick="redirectToProfil()">
-                <p id="name"></p>
+                <p id="name">Invité</p>
             </div>
             <div class="mitro">
                 <img src="images/mitro.jpg" alt="">
@@ -35,34 +35,62 @@
         <img src="images/header.png" alt="" class="bg-header">
     </div>
 </header>
+<div class="all">
+    <div class="navClass">
+        <div id="amisBTN" class="topButton"  onclick="showFriendsList()">
+            <a class="navButton"> Amis</a>
+        </div>
 
-<div class="titre">
-    <img id="titre" src="images/titre.png" alt="">
+        <div id="ajouterBTN" class="topButton" onclick="showFriendsAdd()">
+            <a class="navButton">Ajouter</a>
+        </div>
+
+        <div id="demandesBTN" class="topButton" onclick="showFriendsDemands()">
+            <a class="navButton">Demandes</a>
+
+        </div>
+        <span class="notification-demandes"> </span>
+    </div>
+
+    <div class="container">
+        <div class="friendsList" style="display: flex">
+            <div class="cont">
+                <p>Aucun ami trouvé</p>
+            </div>
+        </div>
+
+        <div class="friendsAdd" style="display: none" >
+
+            <div class="cont">
+                <div id="RechercheJoueur">
+                    <input type="text" id="searchInput" placeholder="RECHERCHER UN JOUEUR...">
+                    <button onclick="ajouterAmisListe()">
+                        <img  src="images/search.png"></button>
+                </div>
+                <div id="resultatRechercheAmis">
+
+                </div>
+            </div>
+        </div>
+        <div class="friendsDemands" style="display: none">
+            <div class="cont">
+
+            </div>
+        </div>
+
+
+    </div>
 </div>
-<div class="container">
-    <div class="Play" onclick="redirectToPlayPage()">
-        <h2 class="btnJouer"> JOUER</h2>
-        <img class="icon" src="images/icon-jouer.png">
-    </div>
 
-    <div class="Play" onclick="redirectToRegle()">
-        <h2 class="btnJouer"> LES REGLES</h2>
-        <img class="icon" id="regle" src="images/icon-regle.png">
-    </div>
-
-    <div id="classement" class="Play" onclick="redirectToClassement()">
-        <h2 class="btnJouer"> CLASSEMENTS</h2>
-    </div>
-</div>
 
 <div id="chatMenu" class="chatMenu">
     <div id="menuChat">
-    <div id="amisChat" onclick="showAmisChat()">
-        Amis
-    </div>
-    <div id="matchChat" onclick="showMatchChat(); scrollToBottMatch()">
-        En match
-    </div>
+        <div id="amisChat" onclick="showAmisChat()">
+            Amis
+        </div>
+        <div id="matchChat" onclick="showMatchChat(); scrollToBottMatch()">
+            En match
+        </div>
     </div>
 
     <div class="amisMsg" style="display: flex">
@@ -117,5 +145,5 @@
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/chat.js"></script>
-
+<script src="js/friends-page.js"></script>
 <script src="js/authentification.js"></script>
