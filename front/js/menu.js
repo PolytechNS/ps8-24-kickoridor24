@@ -1,7 +1,12 @@
+const socket = io('/api/game');
 
 function redirectToGame(name, value, days) {
     setCookie(name,value,days);
     window.location.href = "game.html";
+}
+
+function playOnline(){
+    window.location.href = 'waiting.html';
 }
 
 function redirectToLogin() {
