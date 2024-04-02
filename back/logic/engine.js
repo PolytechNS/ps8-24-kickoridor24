@@ -12,7 +12,25 @@ let player1Position;
 let player2Position;
 var dernierTourB;
 
+
 let rooms = {};
+
+function findAvailableRoom() {
+    console.log('findAvailableRoom');
+    for (let room in rooms) {
+        if (rooms[room].length < 2) {
+            return room;
+        }
+    }
+    return null;
+}
+
+function createRoom() {
+    console.log('createRoom');
+    const room = 'room' + (Math.random() * 1000).toFixed(0);
+    rooms[room] = [];
+    return room;
+}
 
 
 
@@ -24,6 +42,7 @@ module.exports = function (io) {
         console.log('a user connected');
         setupGame();
         socket.emit('setupGame');
+
 
         socket.on('joinGame', () => {
             console.log('joinGame');
@@ -38,7 +57,7 @@ module.exports = function (io) {
             socket.emit('joinedGame', room);
 
             if (rooms[room].length === 2) {
-                io.to(room).emit('startGame', 'Il y a deux joueurs dans la room.');
+                gameNamespace.to(room).emit('startGame', room);
             }
         });
 
@@ -103,19 +122,3 @@ function setupGame() {
 }
 
 
-function findAvailableRoom() {
-    console.log('findAvailableRoom');
-    for (let room in rooms) {
-        if (rooms[room].length < 2) {
-            return room;
-        }
-    }
-    return null;
-}
-
-function createRoom() {
-    console.log('createRoom');
-    const room = 'room' + (Math.random() * 1000).toFixed(0);
-    rooms[room] = [];
-    return room;
-}

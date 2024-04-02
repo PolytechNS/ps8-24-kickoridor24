@@ -7,8 +7,8 @@ socket.on('joinedGame', (room) => {
     console.log(room);
 });
 
-socket.on('startGame', (message) => {
-    console.log(message);
+socket.on('startGame', (room) => {
+    window.location.href = "game.html?room=" + room;
 });
 
 
