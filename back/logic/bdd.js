@@ -611,6 +611,7 @@ async function handleBDD(request, response) {
             }, {
                 $set: {lu: true}
             });
+            console.log("okokokokookokokokokokokkokokkokookokkokokk");
             return messages;
 
         } finally {
@@ -687,7 +688,7 @@ async function handleBDD(request, response) {
     }
 async function findUserById(data) {
     try {
-        console.log(data)
+
         var idTmp = new ObjectId(data._id);
         return await client.db("kickoridor").collection("users").findOne({
             _id: idTmp
@@ -733,7 +734,7 @@ async function findUserById(data) {
 
     async function findFriends(data) {
         try {
-            console.log(data);
+
             const currentUser = await findUser(data);
             const friendListUsers = await Promise.all(currentUser.friendList.map(async (friendID) => {
                 const tmp = await findUserById({_id :friendID});

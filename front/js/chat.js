@@ -151,6 +151,7 @@ async function getConversation(){
 }
 
 async function openAmiChat(data) {
+
     document.getElementsByClassName("matchMsg")[0].style.display = "none";
     document.getElementsByClassName("amisMsg")[0].style.display = "none";
     document.getElementsByClassName("chatAmiMsg")[0].style.display = "flex";
@@ -158,9 +159,10 @@ async function openAmiChat(data) {
     document.getElementById("nomAmiID").textContent = data["username"];
 
 
-    var photoDIV = document.getElementsByClassName("mitroChat")[0];
-    var photo = photoDIV.getElementsByTagName('img')[0];
+    var photo = document.getElementById("photoChatAvecUnAmis");
     photo.src = data["img"];
+
+
     //charger les messages de la conversation dans la base de donnée
     var username = getCookie("username");
 
