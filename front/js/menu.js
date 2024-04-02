@@ -1,3 +1,6 @@
+var userID;
+
+var photoDeProfil = null;
 
 function redirectToGame(name, value, days) {
     setCookie(name,value,days);
@@ -191,7 +194,7 @@ async function checkFriends(){
             });
 
     } catch (e) {
-        alert(e.message);
+        console.log(error.message);
     }
 }
 var affichageNotifChat = false;
@@ -242,7 +245,7 @@ async function getConversationNotif(){
             });
 
     } catch (e) {
-        alert(e.message);
+        console.log(error.message);
     }
 }
 function showHideNotif(data){
@@ -260,10 +263,47 @@ function showHideNotif(data){
     }
 }
 
-if(!window.location.href.includes("friends-page.html")) {
+if(!window.location.href.includes("friends-page.html") &&!window.location.href.includes("login.html")&&!window.location.href.includes("signup.html") ) {
     notif();
 }
+async function getId(){
+    const formDataJSON = {};
+    formDataJSON["username"] = getCookie("username");
+    try {
+        const response = await fetch('/api/retrieveUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Une erreur est survenue lors de la récupération des informations : ' + response.status);
+            }
+
+            return response.json(); // Convertit la réponse en JSON
+        }).then(data => {
+            userID = data["_id"];
+            if(photoDeProfil === null){
+                majPhoto( data["img"]);
+
+            }
+
+        });
+
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+function majPhoto(newImage){
+    photoDeProfil =newImage;
+    document.getElementById("petitePhoto").src = photoDeProfil;
+}
 async function notif() {
+    await getId();
+
     await checkFriends();
     await getConversationNotif();
 }
