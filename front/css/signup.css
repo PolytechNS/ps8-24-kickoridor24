@@ -59,31 +59,7 @@ input {
 }
 
 
-}
 
-#login{
-    background-color: #b0b0b0;
-    border-radius: 999px;
-    box-sizing: border-box;
-    color: #FFFFFF;
-    cursor: pointer;
-    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
-    font-size: 11.5px;
-    font-weight: 700;
-    line-height: 24px;
-    opacity: 1;
-    outline: 0 solid transparent;
-    padding-right : 10px;
-    padding-left : 10px;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    width: fit-content;
-    word-break: break-word;
-    border: 0;
-    margin-bottom: 3.5vh;
-    margin-top: -1.2vh;
-}
 
 #signup{
     background-color: #3cadb6;
@@ -105,7 +81,7 @@ input {
     word-break: break-word;
     border: 0;
     margin-bottom: 2vh;
-    margin-top: -2vh;
+    margin-top: -1vh;
 }
 
 #signup:hover{
