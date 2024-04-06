@@ -8,7 +8,14 @@ socket.on('joinedGame', (room) => {
 });
 
 socket.on('startGame', (room) => {
+    setCookie("typeDePartie", "online", 1);
+    setCookie("room", room, 1);
     window.location.href = "game.html?room=" + room;
+});
+
+socket.on('firstPlayer', () => {
+    console.log('firstPlayer');
+    setCookie("player", "1", 1);
 });
 
 
