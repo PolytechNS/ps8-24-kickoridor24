@@ -11,7 +11,7 @@ var lanePlayerB;
 var partieChargee = false;
 var gState;
 var board = [];
-//var gameState1 = new gameState(playerAWalls,playerBWalls,board);
+
 let i;
 var tmpLigne = [];
 let n;
@@ -62,7 +62,7 @@ let player1Position = 280;
 let player2Position = 8;
 var dernierTourB = false;
 /**--------------- SETUP GAME --------------------**/
-
+var gameState1 = new gameState(playerAWalls,playerBWalls,board);
 //TODO JE SAIS OU IL FAUT LA METTRE
 //setup(1);
 
@@ -1194,7 +1194,7 @@ function getValidMoves(position) {
 }
 
 function changeActivePlayer() {
-    if (activePlayer == "playerA" && getCookie("typeDePartie") === "bot_v2") {
+    if (activePlayer == "playerB" && getCookie("typeDePartie") === "bot_v2") {
 
         activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
         activateFog(cells);
@@ -1205,27 +1205,50 @@ function changeActivePlayer() {
         convertBoard();
         updateBoard(gameState1);
     }
-    if (activePlayer === "playerB" && getCookie("typeDePartie") === "bot") {
-        if (tour >= 200) {
 
+    activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
+    document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
+    if (tour <= 200)
+        document.getElementById('nbTour').textContent = `Tour : n°${200 -(tour - 1)}`;
+    if(!getCookie("typeDePartie").includes("bot"))
+        showAntiCheat();
+
+    tour--;
+
+    activateFog(cells);
+    checkCrossing(player1Position, player2Position);
+    if (activePlayer === "playerA") {
+        showForfaitA();
+        hideForfaitB();
+    } else {
+        showForfaitB();
+        hideForfaitA();
+    }
+
+    murAPose = new Array(3);
+    checkTour201();
+    if (activePlayer === "playerB" && getCookie("typeDePartie") === "bot") {
+
+        if (tour > 200) {
             return movePlyerFirstTurn(player2Position);
         } else {
             var possiblesMoves = getValidMoves(player2Position);
-            socket.emit('computeMoveRandom', possiblesMoves, (returnValue) => {
-                // Utilisez returnValue ici, c'est la valeur de retour de la fonction move
+           var returnValue = computeMove(possiblesMoves);
                 movePlayer(player2Position);
                 movePlayer(returnValue);
-            });
         }
-    } else if (activePlayer === "playerA" && getCookie("typeDePartie") === "bot_v2") {
+    } else if (activePlayer === "playerB" && getCookie("typeDePartie") === "bot_v2") {
+
         if (tour > 200) {
+
             //TODO PAREIL POUR CELLE LA
-            var resPromise = setup(1);
+            var resPromise = setup(2);
             resPromise.then(cellIndex => {
                 var newCellIndex = convertGameStateToPosition((cellIndex).toString());
                 movePlyerFirstTurn(newCellIndex);
             });
         } else {
+
             convertBoard();
             if (activePlayer === "playerB") {
                 gameState1 = new gameState(playerBWalls, playerAWalls, board);
@@ -1234,15 +1257,18 @@ function changeActivePlayer() {
             }
 
             var time = Date.now();
+
             var nMovePromise = nextMove(gameState1); // Stocker la promesse retournée par nextMove
 
 
             nMovePromise.then(nMove => {
+
                 if (nMove.action === "move") {
                     var pos = nMove.value;
                     var newPos = convertGameStateToPosition(pos.toString());
-                    movePlayer(player1Position);
+                    movePlayer(player2Position);
                     movePlayer(newPos);
+
                 } else if (nMove.action === "wall") {
                     var pos = nMove.value;
                     var wall = pos[0];
@@ -1264,28 +1290,9 @@ function changeActivePlayer() {
             }
         }
 
-    } else {
-        activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
-        document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
-        if (tour <= 200)
-            document.getElementById('nbTour').textContent = `Tour : n°${200 -(tour - 1)}`;
-        showAntiCheat();
-
-        tour--;
-
-        activateFog(cells);
-        checkCrossing(player1Position, player2Position);
-        if (activePlayer === "playerA") {
-            showForfaitA();
-            hideForfaitB();
-        } else {
-            showForfaitB();
-            hideForfaitA();
-        }
-
-        murAPose = new Array(3);
-        checkTour201();
     }
+
+
     saveToBack();
 }
 
