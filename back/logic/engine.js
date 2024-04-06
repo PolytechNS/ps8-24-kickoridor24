@@ -20,6 +20,9 @@ module.exports = function (io) {
 
     gameNamespace.on('connection', (socket) => {
         
+        setupGame();
+        socket.emit('setupGame');
+
         socket.on('joinGame', () => {
             console.log('joinGame');
             let room = findAvailableRoom();
@@ -51,8 +54,8 @@ module.exports = function (io) {
 
             if (rooms[roomId].length === 4) {
                 gameNamespace.to(roomId).emit('gameStarted');
-                setupGame();
-                socket.emit('setupGame');
+                //gameNamespace.to(roomId).emit('setupGame');
+                
             }
         });
 
