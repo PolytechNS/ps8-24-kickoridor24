@@ -225,21 +225,20 @@ function mettreAJourTableau(tableau1, tableau2) {
                 let attr = div2.attributes[i];
                 div1.setAttribute(attr.name, attr.value);
             }
+
         } else {
             console.warn(`Le div avec l'ID ${divID} n'a pas été trouvé dans le tableau2.`);
         }
     });
 }
 
-function setUpGame(gameState) {
+function setUpGame() {
+    saveToBack();
     socket.emit('setUpGame');
     socket.on('setUpGameResponse', (activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells) => {
         cells = createDivsWithClassesAndAttributes(cells);
-        if (gameState === undefined) {
 
-        } else {
-            gState = gameState;
-        }
+
         hideAntiCheat();
         HideVictoire();
 
@@ -284,20 +283,24 @@ function setUpGame(gameState) {
 
         dijkstraVisitedNode = [];
         activateFog(cells);
+
         if (tour <= 200)
             document.getElementById('nbTour').textContent = 'Tour : n°' + (200 -(tour - 1));
 
 
         mettreAJourTableau(cellsGrid, cells);
-        cellsGrid.forEach((cell, index) => {
-            if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col'))
+        cells.forEach((cell, index) => {
+
+            if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col')){
                 cell.addEventListener('click', () => handleWall(index));
+        }
             else
                 cell.addEventListener('click', () => movePlayer(index));
         });
 
 
         if (tour === 202) {
+
             let botRows = [];
             lanePlayerA.forEach(row =>
                 row.classList.add('first-turn')
@@ -323,9 +326,12 @@ function setUpGame(gameState) {
             //si une case de top-row est cliquée alors on move le joueur
             botRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
         }
+
         mettreAJourTableau(cellsGrid, cells);
         checkTour201();
-        checkCrossing(player1Position, player2Position);
+        if(tour < 199) {
+            checkCrossing(player1Position, player2Position);
+        }
     });
     var style = document.createElement('style');
     style.type = 'text/css';
@@ -642,12 +648,17 @@ function loadBoard(tab) {
         newDiv.setAttribute('id', tab[i]["id"]);
         if (tab[i]["visibility"] != null)
             newDiv.setAttribute('visibility', tab[i]["visibility"]);
+
+
         cells.push(newDiv);
+
         wrapper.appendChild(newDiv);
     }
+
+
     nbWallPlayerA = 10 - (wallA / 3);
     nbWallPlayerB = 10 - (wallB / 3);
-
+    cellsGrid = cells;
 }
 
 /*--------------- FONCTION GLOBALE --------------------*/
@@ -684,10 +695,12 @@ function showForfaitB() {
 }
 
 function checkCrossing(playerAPosition, playerBPosition) {
+
     var gagneA = false;
     var gagneB = false;
     for (var i = 0; i < lanePlayerB.length; i++) {
-        if (lanePlayerB[i].contains(cells[playerAPosition])) {
+
+        if (lanePlayerB[i].getAttribute('id') == cells[playerAPosition].getAttribute('id')) {
 
             if (dernierTourB) {
                 gagneA = true;
@@ -699,7 +712,8 @@ function checkCrossing(playerAPosition, playerBPosition) {
         }
     }
     for (var i = 0; i < lanePlayerA.length; i++) {
-        if (lanePlayerA[i].contains(cells[playerBPosition])) {
+
+        if (lanePlayerA[i].getAttribute('id') == cells[playerBPosition].getAttribute('id')) {
             gagneB = true;
         }
     }
@@ -857,6 +871,7 @@ function checkJoueurColle() {
 }
 
 function handleWall(cellIndex) {
+
     const row = Math.floor(cellIndex / 17);
     const col = cellIndex % 17;
 
@@ -1449,17 +1464,19 @@ function changeVisibilityPlayer(remove, position, player) {
 
 function movePlayer(cellIndex) {
 
-
     if (firstTurn) {
+
         return;
     }
     if (murAPose[0] != undefined) {
+
         annulerWall();
     }
 
     const clickedCell = cells[cellIndex];
 
     if (cellIndex === player1Position && activePlayer === 'playerA') {
+
         handleCellClick(cellIndex, player1Position);
     }
     if (cellIndex === player2Position && activePlayer === 'playerB') {
@@ -1501,7 +1518,6 @@ function movePlayer(cellIndex) {
 
         changeVisibilityPlayer(false, activePlayer === 'playerA' ? player1Position : player2Position, activePlayer);
         mettreAJourTableau(cellsGrid, cells);
-
         changeActivePlayer();
     }
 }
@@ -1542,8 +1558,10 @@ function handleCellClick(cellIndex, position) {
         cells.forEach(cell => cell.classList.remove('possible-move'));
         isClickedCell = false;
     } else {
+
         validMoves.forEach(move => {
             const moveCell = cells[move];
+
             if (!moveCell.classList.contains('playerA') && !moveCell.classList.contains('playerB')) {
                 moveCell.classList.add('possible-move');
                 isClickedCell = true;

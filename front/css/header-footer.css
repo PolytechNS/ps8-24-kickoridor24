@@ -255,8 +255,8 @@ header {
 
 
 #petitePhoto{
-    height: 90%;
-
+    height: 75%;
+    aspect-ratio: 1/1;
     margin-bottom: 0.4em;
     margin-right: -4em;
 }
