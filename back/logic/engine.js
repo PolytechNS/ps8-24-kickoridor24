@@ -12,40 +12,7 @@ let player1Position;
 let player2Position;
 var dernierTourB;
 
-
 let rooms = {};
-
-function findAvailableRoom() {
-    for (let room in rooms) {
-        if (rooms[room].length < 2) {
-            return room;
-        }
-    }
-    return null;
-}
-
-function findAvailableRoomWithId(roomId) {
-    for (let room in rooms){
-        if (room === roomId){
-            return room;
-        }
-    }
-    return null;
-}
-
-function createRoom() {
-    const room = 'room' + (Math.random() * 1000).toFixed(0);
-    rooms[room] = [];
-    return room;
-}
-
-function createRoomWithId(roomId) {
-    rooms[roomId] = [];
-    return roomId;
-}
-
-
-
 
 module.exports = function (io) {
     gameNamespace = io.of('/api/game');
@@ -139,6 +106,30 @@ function setupGame() {
     tour = 202;
     firstTurn = true;
     dernierTourB = false;
+}
+
+function findAvailableRoom() {
+    for (let room in rooms) {
+        if (rooms[room].length < 2) {
+            return room;
+        }
+    }
+    return null;
+}
+
+function findAvailableRoomWithId(roomId) {
+    for (let room in rooms){
+        if (room === roomId){
+            return room;
+        }
+    }
+    return null;
+}
+
+function createRoom() {
+    const room = 'room' + (Math.random() * 1000).toFixed(0);
+    rooms[room] = [];
+    return room;
 }
 
 
