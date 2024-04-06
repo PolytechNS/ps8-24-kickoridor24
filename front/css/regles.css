@@ -204,6 +204,13 @@
     margin-top: 2.5vh;
 }
 
+#retour{
+    width: 25vh;
+    margin-left: 2vh;
+    margin-top: 1vh;
+    margin-bottom: -3vh;
+    cursor: pointer;
+}
 
 
 

@@ -129,11 +129,9 @@ body {
 }
 
 .fog {
-    background-image: url('../images/mitro.jpg');
     background-size: cover;
     background-repeat: no-repeat;
-    /*
-    /*background-color: black;*/
+    background-color: black;
 }
 
 h3 {

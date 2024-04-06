@@ -155,9 +155,8 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     overflow-y: auto;
-    padding: 0.2em 2em 0em 2em;
 
 }
 
@@ -244,25 +243,38 @@ header {
 #searchInput
 {
     height: 5vh;
-    border-radius: 20px;
-    background-color: #C8C8C8 ;
+    width: 50vh;
+    border-radius: 15px;
+    background-color: #d2e8ef;
+    color: black;
+    font-weight: bold;
 }
 #RechercheJoueur{
-    display: grid;
-    grid-template-columns: 2fr 0.5fr;
-    grid-gap: 10%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    border-radius: 10px;
-    border-bottom: 5px solid rgba(0, 0, 0, 0.7);
-    padding-bottom: 0.5em;
+    height : 9vh;
+    border-bottom: 3px solid #494949;
+    background-color: #cccccc;
+}
 
-}
 #RechercheJoueur button{
-    background-color:  #C8C8C8 ;
-    border-radius: 50%;
-    width: fit-content;
-    height: fit-content;
+    background-color: #B8E6F5;
+    width: 5vh;
+    height: 5vh;
+    border-radius: 30%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+#RechercheJoueur img{
+    width: 150%;
+}
+
 .cont::-webkit-scrollbar {
     width: 15px;
     height: 30px;
@@ -288,8 +300,8 @@ header {
     display: flex;
     align-items: center;
     align-content: center;
-    justify-content: space-between;
-    width: 500px;
+    justify-content: space-around;
+    width: 720px;
 }
 .profilAmis div{
     border-radius: 50%;
@@ -310,5 +322,13 @@ header {
     background-color: red;
     border-radius: 50%;
     display: none;
+}
+
+#retour{
+    width: 25vh;
+    margin-left: 2vh;
+    margin-top: 1vh;
+    margin-bottom: -2vh;
+    cursor: pointer;
 }
 

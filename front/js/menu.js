@@ -267,3 +267,7 @@ async function notif() {
     await checkFriends();
     await getConversationNotif();
 }
+
+function previewPage(){
+    window.history.back();
+}

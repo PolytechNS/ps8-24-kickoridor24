@@ -108,3 +108,11 @@
     width: 150%; /* assurez-vous que l'image remplit complètement le cercle */
     margin-left: -10px;
 }
+
+#retour{
+    width: 25vh;
+    margin-left: 2vh;
+    margin-top: 1vh;
+    margin-bottom: -2vh;
+    cursor: pointer;
+}
