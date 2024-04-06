@@ -16,7 +16,6 @@ var dernierTourB;
 let rooms = {};
 
 function findAvailableRoom() {
-    console.log('findAvailableRoom');
     for (let room in rooms) {
         if (rooms[room].length < 2) {
             return room;
@@ -25,11 +24,24 @@ function findAvailableRoom() {
     return null;
 }
 
+function findAvailableRoomWithId(roomId) {
+    for (let room in rooms){
+        if (room === roomId){
+            return room;
+        }
+    }
+    return null;
+}
+
 function createRoom() {
-    console.log('createRoom');
     const room = 'room' + (Math.random() * 1000).toFixed(0);
     rooms[room] = [];
     return room;
+}
+
+function createRoomWithId(roomId) {
+    rooms[roomId] = [];
+    return roomId;
 }
 
 
@@ -39,7 +51,6 @@ module.exports = function (io) {
     gameNamespace = io.of('/api/game');
 
     gameNamespace.on('connection', (socket) => {
-        console.log('a user connected');
         setupGame();
         socket.emit('setupGame');
 
@@ -56,58 +67,46 @@ module.exports = function (io) {
             rooms[room].push(socket.id);
             socket.emit('joinedGame', room);
 
+
             if (rooms[room].length === 2) {
                 gameNamespace.to(room).emit('startGame', room);
-                for (let room in rooms) {
-                    let index = rooms[room].indexOf(socket.id);
-                    if (index !== -1) {
-                        rooms[room].splice(index, 1);
-                        if (rooms[room].length === 0) {
-                            delete rooms[room];
-                        }
-                        break;
-                    }
-                }
             } else {
                 gameNamespace.to(room).emit('firstPlayer');
             }
         });
 
         socket.on('joinGameWithRoom', (room) => {
-            console.log('joinGameWithRoom');
-            socket.join(room);
-            rooms[room].push(socket.id);
+            
+            let roomId = findAvailableRoomWithId(room);
 
-            if (rooms[room].length === 2) {
-                gameNamespace.to(room).emit('gameStarted');
+            socket.join(roomId);
+            rooms[roomId].push(socket.id);
+
+            if (rooms[roomId].length === 4) {
+                gameNamespace.to(roomId).emit('gameStarted');
             }
         });
 
 
         socket.on('getPlayersPosition', () => {
-           console.log('getPlayersPosition');
            socket.emit('getPlayersPositionResponse', player1Position, player2Position);
 
         });
 
         socket.on('addCellFirtTime', (cell) => {
-            console.log('addCellFirtTime');
             cells = cell;
             socket.emit('setupTheGame');
         });
 
         socket.on('setUpGame', () => {
-            console.log('setUpGame');
             socket.emit('setUpGameResponse', activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells);
         });
 
         socket.on('endSetupGame', () => {
-            console.log('endSetupGame');
             socket.emit('game', player1Position, player2Position, cells, playerAWalls, playerBWalls, nbWallPlayerA, nbWallPlayerB, activePlayer, tour, firstTurn, dernierTourB);
         });
 
         socket.on('saveToBack', (activePl, nbWallPA, nbWallPB, p1Position, p2Position, lap, cels, pAWalls, pBWalls, firstLap, lastTourB) => {
-            console.log('saveToBack');
             activePlayer = activePl;
             nbWallPlayerA = nbWallPA;
             nbWallPlayerB = nbWallPB;
@@ -122,14 +121,13 @@ module.exports = function (io) {
         });
 
         socket.on('disconnect',  () => {
-            console.log('user disconnected');
+            
         });
     });
 };
 
 
 function setupGame() {
-    console.log('new game');
     player1Position = 280;
     player2Position = 8;
     cells = [];
