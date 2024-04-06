@@ -203,23 +203,7 @@ async function openAmiChat(data) {
     scrollToBott();
 }
 
-async function getMessageById(id){
-    const formDataJSON = {};
-    formDataJSON["idMsg"] = id.toString();
 
-    const response = await fetch('/api/getMsgById', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formDataJSON)
-    });
-    const data = await response.json();
-
-    // Retourner les données
-    return data;
-
-}
 function showAmisChat(){
     document.getElementsByClassName("amisMsg")[0].style.display = "flex";
     document.getElementsByClassName("matchMsg")[0].style.display = "none";

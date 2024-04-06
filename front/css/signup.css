@@ -58,8 +58,7 @@ input {
 
 }
 
-#signup, #login{
-    width: 40%;
+
 }
 
 #login{
@@ -124,4 +123,5 @@ input {
     margin-top: 1vh;
     margin-bottom: -2vh;
     cursor: pointer;
+
 }

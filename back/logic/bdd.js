@@ -611,7 +611,6 @@ async function handleBDD(request, response) {
             }, {
                 $set: {lu: true}
             });
-            console.log("okokokokookokokokokokokkokokkokookokkokokk");
             return messages;
 
         } finally {

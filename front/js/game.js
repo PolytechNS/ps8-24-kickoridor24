@@ -11,7 +11,7 @@ var lanePlayerB;
 var partieChargee = false;
 var gState;
 var board = [];
-//var gameState1 = new gameState(playerAWalls,playerBWalls,board);
+
 let i;
 var tmpLigne = [];
 let n;
@@ -62,7 +62,7 @@ let player1Position = 280;
 let player2Position = 8;
 var dernierTourB = false;
 /**--------------- SETUP GAME --------------------**/
-
+var gameState1 = new gameState(playerAWalls,playerBWalls,board);
 //TODO JE SAIS OU IL FAUT LA METTRE
 //setup(1);
 
@@ -225,23 +225,25 @@ function mettreAJourTableau(tableau1, tableau2) {
                 let attr = div2.attributes[i];
                 div1.setAttribute(attr.name, attr.value);
             }
+
         } else {
             console.warn(`Le div avec l'ID ${divID} n'a pas été trouvé dans le tableau2.`);
         }
     });
 }
 
-function setUpGame(gameState) {
+function setUpGame() {
+    saveToBack();
     socket.emit('setUpGame');
     socket.on('setUpGameResponse', (activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells) => {
         cells = createDivsWithClassesAndAttributes(cells);
-        if (gameState === undefined) {
 
-        } else {
-            gState = gameState;
-        }
+
         hideAntiCheat();
+        HideVictoire();
+
         hideValider();
+
         if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null)
             hideSauvegarder();
         if (activePlayer === "playerA") {
@@ -257,9 +259,12 @@ function setUpGame(gameState) {
         document.querySelector('#nbWallPlayerB').innerText = "Murs restants : " + nbWallPlayerB;
 
         cells[player1Position].classList.add('playerA');
+
         cells[player2Position].classList.add('playerB');
 
         hideAntiCheat();
+        HideVictoire();
+
         hideValider();
 
         lanePlayerA = [];
@@ -280,17 +285,22 @@ function setUpGame(gameState) {
         activateFog(cells);
 
         if (tour <= 200)
-            document.getElementById('nbTour').textContent = `Tour : n°${tour}`;
+            document.getElementById('nbTour').textContent = 'Tour : n°' + (200 -(tour - 1));
+
 
         mettreAJourTableau(cellsGrid, cells);
-        cellsGrid.forEach((cell, index) => {
-            if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col'))
+        cells.forEach((cell, index) => {
+
+            if (cell.classList.contains('odd-row') || cell.classList.contains('odd-col')){
                 cell.addEventListener('click', () => handleWall(index));
+        }
             else
                 cell.addEventListener('click', () => movePlayer(index));
         });
 
+
         if (tour === 202) {
+
             let botRows = [];
             lanePlayerA.forEach(row =>
                 row.classList.add('first-turn')
@@ -304,8 +314,7 @@ function setUpGame(gameState) {
                 }
             });
 
-
-            // Afficher le message pour le premier tour
+             // Afficher le message pour le premier tour
             const message = document.createElement('div');
             message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
             message.classList.add('message');
@@ -317,10 +326,28 @@ function setUpGame(gameState) {
             //si une case de top-row est cliquée alors on move le joueur
             botRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
         }
+
         mettreAJourTableau(cellsGrid, cells);
         checkTour201();
-        checkCrossing(player1Position, player2Position);
+        if(tour < 199) {
+            checkCrossing(player1Position, player2Position);
+        }
     });
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    document.getElementsByTagName('head')[0].appendChild(style);
+
+// Définir la règle CSS
+    var cssA = '.playerA { background-image: url("'+ photoDeProfil +'"); }';
+    var cssB;
+    if(photoDeProfil == "images/photoProfil/Pedri.png"){
+        cssB = '.playerB { background-image: url("images/photoProfil/Mitroglu.png"); }';
+    }else{
+        cssB = '.playerB { background-image: url("images/photoProfil/Pedri.png"); }';
+    }
+
+    style.appendChild(document.createTextNode(cssA));
+    style.appendChild(document.createTextNode(cssB));
     socket.emit('endSetupGame');
 }
 
@@ -621,12 +648,17 @@ function loadBoard(tab) {
         newDiv.setAttribute('id', tab[i]["id"]);
         if (tab[i]["visibility"] != null)
             newDiv.setAttribute('visibility', tab[i]["visibility"]);
+
+
         cells.push(newDiv);
+
         wrapper.appendChild(newDiv);
     }
+
+
     nbWallPlayerA = 10 - (wallA / 3);
     nbWallPlayerB = 10 - (wallB / 3);
-
+    cellsGrid = cells;
 }
 
 /*--------------- FONCTION GLOBALE --------------------*/
@@ -663,10 +695,12 @@ function showForfaitB() {
 }
 
 function checkCrossing(playerAPosition, playerBPosition) {
+
     var gagneA = false;
     var gagneB = false;
     for (var i = 0; i < lanePlayerB.length; i++) {
-        if (lanePlayerB[i].contains(cells[playerAPosition])) {
+
+        if (lanePlayerB[i].getAttribute('id') == cells[playerAPosition].getAttribute('id')) {
 
             if (dernierTourB) {
                 gagneA = true;
@@ -678,7 +712,8 @@ function checkCrossing(playerAPosition, playerBPosition) {
         }
     }
     for (var i = 0; i < lanePlayerA.length; i++) {
-        if (lanePlayerA[i].contains(cells[playerBPosition])) {
+
+        if (lanePlayerA[i].getAttribute('id') == cells[playerBPosition].getAttribute('id')) {
             gagneB = true;
         }
     }
@@ -686,21 +721,48 @@ function checkCrossing(playerAPosition, playerBPosition) {
         victoire("match nul !");
 
     } else if (gagneA) {
-        victoire("Player A a gagné !");
+        victoire("PlayerA");
 
     } else if (gagneB) {
-        victoire("Player B a gagné !");
+        victoire("PlayerB");
 
     }
 }
 
 function victoire(txt) {
-    alert(txt);
+    //alert(txt);
+    showVictoire(txt);
     if (partieChargee)
         supprimerAnciennePartie(getUsername());
-    window.location.href = 'index.html';
+   // window.location.href = 'index.html';
 }
+function showVictoire(txt){
+    document.querySelector('.finDePartie').style.display = 'flex';
+    const divMid = document.getElementById("finMiddle");
+    if(txt == "match nul !"){
+        divMid.getElementsByTagName('h2')[0].textContent = txt;
+        divMid.getElementsByTagName('img')[0].src = "images/draw.gif";
+    }
+    else {
+        divMid.getElementsByTagName('h2')[0].textContent = txt + " remporte la partie";
 
+        if (txt == "playerA") {
+            if (getCookie("username") != null) {
+                divMid.getElementsByTagName('h2')[0].textContent = getCookie("username") + " remporte la partie";
+            }
+            if (celebrationBDD != null) {
+                divMid.getElementsByTagName('img')[0].src = celebrationBDD + '.gif';
+
+            }
+        }
+    }
+    document.querySelector('.anti-cheat').style.display = 'none';
+    wrapper.style.display = 'none';
+}
+function HideVictoire(){
+    document.querySelector('.finDePartie').style.display = 'none';
+
+}
 async function supprimerAnciennePartie(user) {
     const formDataJSON = {};
     formDataJSON["username"] = user;
@@ -809,6 +871,7 @@ function checkJoueurColle() {
 }
 
 function handleWall(cellIndex) {
+
     const row = Math.floor(cellIndex / 17);
     const col = cellIndex % 17;
 
@@ -1146,7 +1209,7 @@ function getValidMoves(position) {
 }
 
 function changeActivePlayer() {
-    if (activePlayer == "playerA" && getCookie("typeDePartie") === "bot_v2") {
+    if (activePlayer == "playerB" && getCookie("typeDePartie") === "bot_v2") {
 
         activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
         activateFog(cells);
@@ -1157,27 +1220,50 @@ function changeActivePlayer() {
         convertBoard();
         updateBoard(gameState1);
     }
-    if (activePlayer === "playerB" && getCookie("typeDePartie") === "bot") {
-        if (tour >= 200) {
 
+    activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
+    document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
+    if (tour <= 200)
+        document.getElementById('nbTour').textContent = `Tour : n°${200 -(tour - 1)}`;
+    if(!getCookie("typeDePartie").includes("bot"))
+        showAntiCheat();
+
+    tour--;
+
+    activateFog(cells);
+    checkCrossing(player1Position, player2Position);
+    if (activePlayer === "playerA") {
+        showForfaitA();
+        hideForfaitB();
+    } else {
+        showForfaitB();
+        hideForfaitA();
+    }
+
+    murAPose = new Array(3);
+    checkTour201();
+    if (activePlayer === "playerB" && getCookie("typeDePartie") === "bot") {
+
+        if (tour > 200) {
             return movePlyerFirstTurn(player2Position);
         } else {
             var possiblesMoves = getValidMoves(player2Position);
-            socket.emit('computeMoveRandom', possiblesMoves, (returnValue) => {
-                // Utilisez returnValue ici, c'est la valeur de retour de la fonction move
+           var returnValue = computeMove(possiblesMoves);
                 movePlayer(player2Position);
                 movePlayer(returnValue);
-            });
         }
-    } else if (activePlayer === "playerA" && getCookie("typeDePartie") === "bot_v2") {
+    } else if (activePlayer === "playerB" && getCookie("typeDePartie") === "bot_v2") {
+
         if (tour > 200) {
+
             //TODO PAREIL POUR CELLE LA
-            var resPromise = setup(1);
+            var resPromise = setup(2);
             resPromise.then(cellIndex => {
                 var newCellIndex = convertGameStateToPosition((cellIndex).toString());
                 movePlyerFirstTurn(newCellIndex);
             });
         } else {
+
             convertBoard();
             if (activePlayer === "playerB") {
                 gameState1 = new gameState(playerBWalls, playerAWalls, board);
@@ -1186,15 +1272,18 @@ function changeActivePlayer() {
             }
 
             var time = Date.now();
+
             var nMovePromise = nextMove(gameState1); // Stocker la promesse retournée par nextMove
 
 
             nMovePromise.then(nMove => {
+
                 if (nMove.action === "move") {
                     var pos = nMove.value;
                     var newPos = convertGameStateToPosition(pos.toString());
-                    movePlayer(player1Position);
+                    movePlayer(player2Position);
                     movePlayer(newPos);
+
                 } else if (nMove.action === "wall") {
                     var pos = nMove.value;
                     var wall = pos[0];
@@ -1216,28 +1305,9 @@ function changeActivePlayer() {
             }
         }
 
-    } else {
-        activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
-        document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
-        if (tour <= 200)
-            document.getElementById('nbTour').textContent = `Tour : n°${tour - 1}`;
-        showAntiCheat();
-
-        tour--;
-
-        activateFog(cells);
-        checkCrossing(player1Position, player2Position);
-        if (activePlayer === "playerA") {
-            showForfaitA();
-            hideForfaitB();
-        } else {
-            showForfaitB();
-            hideForfaitA();
-        }
-
-        murAPose = new Array(3);
-        checkTour201();
     }
+
+
     saveToBack();
 }
 
@@ -1394,17 +1464,19 @@ function changeVisibilityPlayer(remove, position, player) {
 
 function movePlayer(cellIndex) {
 
-
     if (firstTurn) {
+
         return;
     }
     if (murAPose[0] != undefined) {
+
         annulerWall();
     }
 
     const clickedCell = cells[cellIndex];
 
     if (cellIndex === player1Position && activePlayer === 'playerA') {
+
         handleCellClick(cellIndex, player1Position);
     }
     if (cellIndex === player2Position && activePlayer === 'playerB') {
@@ -1446,7 +1518,6 @@ function movePlayer(cellIndex) {
 
         changeVisibilityPlayer(false, activePlayer === 'playerA' ? player1Position : player2Position, activePlayer);
         mettreAJourTableau(cellsGrid, cells);
-
         changeActivePlayer();
     }
 }
@@ -1487,8 +1558,10 @@ function handleCellClick(cellIndex, position) {
         cells.forEach(cell => cell.classList.remove('possible-move'));
         isClickedCell = false;
     } else {
+
         validMoves.forEach(move => {
             const moveCell = cells[move];
+
             if (!moveCell.classList.contains('playerA') && !moveCell.classList.contains('playerB')) {
                 moveCell.classList.add('possible-move');
                 isClickedCell = true;
@@ -1502,3 +1575,5 @@ function saveToBack() {
     cellsTmp = getClassesAndAttributesFromDivs(cellsGrid);
     socket.emit('saveToBack', activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cellsTmp, playerAWalls, playerBWalls, firstTurn, dernierTourB);
 }
+
+
