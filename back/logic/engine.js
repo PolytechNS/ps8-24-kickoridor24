@@ -13,15 +13,13 @@ let player2Position;
 var dernierTourB;
 
 let rooms = {};
+let varRoom = '';
 
 module.exports = function (io) {
     gameNamespace = io.of('/api/game');
 
     gameNamespace.on('connection', (socket) => {
-        setupGame();
-        socket.emit('setupGame');
-
-
+        
         socket.on('joinGame', () => {
             console.log('joinGame');
             let room = findAvailableRoom();
@@ -46,31 +44,38 @@ module.exports = function (io) {
             
             let roomId = findAvailableRoomWithId(room);
 
+            varRoom = room;
+
             socket.join(roomId);
             rooms[roomId].push(socket.id);
 
             if (rooms[roomId].length === 4) {
                 gameNamespace.to(roomId).emit('gameStarted');
+                setupGame();
+                socket.emit('setupGame');
             }
         });
 
 
         socket.on('getPlayersPosition', () => {
-           socket.emit('getPlayersPositionResponse', player1Position, player2Position);
-
+           //socket.emit('getPlayersPositionResponse', player1Position, player2Position);
+           gameNamespace.to(varRoom).emit('getPlayersPositionResponse', player1Position, player2Position);
         });
 
         socket.on('addCellFirtTime', (cell) => {
             cells = cell;
-            socket.emit('setupTheGame');
+            //socket.emit('setupTheGame');
+            gameNamespace.to(varRoom).emit('setupTheGame');
         });
 
         socket.on('setUpGame', () => {
-            socket.emit('setUpGameResponse', activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells);
+            //socket.emit('setUpGameResponse', activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells);
+            gameNamespace.to(varRoom).emit('setUpGameResponse', activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells);
         });
 
         socket.on('endSetupGame', () => {
-            socket.emit('game', player1Position, player2Position, cells, playerAWalls, playerBWalls, nbWallPlayerA, nbWallPlayerB, activePlayer, tour, firstTurn, dernierTourB);
+            //socket.emit('game', player1Position, player2Position, cells, playerAWalls, playerBWalls, nbWallPlayerA, nbWallPlayerB, activePlayer, tour, firstTurn, dernierTourB);
+            gameNamespace.to(varRoom).emit('game', player1Position, player2Position, cells, playerAWalls, playerBWalls, nbWallPlayerA, nbWallPlayerB, activePlayer, tour, firstTurn, dernierTourB);
         });
 
         socket.on('saveToBack', (activePl, nbWallPA, nbWallPB, p1Position, p2Position, lap, cels, pAWalls, pBWalls, firstLap, lastTourB) => {
