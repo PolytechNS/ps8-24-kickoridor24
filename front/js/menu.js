@@ -329,3 +329,7 @@ async function notif() {
     }
     await getConversationNotif();
 }
+
+function previewPage(){
+    window.history.back();
+}
