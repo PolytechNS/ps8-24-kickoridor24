@@ -58,8 +58,28 @@ module.exports = function (io) {
 
             if (rooms[room].length === 2) {
                 gameNamespace.to(room).emit('startGame', room);
+                for (let room in rooms) {
+                    let index = rooms[room].indexOf(socket.id);
+                    if (index !== -1) {
+                        rooms[room].splice(index, 1);
+                        if (rooms[room].length === 0) {
+                            delete rooms[room];
+                        }
+                        break;
+                    }
+                }
             } else {
                 gameNamespace.to(room).emit('firstPlayer');
+            }
+        });
+
+        socket.on('joinGameWithRoom', (room) => {
+            console.log('joinGameWithRoom');
+            socket.join(room);
+            rooms[room].push(socket.id);
+
+            if (rooms[room].length === 2) {
+                gameNamespace.to(room).emit('gameStarted');
             }
         });
 

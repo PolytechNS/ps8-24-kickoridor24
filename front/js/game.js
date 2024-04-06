@@ -1,5 +1,10 @@
 const socket = io('/api/game');
 
+socket.emit("joinGameWithRoom", getCookie("room"));
+socket.on("gameStarted" , () => {
+   console.log("gameStarted");
+});
+
 // Sélectionnez la div wrapper
 const wrapper = document.querySelector('.wrapper');
 var validGrid = [];
