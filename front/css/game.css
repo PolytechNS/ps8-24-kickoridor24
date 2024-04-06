@@ -143,31 +143,35 @@ h3 {
 }
 
 .playerB {
-    background-color: #ff0000;
+    background-color: #ff000090;
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .playerA {
-    background-color: #0000ff;
+    background-color: #000FFF90;
+
+
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
 }
 
 .playerA:after {
-    content: 'A';
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.3em;
-    font-family: 'Roboto Condensed', sans-serif;
-    color: white;
+    justify-items: center;
 }
 
 .playerB:after {
-    content: 'B';
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.3em;
-    font-family: 'Roboto Condensed', sans-serif;
-    color: white;
+    justify-items: center;
 }
 
 .profilA, .profilB {
@@ -260,7 +264,7 @@ background-color: #f1c758;
 .anti-cheat {
     background-color: #E4E5E7;
     width: 100%;
-    height: 500px;
+    height: 55vh;
     margin: 10px auto;
     text-align: center;
     font-family: 'Roboto Condensed', sans-serif;
@@ -321,3 +325,32 @@ button {
     width: 100%;
 }
 
+.finDePartie {
+    background-color: #E4E5E7;
+    width: 100%;
+    height: 55vh;
+    margin: 10px auto;
+    text-align: center;
+    font-family: 'Roboto Condensed', sans-serif;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.finDePartie div{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+#finMiddle button{
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 50px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1vh;
+    color: #eb4f61;
+    font-weight: bold;
+}
+#finMiddle img{
+    width: 20vw;
+    min-height: 25vh;
+    max-height: 40vh;
+}

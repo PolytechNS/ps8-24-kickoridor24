@@ -1,7 +1,7 @@
 var userID;
 
-var photoDeProfil = null;
-
+var photoDeProfil ="images/photoProfil/Mitroglu.png";
+var celebrationBDD =null;
 function redirectToGame(name, value, days) {
     setCookie(name,value,days);
     window.location.href = "game.html";
@@ -248,6 +248,23 @@ async function getConversationNotif(){
         console.log(error.message);
     }
 }
+async function getMessageById(id){
+    const formDataJSON = {};
+    formDataJSON["idMsg"] = id.toString();
+
+    const response = await fetch('/api/getMsgById', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formDataJSON)
+    });
+    const data = await response.json();
+
+    // Retourner les données
+    return data;
+
+}
 function showHideNotif(data){
     var chatbtn =  document.getElementById("chat");
     var notif = chatbtn.getElementsByClassName('notification-badge')[0];
@@ -284,11 +301,13 @@ async function getId(){
             return response.json(); // Convertit la réponse en JSON
         }).then(data => {
             userID = data["_id"];
-            if(photoDeProfil === null){
+            if(photoDeProfil !== data["img"]){
                 majPhoto( data["img"]);
 
             }
-
+            if(celebrationBDD == null){
+                celebrationBDD = data["celebration"];
+            }
         });
 
 
@@ -299,11 +318,14 @@ async function getId(){
 
 function majPhoto(newImage){
     photoDeProfil =newImage;
+    if(!window.location.href.includes("game.html"))
     document.getElementById("petitePhoto").src = photoDeProfil;
 }
 async function notif() {
     await getId();
-
-    await checkFriends();
+    if(!window.location.href.includes("game.html"))
+    {
+        await checkFriends();
+    }
     await getConversationNotif();
 }

@@ -255,8 +255,8 @@ header {
 
 
 #petitePhoto{
-    height: 6vh;
-    width: 6vh;
+    height: 90%;
+
     margin-bottom: 0.4em;
     margin-right: -4em;
 }

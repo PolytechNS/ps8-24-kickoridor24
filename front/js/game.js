@@ -241,7 +241,10 @@ function setUpGame(gameState) {
             gState = gameState;
         }
         hideAntiCheat();
+        HideVictoire();
+
         hideValider();
+
         if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null)
             hideSauvegarder();
         if (activePlayer === "playerA") {
@@ -257,9 +260,12 @@ function setUpGame(gameState) {
         document.querySelector('#nbWallPlayerB').innerText = "Murs restants : " + nbWallPlayerB;
 
         cells[player1Position].classList.add('playerA');
+
         cells[player2Position].classList.add('playerB');
 
         hideAntiCheat();
+        HideVictoire();
+
         hideValider();
 
         lanePlayerA = [];
@@ -278,9 +284,9 @@ function setUpGame(gameState) {
 
         dijkstraVisitedNode = [];
         activateFog(cells);
-
         if (tour <= 200)
-            document.getElementById('nbTour').textContent = `Tour : n°${tour}`;
+            document.getElementById('nbTour').textContent = 'Tour : n°' + (200 -(tour - 1));
+
 
         mettreAJourTableau(cellsGrid, cells);
         cellsGrid.forEach((cell, index) => {
@@ -289,6 +295,7 @@ function setUpGame(gameState) {
             else
                 cell.addEventListener('click', () => movePlayer(index));
         });
+
 
         if (tour === 202) {
             let botRows = [];
@@ -304,8 +311,7 @@ function setUpGame(gameState) {
                 }
             });
 
-
-            // Afficher le message pour le premier tour
+             // Afficher le message pour le premier tour
             const message = document.createElement('div');
             message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
             message.classList.add('message');
@@ -321,6 +327,21 @@ function setUpGame(gameState) {
         checkTour201();
         checkCrossing(player1Position, player2Position);
     });
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    document.getElementsByTagName('head')[0].appendChild(style);
+
+// Définir la règle CSS
+    var cssA = '.playerA { background-image: url("'+ photoDeProfil +'"); }';
+    var cssB;
+    if(photoDeProfil == "images/photoProfil/Pedri.png"){
+        cssB = '.playerB { background-image: url("images/photoProfil/Mitroglu.png"); }';
+    }else{
+        cssB = '.playerB { background-image: url("images/photoProfil/Pedri.png"); }';
+    }
+
+    style.appendChild(document.createTextNode(cssA));
+    style.appendChild(document.createTextNode(cssB));
     socket.emit('endSetupGame');
 }
 
@@ -686,21 +707,48 @@ function checkCrossing(playerAPosition, playerBPosition) {
         victoire("match nul !");
 
     } else if (gagneA) {
-        victoire("Player A a gagné !");
+        victoire("PlayerA");
 
     } else if (gagneB) {
-        victoire("Player B a gagné !");
+        victoire("PlayerB");
 
     }
 }
 
 function victoire(txt) {
-    alert(txt);
+    //alert(txt);
+    showVictoire(txt);
     if (partieChargee)
         supprimerAnciennePartie(getUsername());
-    window.location.href = 'index.html';
+   // window.location.href = 'index.html';
 }
+function showVictoire(txt){
+    document.querySelector('.finDePartie').style.display = 'flex';
+    const divMid = document.getElementById("finMiddle");
+    if(txt == "match nul !"){
+        divMid.getElementsByTagName('h2')[0].textContent = txt;
+        divMid.getElementsByTagName('img')[0].src = "images/draw.gif";
+    }
+    else {
+        divMid.getElementsByTagName('h2')[0].textContent = txt + " remporte la partie";
 
+        if (txt == "playerA") {
+            if (getCookie("username") != null) {
+                divMid.getElementsByTagName('h2')[0].textContent = getCookie("username") + " remporte la partie";
+            }
+            if (celebrationBDD != null) {
+                divMid.getElementsByTagName('img')[0].src = celebrationBDD + '.gif';
+
+            }
+        }
+    }
+    document.querySelector('.anti-cheat').style.display = 'none';
+    wrapper.style.display = 'none';
+}
+function HideVictoire(){
+    document.querySelector('.finDePartie').style.display = 'none';
+
+}
 async function supprimerAnciennePartie(user) {
     const formDataJSON = {};
     formDataJSON["username"] = user;
@@ -1220,7 +1268,7 @@ function changeActivePlayer() {
         activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
         document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
         if (tour <= 200)
-            document.getElementById('nbTour').textContent = `Tour : n°${tour - 1}`;
+            document.getElementById('nbTour').textContent = `Tour : n°${200 -(tour - 1)}`;
         showAntiCheat();
 
         tour--;
@@ -1502,3 +1550,5 @@ function saveToBack() {
     cellsTmp = getClassesAndAttributesFromDivs(cellsGrid);
     socket.emit('saveToBack', activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cellsTmp, playerAWalls, playerBWalls, firstTurn, dernierTourB);
 }
+
+

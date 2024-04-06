@@ -13,7 +13,7 @@ let player2Position;
 var dernierTourB;
 
 
-
+const clients = {};
 
 module.exports = function (io) {
     gameNamespace = io.of('/api/game');
@@ -23,7 +23,21 @@ module.exports = function (io) {
         setupGame();
         socket.emit('setupGame');
 
+        socket.on('login', (userId) => {
+            console.log('Utilisateur', userId, 'connecté');
+            // Associer l'ID de l'utilisateur à sa socket
+            clients[userId] = socket;
+        });
+        socket.on('message', (data) => {
+            const { senderId, ami, message } = data;
+            console.log(data);
+            console.log('Message de', senderId, 'à', ami, ':', message);
 
+            // Notifier le destinataire s'il est connecté
+            if (clients[ami]) {
+                clients[ami].emit('newMessage', { senderId, message });
+            }
+        });
         socket.on('getPlayersPosition', () => {
            console.log('getPlayersPosition');
            socket.emit('getPlayersPositionResponse', player1Position, player2Position);
