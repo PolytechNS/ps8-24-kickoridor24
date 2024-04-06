@@ -25,9 +25,7 @@
             <div class="name">
                 <p id="name"></p>
             </div>
-            <div class="mitro">
-                <img src="images/mitro.jpg" alt="">
-            </div>
+            <img id="petitePhoto"src="images/photoProfil/Mitroglu.png" alt="">
         </div>
     </div>
 
@@ -56,31 +54,58 @@
 
     <div class="container">
         <div class="info" style="display: flex">
-            <div class="Play">
-                <h2 class="btnJouer"> Info resumer</h2>
+            <div class="resume">
+               <p>Joueur sélectionné</p>
+                <img id="photoChoisieInfo" src="images/photoProfil/Bellingham.png"/>
+                <p id="namePhotoInfo">Bellingham</p>
+                <p>Célébration sélectionnée</p>
+                <img  id="celebrationChoisieInfo"id ="gifResume"  src="images/celebration/SIUU.png" />
+                <p id="nameCelebrationInfo">SIUUU</p>
             </div>
-            <div class="Play">
-                <h2 class="btnJouer"> Formulaire a faire</h2>
+            <div class="contenu">
+                <p class="gap"></p>
+                <h2 >Nom d'équipe</h2>
+                <input id="nomEquipeInput"type="text">
+                <h2 >Adresse mail</h2>
+                <input id="mailInput" type="text">
+                <h2 >Mot de passe</h2>
+                <input id="motDePasseInput" type="password">
+                <p class="gap"></p>
             </div>
         </div>
 
         <div class="photo" style="display: none">
-            <div class="Play">
-                <h2 class="btnJouer"> Photos actuelle</h2>
+            <div class="resume">
+                <p>Joueur sélectionné</p>
+                <img id="photoChoisieProfil" src="images/photoProfil/Bellingham.png"/>
+                <p id="namePhotoProfil">Bellingham</p>
             </div>
 
-            <div class="Play">
-                <h2 class="btnJouer"> Liste des photos</h2>
+            <div class="contenuSearch">
+               <div class="rechercheDiv">
+                   <h2>Rechercher</h2>
+                   <input id="recherchePhoto" type="text">
+               </div>
+                <div id="gridpdp">
+                </div>
             </div>
+
         </div>
 
         <div class="celebration" style="display: none">
-            <div class="Play">
-                <h2 class="btnJouer"> Celebration actuelle</h2>
+            <div class="resume">
+                <p>Célébration sélectionnée</p>
+                <img id="celebrationChoisieCeleb" src="images/celebration/SIUU.png"/>
+                <p id="nameCelebrationCeleb">SIUU</p>
             </div>
 
-            <div class="Play">
-                <h2 class="btnJouer"> Liste des celebrations</h2>
+            <div class="contenuSearch">
+                <div class="rechercheDiv">
+                    <h2>Rechercher</h2>
+                    <input id="rechercheCelebration" type="text">
+                </div>
+                <div id="gridCeleb">
+                </div>
             </div>
         </div>
 
@@ -108,7 +133,7 @@
             <div class="ami">
                 <div style="display: flex">
                     <div class="mitroChat">
-                        <img src="images/mitro.jpg" alt="">
+                        <img src="images/mitro.jpg" id="photoChatAvecUnAmis" alt="">
                     </div>
                     <span class="nom" id="nomAmiID">Amis1</span>
                 </div>

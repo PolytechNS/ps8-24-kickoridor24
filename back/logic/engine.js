@@ -1,85 +1,84 @@
-const clients = {};
-module.exports = function(io) {
-    const gameNamespace = io.of('/api/game');
+let gameNamespace;
+
+let cells;
+let playerAWalls;
+let playerBWalls;
+let nbWallPlayerA;
+let nbWallPlayerB;
+let activePlayer;
+let tour;
+let firstTurn;
+let player1Position;
+let player2Position;
+var dernierTourB;
+
+
+
+
+module.exports = function (io) {
+    gameNamespace = io.of('/api/game');
+
     gameNamespace.on('connection', (socket) => {
-        console.log('A user connected : ', socket.id);
-        socket.on('login', (userId) => {
-            console.log('Utilisateur', userId, 'connecté');
-            // Associer l'ID de l'utilisateur à sa socket
-            clients[userId] = socket;
-        });
-        socket.on('disconnect', () => {
-            console.log('Utilisateur déconnecté:', socket.id);
+        console.log('a user connected');
+        setupGame();
+        socket.emit('setupGame');
+
+
+        socket.on('getPlayersPosition', () => {
+           console.log('getPlayersPosition');
+           socket.emit('getPlayersPositionResponse', player1Position, player2Position);
 
         });
-        /*socket.on('computeMoveRandom', (move) => {
-            aiRandom.move(move);
-        });*/
-        socket.on('getValidMoves', (activePlayer, playerPosition, grid, validGrid) => {
-            socket.emit('validMoves', getValidMoves(activePlayer, playerPosition, grid, validGrid));
-        });
-        socket.on('message', (data) => {
-            const { senderId, ami, message } = data;
-            console.log(data);
-            console.log('Message de', senderId, 'à', ami, ':', message);
 
-            // Notifier le destinataire s'il est connecté
-            if (clients[ami]) {
-                clients[ami].emit('newMessage', { senderId, message });
-            }
+        socket.on('addCellFirtTime', (cell) => {
+            console.log('addCellFirtTime');
+            cells = cell;
+            socket.emit('setupTheGame');
         });
-        socket.on('newWall', (newWall) => {
-            console.log('New wall received: ', newWall);
+
+        socket.on('setUpGame', () => {
+            console.log('setUpGame');
+            socket.emit('setUpGameResponse', activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells);
         });
-        socket.on('newMove', (newMove) => {
-            console.log('New move received: ', newMove);
+
+        socket.on('endSetupGame', () => {
+            console.log('endSetupGame');
+            socket.emit('game', player1Position, player2Position, cells, playerAWalls, playerBWalls, nbWallPlayerA, nbWallPlayerB, activePlayer, tour, firstTurn, dernierTourB);
+        });
+
+        socket.on('saveToBack', (activePl, nbWallPA, nbWallPB, p1Position, p2Position, lap, cels, pAWalls, pBWalls, firstLap, lastTourB) => {
+            console.log('saveToBack');
+            activePlayer = activePl;
+            nbWallPlayerA = nbWallPA;
+            nbWallPlayerB = nbWallPB;
+            player1Position = p1Position;
+            player2Position = p2Position;
+            tour = lap;
+            cells = cels;
+            playerAWalls = pAWalls;
+            playerBWalls = pBWalls;
+            firstTurn = firstLap;
+            dernierTourB = lastTourB;
+        });
+
+        socket.on('disconnect',  () => {
+            console.log('user disconnected');
         });
     });
 };
 
 
-
-
-function getValidMoves(activePlayer,position, grid, validGrid) {
-    position = position - 1;
-    const row = Math.floor(position / 17);
-    const col = position % 17;
-    const moves = [];
-
-    const cellFowardPlus1 = grid[position + 34];
-    const cellBackwardPlus1 = grid[position - 34];
-    const cellLeftPlus1 = grid[position - 2];
-    const cellRightPlus1 = grid[position + 2];
-
-    if (row > 0 && validGrid[position - 17] !== 2){
-        if(cellBackwardPlus1 === 1){
-            if(validGrid[position - 51] !== 2)
-                moves.push(position - 66);
-        } else
-            moves.push(position - 32);
-    }
-    if (row < 16 && validGrid[position + 17] !== 2){
-        if(cellFowardPlus1 === 1){
-            if(validGrid[position + 51] !== 2)
-                moves.push(position + 70);
-        } else
-            moves.push(position + 36);
-    }
-    if (col > 0 && validGrid[position - 1] !== 2){
-        if(cellLeftPlus1 === 1){
-            if(validGrid[position - 3] !== 2)
-                moves.push(position - 4);
-        } else
-            moves.push(position);
-    }
-    if (col < 16 && validGrid[position + 1] !== 2){
-        if(cellRightPlus1 === 1){
-            if(validGrid[position + 3] !== 2)
-                moves.push(position + 6);
-        } else
-            moves.push(position + 4);
-    }
-    return moves;
+function setupGame() {
+    console.log('new game');
+    player1Position = 280;
+    player2Position = 8;
+    cells = [];
+    playerAWalls = [];
+    playerBWalls = [];
+    nbWallPlayerA = 10;
+    nbWallPlayerB = 10;
+    activePlayer = 'playerA';
+    tour = 202;
+    firstTurn = true;
+    dernierTourB = false;
 }
-
-exports.getValidMoves = getValidMoves;
