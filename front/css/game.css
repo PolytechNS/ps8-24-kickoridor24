@@ -5,28 +5,7 @@ body {
     background-position: center;
 }
 
-.header {
-    background-image: url('../images/header.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    height: 9%;
-}
 
-.footer {
-    background-image: url('../images/footer.png');
-    background-position: right;
-    background-size: contain;
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    height: 9%;
-    margin-top: auto;
-    margin-bottom: -5px;
-}
 
 .message{
     position: absolute;
@@ -59,12 +38,7 @@ body {
     margin-left: 5px;
 }
 
-#home {
-    width: 2.5%;
-    margin-bottom: 5px;
-    margin-left: 5px;
-    cursor: pointer;
-}
+
 
 #vingt{
     width: 2.5%;

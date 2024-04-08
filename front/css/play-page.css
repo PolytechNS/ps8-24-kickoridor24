@@ -26,10 +26,15 @@
 
 .btnJouer{
     height: 23vh;
-    width: 41vh;
+    width: 20vw;
     padding: 0.1em 0.2em 0.2em 0.2em;
 }
 
+.btnHORSLIGNEBTN{
+    height: 23vh;
+    width: 13vw;
+    padding: 0.1em 0.2em 0.2em 0.2em;
+}
 .onlinePlay, .horsLignePlay{
     display: flex;
     flex-direction: row;
@@ -91,7 +96,10 @@
     width: 10vh;
     margin-right: 0.5vh;
 }
-
+#resume{
+    width: 10vh;
+    margin-right: 0.5vh;
+}
 .all{
     display: flex;
     justify-content: center;

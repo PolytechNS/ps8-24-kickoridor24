@@ -10,7 +10,7 @@
     box-shadow: 0 3px 3px 0 #676767;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: flex-end;
     transition: background-color 0.3s ease; /* Animation de transition pour un effet plus fluide */
 
 }
@@ -29,7 +29,9 @@
 }
 
 .btnJouer{
-    margin: 0.2em 0.3em 0.3em 0.3em;
+    height: 23vh;
+    width: 20vw;
+    margin: 0.1em 0.2em 0.2em 0.2em;
 }
 
 .container {
@@ -56,11 +58,6 @@
 #name:hover {
     cursor: pointer;
     font-weight: bold;
-}
-
-.name{
-    margin-right: 1em;
-    margin-left: 1em;
 }
 
 
@@ -111,3 +108,7 @@
     cursor: pointer;
 }
 
+#aleaBot, #smartBot{
+    width: 10vh;
+    margin-right: 0.5vh;
+}

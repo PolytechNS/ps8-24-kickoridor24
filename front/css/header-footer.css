@@ -73,7 +73,11 @@ header {
     align-items: center;
     justify-content: center;
     margin-bottom: 1.1vh;
+    margin-right: 1em;
+    margin-left: 1em;
 }
+
+
 
 .se-connecter {
     font-family: 'Roboto Condensed', sans-serif;
