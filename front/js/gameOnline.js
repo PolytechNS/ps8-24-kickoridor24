@@ -268,13 +268,14 @@ function setUpGame(gameState) {
         hideValider();
         if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null)
             hideSauvegarder();
-        if (activePlayer === "playerA") {
-            hideForfaitB();
+        if (currentPlayer === "playerA") {
             showForfaitA();
+            hideForfaitB();
         } else {
-            hideForfaitA();
             showForfaitB();
+            hideForfaitA();
         }
+
 
         document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
         document.querySelector('#nbWallPlayerA').innerText = "Murs restants : " + nbWallPlayerA;
@@ -302,9 +303,8 @@ function setUpGame(gameState) {
 
         dijkstraVisitedNode = [];
         activateFog(cells);
-
         if (tour <= 200)
-            document.getElementById('nbTour').textContent = `Tour : n°${tour}`;
+            document.getElementById('nbTour').textContent = 'Tour : n°' + (200 -(tour - 1));
 
         mettreAJourTableau(cellsGrid, cells);
         cellsGrid.forEach((cell, index) => {
@@ -341,6 +341,31 @@ function setUpGame(gameState) {
             //si une case de top-row est cliquée alors on move le joueur
             botRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
         }
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        document.getElementsByTagName('head')[0].appendChild(style);
+
+// Définir la règle CSS
+        var cssA
+        if(currentPlayer == "playerA")
+        var cssA = '.playerA { background-image: url("'+ photoDeProfil +'"); }';
+        else{
+            var cssA = '.playerB { background-image: url("'+ photoDeProfil +'"); }';
+        }
+        var cssB;
+        if(photoDeProfil == "images/photoProfil/Pedri.png"){
+            if(currentPlayer == "playerA")
+            cssB = '.playerB { background-image: url("images/photoProfil/Mitroglu.png"); }';
+            else
+                cssB = '.playerA { background-image: url("images/photoProfil/Mitroglu.png"); }';
+        }else{
+            if(currentPlayer == "playerA")
+            cssB = '.playerB { background-image: url("images/photoProfil/Pedri.png"); }';
+            else
+                cssB = '.playerA { background-image: url("images/photoProfil/Pedri.png"); }';
+        }
+        style.appendChild(document.createTextNode(cssA));
+        style.appendChild(document.createTextNode(cssB));
         mettreAJourTableau(cellsGrid, cells);
         checkTour201();
         checkCrossing(player1Position, player2Position);
@@ -514,10 +539,10 @@ function convertGameStateToPosition(gameState) {
 }
 
 function declarerForfait() {
-    if (activePlayer === "playerA") {
-        victoire("Vous avez déclarer forfait \n Player B a gagné !");
+    if (currentPlayer === "playerA") {
+        victoire("playerB");
     } else {
-        victoire("Vous avez déclarer forfait \n Player A a gagné !");
+        victoire("playerA");
     }
 }
 
@@ -716,21 +741,54 @@ function checkCrossing(playerAPosition, playerBPosition) {
         victoire("match nul !");
 
     } else if (gagneA) {
-        victoire("Player A a gagné !");
+        victoire("PlayerA");
 
     } else if (gagneB) {
-        victoire("Player B a gagné !");
+        victoire("PlayerB");
 
     }
 }
 
 function victoire(txt) {
-    alert(txt);
-    if (partieChargee)
-        supprimerAnciennePartie(getUsername());
-    window.location.href = 'index.html';
-}
+    //alert(txt);
+    socket.emit("VictoireOnline",txt);
 
+}
+socket.on("FinDePartieOnline",(txt) => {
+    showVictoire(txt);
+    calculerElo(txt);
+    // window.location.href = 'index.html';})
+});
+async function calculerElo(txt){
+
+}
+function showVictoire(txt){
+    document.querySelector('.finDePartie').style.display = 'flex';
+    const divMid = document.getElementById("finMiddle");
+    if(txt == "match nul !"){
+        divMid.getElementsByTagName('h2')[0].textContent = txt;
+        divMid.getElementsByTagName('img')[0].src = "images/draw.gif";
+    }
+    else {
+        divMid.getElementsByTagName('h2')[0].textContent = txt + " remporte la partie";
+
+        if (txt == "playerA") {
+            if (getCookie("username") != null) {
+                divMid.getElementsByTagName('h2')[0].textContent = getCookie("username") + " remporte la partie";
+            }
+            if (celebrationBDD != null) {
+                divMid.getElementsByTagName('img')[0].src = celebrationBDD + '.gif';
+
+            }
+        }
+    }
+    document.querySelector('.anti-cheat').style.display = 'none';
+    wrapper.style.display = 'none';
+}
+function HideVictoire(){
+    document.querySelector('.finDePartie').style.display = 'none';
+
+}
 async function supprimerAnciennePartie(user) {
     const formDataJSON = {};
     formDataJSON["username"] = user;
@@ -1264,7 +1322,7 @@ function changeActivePlayer() {
         activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
         document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
         if (tour <= 200)
-            document.getElementById('nbTour').textContent = `Tour : n°${tour - 1}`;
+            document.getElementById('nbTour').textContent = `Tour : n°${200 -(tour - 1)}`;
         if(getCookie("typeDePartie") !== "enLigne")
             showAntiCheat();
 
@@ -1563,3 +1621,9 @@ socket.on('MajOnline', (player1Pos, player2Pos, cels, pAWalls, pBWalls, nbWallPA
     dernierTourB = dernierLapB;
     changeActivePlayer();
 });
+
+function returnMenu(){
+    socket.emit("changePage");
+    window.location.href = 'index.html';
+
+}

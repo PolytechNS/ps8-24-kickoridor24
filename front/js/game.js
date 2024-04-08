@@ -516,9 +516,9 @@ function convertGameStateToPosition(gameState) {
 
 function declarerForfait() {
     if (activePlayer === "playerA") {
-        victoire("Vous avez déclarer forfait \n Player B a gagné !");
+        victoire("playerB");
     } else {
-        victoire("Vous avez déclarer forfait \n Player A a gagné !");
+        victoire("playerA");
     }
 }
 

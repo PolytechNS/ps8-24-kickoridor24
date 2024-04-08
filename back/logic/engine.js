@@ -63,7 +63,8 @@ module.exports = function (io) {
         socket.on("changePage", () => {
             const room = findRoomBySocketId(socket.id);
             socket.leave(room);
-            rooms[room].splice(socket.id, 1);
+            if(rooms[room])
+                rooms[room].splice(socket.id, 1);
         });
         socket.on('joinGameWithRoom', (room) => {
 
@@ -160,6 +161,11 @@ module.exports = function (io) {
 
 
         socket.on('disconnect', () => {
+
+        });
+        socket.on("VictoireOnline", (txt) => {
+            const room = findRoomBySocketId(socket.id);
+            gameNamespace.to(room).emit("FinDePartieOnline",txt);
 
         });
 
