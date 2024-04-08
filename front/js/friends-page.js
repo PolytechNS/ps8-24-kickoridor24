@@ -55,7 +55,7 @@ async function ajouterAmisListe(){
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>1499){
-                            div.style.background ='url("images/europaTest.jpg")';
+                            div.style.background ='url("images/europaTest.png")';
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
@@ -234,7 +234,7 @@ async function demandesAmisListe(){
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>1499){
-                            div.style.background ='url("images/europaTest.jpg")';
+                            div.style.background ='url("images/europaTest.png")';
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
