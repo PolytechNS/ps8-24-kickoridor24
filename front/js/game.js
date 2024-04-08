@@ -1,10 +1,5 @@
 const socket = io('/api/game');
 
-socket.emit("joinGameWithRoom", getCookie("room"));
-socket.on("gameStarted" , () => {
-   console.log("gameStarted");
-});
-
 // Sélectionnez la div wrapper
 const wrapper = document.querySelector('.wrapper');
 var validGrid = [];
@@ -72,7 +67,6 @@ var gameState1 = new gameState(playerAWalls,playerBWalls,board);
 //setup(1);
 
 socket.on('setupGame', () => {
-    console.log("oookkk");
     for (i = 0; i < 289; i = i + 2) {
         if (i > 135) {
             n = 0;
@@ -91,7 +85,6 @@ socket.on('setupGame', () => {
 
     socket.emit('getPlayersPosition');
     socket.on('getPlayersPositionResponse', (player1Position, player2Position) => {
-
         cellsString = [];
         cellsGrid = [];
         for (i = 1; i <= 289; i++) {
@@ -626,7 +619,6 @@ async function retrieveGameBDD(username) {
 }
 
 function loadBoard(tab) {
-    console.log("nnnaaann");
     var wallA = 0;
     var wallB = 0;
 

@@ -1,20 +1,12 @@
-
-
     const socket = io('/api/game');
-
 
 var userID;
 
 var photoDeProfil ="images/photoProfil/Mitroglu.png";
 var celebrationBDD =null;
-
 function redirectToGame(name, value, days) {
     setCookie(name,value,days);
     window.location.href = "game.html";
-}
-
-function playOnline(){
-    window.location.href = 'waiting.html';
 }
 
 function redirectToLogin() {
