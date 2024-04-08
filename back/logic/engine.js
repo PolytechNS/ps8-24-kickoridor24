@@ -22,7 +22,7 @@ module.exports = function (io) {
     gameNamespace = io.of('/api/game');
 
     gameNamespace.on('connection', (socket) => {
-        
+
         setupGame();
         socket.emit('setupGame');
 
@@ -39,7 +39,7 @@ module.exports = function (io) {
 
 
             if (rooms[room].length === 2) {
-                gameNamespace.to(room).emit('startGame', room);  
+                gameNamespace.to(room).emit('startGame', room);
 
 
             } else {
@@ -47,13 +47,13 @@ module.exports = function (io) {
                 gameNamespace.to(room).emit('firstPlayer');
             }
         });
-        socket.on("changePage",() =>{
+        socket.on("changePage", () => {
             const room = findRoomBySocketId(socket.id);
             socket.leave(room);
-            rooms[room].splice(socket.id,1);
+            rooms[room].splice(socket.id, 1);
         });
         socket.on('joinGameWithRoom', (room) => {
-            
+
             let roomId = findAvailableRoomWithId(room);
 
             varRoom = room;
@@ -65,7 +65,7 @@ module.exports = function (io) {
 
                 gameNamespace.to(roomId).emit('gameStarted');
                 //gameNamespace.to(roomId).emit('setupGame');
-                
+
             }
         });
 
@@ -84,8 +84,8 @@ module.exports = function (io) {
             }
         });
         socket.on('getPlayersPosition', () => {
-           //socket.emit('getPlayersPositionResponse', player1Position, player2Position);
-           gameNamespace.to(varRoom).emit('getPlayersPositionResponse', player1Position, player2Position);
+            //socket.emit('getPlayersPositionResponse', player1Position, player2Position);
+            gameNamespace.to(varRoom).emit('getPlayersPositionResponse', player1Position, player2Position);
         });
 
         socket.on('addCellFirtTime', (cell) => {
@@ -103,7 +103,7 @@ module.exports = function (io) {
         });
 
         socket.on('endSetupGame', (currentpalyer) => {
-            console.log(socket.id +"  " + currentpalyer)
+            console.log(socket.id + "  " + currentpalyer)
             const room = findRoomBySocketId(socket.id);
             console.log(rooms[room].length)
             socket.emit('game', player1Position, player2Position, cells, playerAWalls, playerBWalls, nbWallPlayerA, nbWallPlayerB, activePlayer, tour, firstTurn, dernierTourB);
@@ -143,31 +143,12 @@ module.exports = function (io) {
         });
 
 
-        socket.on('disconnect',  () => {
-            
-        });
-         socket.on('login', (userId) => {
-            console.log('Utilisateur', userId, 'connecté');
-            // Associer l'ID de l'utilisateur à sa socket
-            clients[userId] = socket;
-        });
-        socket.on('message', (data) => {
-            const { senderId, ami, message } = data;
-            console.log(data);
-            console.log('Message de', senderId, 'à', ami, ':', message);
+        socket.on('disconnect', () => {
 
-            // Notifier le destinataire s'il est connecté
-            if (clients[ami]) {
-                clients[ami].emit('newMessage', { senderId, message });
-            }
         });
-        socket.on('getPlayersPosition', () => {
-           console.log('getPlayersPosition');
-           socket.emit('getPlayersPositionResponse', player1Position, player2Position);
 
     });
 };
-
 
 function setupGame() {
     player1Position = 280;
