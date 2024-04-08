@@ -110,13 +110,6 @@
     margin-left: -10px;
 }
 
-#retour{
-    width: 25vh;
-    margin-left: 2vh;
-    margin-top: 1vh;
-    margin-bottom: -2vh;
-    cursor: pointer;
-
 .resume {
 
     background-color: #E4E5E7;
@@ -333,4 +326,21 @@ input{
     font-family: 'Roboto Condensed', sans-serif;
     color: black;
     font-size: 3vh;
+
+}
+
+#retour{
+    width: 25vh;
+    margin-left: 2vh;
+    margin-top: 1vh;
+    margin-bottom: -5vh;
+    cursor: pointer;
+}
+
+.lock{
+    opacity: 0.4;
+}
+
+.unlock{
+    opacity: 1;
 }

@@ -10,6 +10,9 @@ var img;
 var celebration;
 var photoSelected;
 var celebrationSelected;
+var listeAchiev;
+
+recupInfoJoueur();
 
 const rechercheCelebration = document.getElementById("rechercheCelebration");
 rechercheCelebration.addEventListener('keydown', function(event) {
@@ -30,40 +33,76 @@ recherchePhoto.addEventListener('keydown', function(event) {
 function showCeleb(){
     document.getElementsByClassName("info")[0].style.display = "none";
     document.getElementsByClassName("photo")[0].style.display = "none";
+    document.getElementsByClassName("achiev")[0].style.display = "none";
     document.getElementsByClassName("celebration")[0].style.display = "flex";
     document.getElementById("celeb").style.borderBottom = "4px solid #eb4f61";
     document.getElementById("info").style.borderBottom = "none";
     document.getElementById("photo").style.borderBottom = "none";
+    document.getElementById("achiev").style.borderBottom = "none";
     document.getElementById("celeb").style.backgroundColor = "#3EE4F0";
     document.getElementById("info").style.backgroundColor = "#E4E5E7";
     document.getElementById("photo").style.backgroundColor = "#E4E5E7";
+    document.getElementById("achiev").style.backgroundColor = "#E4E5E7";
     fillCelebration();
-
 }
 
 function showInfo(){
     document.getElementsByClassName("info")[0].style.display = "flex";
     document.getElementsByClassName("photo")[0].style.display = "none";
+    document.getElementsByClassName("achiev")[0].style.display = "none";
     document.getElementsByClassName("celebration")[0].style.display = "none";
     document.getElementById("info").style.borderBottom = "4px solid #eb4f61";
     document.getElementById("photo").style.borderBottom = "none";
     document.getElementById("celeb").style.borderBottom = "none";
+    document.getElementById("achiev").style.borderBottom = "none";
     document.getElementById("celeb").style.backgroundColor = "#E4E5E7";
     document.getElementById("photo").style.backgroundColor = "#E4E5E7";
     document.getElementById("info").style.backgroundColor = "#3EE4F0";
+    document.getElementById("achiev").style.backgroundColor = "#E4E5E7";
 }
 
 function showPhoto(){
     document.getElementsByClassName("info")[0].style.display = "none";
     document.getElementsByClassName("photo")[0].style.display = "flex";
+    document.getElementsByClassName("achiev")[0].style.display = "none";
     document.getElementsByClassName("celebration")[0].style.display = "none";
     document.getElementById("photo").style.borderBottom = "4px solid #eb4f61";
     document.getElementById("info").style.borderBottom = "none";
     document.getElementById("celeb").style.borderBottom = "none";
+    document.getElementById("achiev").style.borderBottom = "none";
     document.getElementById("celeb").style.backgroundColor = "#E4E5E7";
     document.getElementById("info").style.backgroundColor = "#E4E5E7";
     document.getElementById("photo").style.backgroundColor = "#3EE4F0";
+    document.getElementById("achiev").style.backgroundColor = "#E4E5E7";
     fillPhoto();
+}
+
+function showAchiev(){
+    document.getElementsByClassName("info")[0].style.display = "none";
+    document.getElementsByClassName("photo")[0].style.display = "none";
+    document.getElementsByClassName("celebration")[0].style.display = "none";
+    document.getElementsByClassName("achiev")[0].style.display = "flex";
+    document.getElementById("achiev").style.borderBottom = "4px solid #eb4f61";
+    document.getElementById("info").style.borderBottom = "none";
+    document.getElementById("photo").style.borderBottom = "none";
+    document.getElementById("achiev").style.backgroundColor = "#3EE4F0";
+    document.getElementById("celeb").style.backgroundColor = "#E4E5E7";
+    document.getElementById("info").style.backgroundColor = "#E4E5E7";
+    document.getElementById("photo").style.backgroundColor = "#E4E5E7";
+    checkAchiev();
+}
+
+function checkAchiev(){
+    for (var i = 0; i < listeAchiev.length; i++) {
+        console.log(listeAchiev[i]);
+        let achievFound = document.getElementById(listeAchiev[i])
+        if(achievFound){
+            achievFound.classList.add("lock");
+            achievFound.classList.add("unlock");
+        }
+    }
+    var nbAchiev = document.getElementsByClassName("unlock").length;
+    document.getElementById("nbAchiev").textContent = nbAchiev + "/3 débloqué(s)";
 }
 
 
@@ -207,6 +246,7 @@ async function recupInfoJoueur(){
             motDePasse = data["password"];
             img = data["img"];
             celebration = data["celebration"];
+            listeAchiev = data["achiev"];
             fillData();
         });
 
@@ -214,8 +254,9 @@ async function recupInfoJoueur(){
     } catch (error) {
         alert(error.message);
     }
+    console.log(listeAchiev);
 }
-recupInfoJoueur();
+
 
 function fillData(){
     document.getElementById("nomEquipeInput").value = nomDequipe;
