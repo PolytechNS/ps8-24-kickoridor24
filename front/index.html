@@ -3,6 +3,7 @@
     <meta charset="utf-8">
     <title>Kick'Oridor - Menu</title>
     <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <link rel="stylesheet" type="text/css" href="css/header-footer.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
 <body>
@@ -21,9 +22,11 @@
             <div id="se-deconnecter" class="connexion" style="display: none" onclick="redirectToLogin()">
                 <p class="btn"> Se déconnecter</p>
             </div>
-            <div class="name">
-                <p id="name">Invité</p>
+            <div class="name" onclick="redirectToProfil()">
+                <p id="name"></p>
             </div>
+            <img id="petitePhoto"src="images/photoProfil/Mitroglu.png" alt="">
+
         </div>
     </div>
 
@@ -32,26 +35,86 @@
     </div>
 </header>
 
+<div class="titre">
+    <img id="titre" src="images/titre.png" alt="">
+</div>
 <div class="container">
-    <div class="Play" onclick="redirectToBotPage()">
-        <h2 class="btnJouer"> JOUER CONTRE UN BOT</h2>
+    <div class="Play" onclick="redirectToPlayPage()">
+        <h2 class="btnJouer"> JOUER</h2>
+        <img class="icon" src="images/icon-jouer.png">
     </div>
 
-    <div class="Play" onclick="redirectToGame('typeDePartie','1v1local',7)">
-        <h2 class="btnJouer"> JOUER EN 1V1 LOCAL</h2>
+    <div class="Play" onclick="redirectToRegle()">
+        <h2 class="btnJouer"> LES REGLES</h2>
+        <img class="icon" id="regle" src="images/icon-regle.png">
     </div>
 
-    <div class="Play" id="resumeGameButton" onclick="redirectToGame('typeDePartie','resumeGame',7)">
-        <h2 class="btnJouer"> REPRENDRE UNE PARTIE</h2>
+    <div id="classement" class="Play" onclick="redirectToClassement()">
+        <h2 class="btnJouer"> CLASSEMENTS</h2>
+    </div>
+</div>
+
+<div id="chatMenu" class="chatMenu">
+    <div id="menuChat">
+    <div id="amisChat" onclick="showAmisChat()">
+        Amis
+    </div>
+    <div id="matchChat" >
+        En match
+    </div>
+    </div>
+
+    <div class="amisMsg" style="display: flex">
+
+    </div>
+    <div class="matchMsg" style="display: none">
+
+    </div>
+    <div class="chatAmiMsg" style="display: none">
+        <div class="listeAmis" id="nomAmi" onclick=" showAmisChat();getConversation();">
+            <div class="ami">
+                <div style="display: flex">
+                    <div class="mitroChat">
+                        <img src="images/mitro.jpg" id="photoChatAvecUnAmis" alt="">
+                    </div>
+                    <span class="nom" id="nomAmiID">Amis1</span>
+                </div>
+            </div>
+        </div>
+        <div class="chatAmi" id="chatAmiID">
+
+        </div>
+    </div>
+    <div class="inputEcrire" style="display: none">
+        <input type="text" class="barreChat" id="messageInput" placeholder="Ecrire un message">
+        <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChat()">
     </div>
 </div>
 
 <div class="footer">
     <img id="param" src="images/param.png">
+
+
+    <div id="amisDiv" onclick="redirectToFriendsPage()">
+        <img id="amisImg" src="images/friends.png">
+        <p id="amisTexte">AMIS</p>
+        <span class="notification-badge"> </span>
+    </div>
+    <div id="chat" onclick="openChat()">
+        <img src="images/chat.png">
+        <p id="chatting">CHAT</p>
+        <span class="notification-badge"> </span>
+    </div>
+
+
+
+
 </div>
 </body>
 </html>
 <script src="js/cookie.js"></script>
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>
+<script src="js/chat.js"></script>
+
 <script src="js/authentification.js"></script>

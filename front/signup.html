@@ -3,6 +3,7 @@
     <meta charset="utf-8">
     <title>Kick'Oridor - Menu</title>
     <link rel="stylesheet" type="text/css" href="css/signup.css">
+    <link rel="stylesheet" type="text/css" href="css/header-footer.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
 <body>
@@ -32,10 +33,13 @@
     </div>
 </header>
 
+<div class="retour">
+    <img id="retour" src="images/retour.png" alt="" onclick="previewPage()">
+</div>
+
 <div class="container">
     <div class="Title">
-        <img id="kickoridor2" src="images/kickoridor.png">
-        <img id="vingt2" src="images/24.png">
+        <img id="kickoridor2" src="images/kickoridor24.png">
     </div>
     <div class="sign">
         <h2 class="btnJouer"> S'inscrire</h2>
@@ -45,8 +49,7 @@
             <input type="password" id="password" name="password" required placeholder="Mot de passe"><br><br>
             <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirmer le mot de passe"><br><br>
             <div class="valider">
-                <button type="submit" id="signup">S'inscrire</button>
-                <button id="login" onclick="redirectToLogin()">Se connecter</button>
+                <button type="submit" id="signup">S'INSCRIRE</button>
             </div>
         </form>
     </div>
