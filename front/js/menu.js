@@ -311,10 +311,10 @@ async function getId(){
                 majPhoto( data["img"]);
 
             }
-            console.log(celebrationBDD == null);
+
             if(celebrationBDD !== data["celebration"]){
                 celebrationBDD = data["celebration"];
-                console.log(celebrationBDD);
+
             }
         });
 

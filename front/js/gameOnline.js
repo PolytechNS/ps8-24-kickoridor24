@@ -717,10 +717,10 @@ function showForfaitB() {
 function checkCrossing(playerAPosition, playerBPosition) {
     var gagneA = false;
     var gagneB = false;
-    console.log("CHECK")
-    console.log(playerBPosition);
+
+
     for (var i = 0; i < lanePlayerB.length; i++) {
-        if (lanePlayerB[i].contains(cells[playerAPosition])) {
+        if (lanePlayerB[i].getAttribute("id") == (parseInt(playerAPosition)+1)) {
 
             if (dernierTourB) {
                 gagneA = true;
@@ -732,8 +732,8 @@ function checkCrossing(playerAPosition, playerBPosition) {
         }
     }
     for (var i = 0; i < lanePlayerA.length; i++) {
-        if (lanePlayerA[i].contains(cells[playerBPosition])) {
-            console.log("b WIN")
+        if (lanePlayerA[i].getAttribute("id") == (parseInt(playerBPosition)+1)) {
+
             gagneB = true;
         }
     }
@@ -782,7 +782,7 @@ function showVictoire(txt){
             if (getCookie("username") != null) {
                 divMid.getElementsByTagName('h2')[0].textContent = getCookie("username") + " remporte la partie";
             }
-            console.log(celebrationBDD)
+
             if (celebrationBDD != null) {
                 divMid.getElementsByTagName('img')[0].src = celebrationBDD + '.gif';
 
@@ -1255,77 +1255,6 @@ function getValidMoves(position) {
 }
 
 function changeActivePlayer() {
-    if (activePlayer == "playerA" && getCookie("typeDePartie") === "bot_v2") {
-
-        activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
-        activateFog(cells);
-        activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
-        activateFog(cells);
-
-        //TODO JE SAIS PAS OU ELLE EST
-        convertBoard();
-        updateBoard(gameState1);
-    }
-    if (activePlayer === "playerB" && getCookie("typeDePartie") === "bot") {
-        if (tour >= 200) {
-
-            return movePlyerFirstTurn(player2Position);
-        } else {
-            var possiblesMoves = getValidMoves(player2Position);
-            socket.emit('computeMoveRandom', possiblesMoves, (returnValue) => {
-                // Utilisez returnValue ici, c'est la valeur de retour de la fonction move
-                movePlayer(player2Position);
-                movePlayer(returnValue);
-            });
-        }
-    } else if (activePlayer === "playerA" && getCookie("typeDePartie") === "bot_v2") {
-        if (tour > 200) {
-            //TODO PAREIL POUR CELLE LA
-            var resPromise = setup(1);
-            resPromise.then(cellIndex => {
-                var newCellIndex = convertGameStateToPosition((cellIndex).toString());
-                movePlyerFirstTurn(newCellIndex);
-            });
-        } else {
-            convertBoard();
-            if (activePlayer === "playerB") {
-                gameState1 = new gameState(playerBWalls, playerAWalls, board);
-            } else {
-                gameState1 = new gameState(playerAWalls, playerBWalls, board);
-            }
-
-            var time = Date.now();
-            var nMovePromise = nextMove(gameState1); // Stocker la promesse retournée par nextMove
-
-
-            nMovePromise.then(nMove => {
-                if (nMove.action === "move") {
-                    var pos = nMove.value;
-                    var newPos = convertGameStateToPosition(pos.toString());
-                    movePlayer(player1Position);
-                    movePlayer(newPos);
-                } else if (nMove.action === "wall") {
-                    var pos = nMove.value;
-                    var wall = pos[0];
-                    var orientation = pos[1];
-                    var cellIndex = convertGameStateToPosition(wall.toString()) + 18;
-                    handleWall(cellIndex);
-                    if (orientation === 1) {
-                        rotationWall(cellIndex);
-                    }
-                    validerWall();
-                }
-            }).catch(error => {
-                console.error("Erreur lors de l'exécution de nextMove:", error);
-            });
-
-            var time2 = (Date.now() - time);
-            if (time2 >= 190) {
-                console.log("ALLLLEEEERRRTTTTEEEE : " + time2);
-            }
-        }
-
-    } else {
         activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
         document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
         if (tour <= 200)
@@ -1347,7 +1276,7 @@ function changeActivePlayer() {
 
         murAPose = new Array(3);
         checkTour201();
-    }
+
     //saveToBack();
 }
 
