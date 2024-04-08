@@ -50,6 +50,9 @@
         <div id="celeb" class="topButton" onclick="showCeleb()">
             <a class="navButton">Célébration</a>
         </div>
+        <div id="achiev" class="topButton" onclick="showAchiev()">
+            <a class="navButton">Achievements</a>
+        </div>
     </div>
 
     <div class="container">
@@ -109,6 +112,35 @@
             </div>
         </div>
 
+        <div class="achiev" style="display: none">
+            <div class="resume">
+                <p>Achievements</p>
+                <p id="nbAchiev">0/3 débloqué(s)</p>
+            </div>
+
+            <div class="contenuSearch">
+                <div class="rechercheDiv">
+                    <h2>Rechercher</h2>
+                    <input id="rechercheAchiev" type="text">
+                </div>
+                <div id="gridAchiev">
+                    <div id="1f" class="lock">
+                        <img src="images/achievements/1.png" alt="" class="achievImg" id="achiev2">
+                        <p>Ajouté 1 ami(e)</p>
+                    </div>
+                    <div id="2f" class="lock">
+                        <img src="images/achievements/2.png" alt="" class="achievImg" id="achiev2">
+                        <p>Ajouté 5 ami(e)s</p>
+                    </div>
+                    <div id="3f" class="lock">
+                        <img src="images/achievements/2.png" alt="" class="achievImg" id="achiev2">
+                        <p>Ajouté 10 ami(e)s</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -117,7 +149,7 @@
         <div id="amisChat" onclick="showAmisChat()">
             Amis
         </div>
-        <div id="matchChat" onclick="showMatchChat(); scrollToBottMatch()">
+        <div id="matchChat" >
             En match
         </div>
     </div>

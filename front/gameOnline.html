@@ -2,26 +2,20 @@
 <head>
     <meta charset="utf-8">
     <title>Kick'Oridor - Game</title>
-    <link rel="stylesheet" type="text/css" href="css/header-footer.css">
     <link rel="stylesheet" type="text/css" href="css/game.css">
+    <link rel="stylesheet" type="text/css" href="css/header-footer.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
 <body>
 <header>
     <div class="cnt-header">
         <div class="nav">
-            <img id="home" src="images/home.png" onclick="redirectToMenu()">
             <div class="logo">
                 <img src="images/kickoridor24.png">
             </div>
         </div>
         <div class="connection">
-            <div id="se-connecter" class="connexion" onclick="redirectToLogin()">
-                <p class="btn"> Se connecter</p>
-            </div>
-            <div id="se-deconnecter" class="connexion" style="display: none" onclick="redirectToLogin()">
-                <p class="btn"> Se déconnecter</p>
-            </div>
+
             <div class="name" onclick="redirectToProfil()">
                 <p id="name"></p>
             </div>
@@ -36,7 +30,7 @@
 </header>
 <div class="center">
     <h2 id="currentPlayer">Tour : playerA</h2>
-    <h2 id="nbTour">Tour : n°0</h2>
+    <h2 id="nbTour">Tour : n°200</h2>
 </div>
 
 <div class="container">
@@ -70,7 +64,7 @@
                 Player remporte la partie
             </h2>
             <img src="images/celebration/SIUU.gif" class="celebrationVictoire">
-            <button onclick="window.location.href = 'index.html'">RETOUR AU MENU</button>
+            <button onclick=returnMenu()>RETOUR AU MENU</button>
         </div>
         <div id="finRight">
             <img src="images/coupeRight.png" class="coupeRight">
@@ -113,7 +107,7 @@
             <div class="ami">
                 <div style="display: flex">
                     <div class="mitroChat">
-                        <img src="images/mitro.jpg" id="photoChatAvecUnAmis" alt="">
+                        <img src="images/mitro.jpg" alt="">
                     </div>
                     <span class="nom" id="nomAmiID">Amis1</span>
                 </div>
@@ -126,6 +120,10 @@
     <div class="inputEcrire" style="display: none">
         <input type="text" class="barreChat" id="messageInput" placeholder="Ecrire un message">
         <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChat()">
+    </div>
+    <div class="inputEcrire" style="display: none">
+        <input type="text" class="barreChat" id="inputMatch" placeholder="Ecrire un message">
+        <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChatMatch()">
     </div>
 </div>
 
@@ -150,15 +148,9 @@
 
 
 <script src="js/cookie.js"></script>
-
+<script src="js/elo.js"></script>
 <script src="js/authentification.js"></script>
-
-<!--<script src="js/ai.js"></script>-->
-<script src="js/kickoridor24.js"></script>
-<script src="js/bot_alea.js"></script>
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/chat.js"></script>
-<script src="js/game.js"></script>
-
-
+<script src="js/gameOnline.js"></script>

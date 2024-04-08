@@ -1,4 +1,4 @@
-const socket = io("/api/game");
+
 socket.emit('login', getCookie("username"));
 var input = document.getElementById("messageInput");
 
@@ -44,7 +44,33 @@ async function envoyerChat(){
         alert(e.message);
     }
 }
+function envoyerChatMatch(){
+    const message = document.getElementById("inputMatch").value;
+    var username = getCookie("username");
+    socket.emit("MessageMatch",message,username)
+    document.getElementById('inputMatch').value = "";
+}
+socket.on("NewMatchMsg",(message,sender) =>{
+    var chat = document.getElementsByClassName("matchMsg")[0];
 
+        var div = document.createElement("div");
+        if (sender === getCookie("username")) {
+            div.classList.add("mesMsg");
+            var p = document.createElement("p");
+            p.classList.add("msgMoi");
+            p.textContent = message;
+            div.appendChild(p);
+        } else {
+            div.classList.add("msgAmis");
+            var p = document.createElement("p");
+            p.classList.add("sesMsg");
+            p.textContent = message;
+            div.appendChild(p);
+        }
+        chat.appendChild(div);
+
+scrollToBott();
+});
 async function getConversation(){
 
     const formDataJSON = {};
@@ -116,7 +142,7 @@ async function getConversation(){
 
                             const message = await getMessageById(data[i]["lastMsg"]);
 
-                            if(message["lu"] == false && message["emetteur"] !== user) {
+                            if(message["lu"] == false && message["emetteur"] !== userID) {
                                 imgChat.src = "images/chat-notif.png";
                               //  showHideNotif("true");
                             }
@@ -156,6 +182,7 @@ async function openAmiChat(data) {
     document.getElementsByClassName("amisMsg")[0].style.display = "none";
     document.getElementsByClassName("chatAmiMsg")[0].style.display = "flex";
     document.getElementsByClassName("inputEcrire")[0].style.display = "flex";
+    document.getElementsByClassName("inputEcrire")[1].style.display = "none";
     document.getElementById("nomAmiID").textContent = data["username"];
 
 
@@ -183,7 +210,7 @@ async function openAmiChat(data) {
             chat.innerHTML = "";
             for (var i = 0; i < data.length; i++) {
                 var div = document.createElement("div");
-                if (data[i]["emetteur"] === username) {
+                if (data[i]["emetteur"] === userID) {
                     div.classList.add("mesMsg");
                     var p = document.createElement("p");
                     p.classList.add("msgMoi");
@@ -209,6 +236,7 @@ function showAmisChat(){
     document.getElementsByClassName("matchMsg")[0].style.display = "none";
     document.getElementsByClassName("chatAmiMsg")[0].style.display = "none";
     document.getElementsByClassName("inputEcrire")[0].style.display = "none";
+    document.getElementsByClassName("inputEcrire")[1].style.display = "none";
     document.getElementById("amisChat").style.backgroundColor = "#3EE4F0";
     document.getElementById("matchChat").style.backgroundColor = "#E4E5E7";
     document.getElementById("amisChat").style.borderBottom = "4px solid #eb4f61";

@@ -52,7 +52,8 @@ async function handleBDD(request, response) {
                         celebration:'images/celebration/SIUU',
                         token: token,
                         friendList: [],
-                        demandes: []
+                        demandes: [],
+                        achiev : [],
                     }
                     saveUser(dataToSend).then(async() => {
                             response.statusCode = 200;
@@ -118,6 +119,7 @@ async function handleBDD(request, response) {
                     jsonResponse["celebration"] = user.celebration;
                     jsonResponse["email"] = token.data.email;
                     jsonResponse["password"] = token.data.password;
+                    jsonResponse["achiev"] = user.achiev;
                     //await client.close();
                         response.statusCode = 200;
                         response.write(JSON.stringify(jsonResponse));
@@ -592,8 +594,26 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    }else if (request.method === "POST" && request.url === "/api/getAllUsers") {
+    }else if (request.method === "POST" && request.url === "/api/addAchiev") {
         let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+              const data = JSON.parse(body);
+
+                await addAchiev(data);
+                response.end("ok");
+
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });   
+    }else if (request.method === "POST" && request.url === "/api/getAllUsers") {
+      let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
         });
@@ -1095,6 +1115,19 @@ async function changeName(data) {
         //
     }
 }
+
+async function addAchiev(data) {
+    try {
+        //
+        await client.db("kickoridor").collection("users").updateOne(
+            { username: data.username },
+            { $addToSet: { achiev: data.achiev } }
+        );
+    } finally {
+        //
+    }
+}
+
 function verifyAccessToken(token) {
     const secret = 'kc-blue-wall';
 

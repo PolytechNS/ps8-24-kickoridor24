@@ -1,5 +1,5 @@
 //a chaque chargement de page, on verifie si l'utilisateur est connecté
-if(!window.location.href.includes("game.html")) {
+if(!window.location.href.includes("game.html") || !window.location.href.includes("gameOnline.html")) {
     window.onload = function () {
         if (getUsername() !== null) {
             document.getElementById("se-connecter").style.display = "none";

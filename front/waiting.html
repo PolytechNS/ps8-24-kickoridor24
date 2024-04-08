@@ -1,12 +1,11 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Kick'Oridor - Menu</title>
-    <link rel="stylesheet" type="text/css" href="css/classement.css">
+    <meta charset="UTF-8">
+    <title>Kick'oridor - Matchmaking</title>
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
-<body>
 <header>
     <div class="cnt-header">
         <div class="nav">
@@ -22,10 +21,11 @@
             <div id="se-deconnecter" class="connexion" style="display: none" onclick="redirectToLogin()">
                 <p class="btn"> Se déconnecter</p>
             </div>
-            <div class="name">
+            <div class="name" onclick="redirectToProfil()">
                 <p id="name"></p>
             </div>
             <img id="petitePhoto"src="images/photoProfil/Mitroglu.png" alt="">
+
         </div>
     </div>
 
@@ -33,36 +33,12 @@
         <img src="images/header.png" alt="" class="bg-header">
     </div>
 </header>
+<body>
 
-<div class="retour">
-    <img id="retour" src="images/retour.png" alt="" onclick="previewPage()">
-</div>
-
-<div class="all">
-    <div class="navClass">
-        <div id="Votre-classement" class="topButton" onclick="showVotreClassement()">
-            <a class="navButton">Votre classement</a>
-        </div>
-
-        <div id="Classement-mondial" class="topButton" onclick="showClassementMonde()">
-            <a class="navButton">Classement mondial</a>
-        </div>
-    </div>
-
-
-    <div class="container">
-        <div class="VotreClassement" style="display: flex">
-                <div class="votreClass">
-
-                </div>
-        </div>
-        <div class="ClassementMondial" style="display: none">
-                <div class="classementMonde">
-
-                </div>
-        </div>
-    </div>
-</div>
+<h1>Attente d'un adversaire</h1>
+<p>En attente d'un adversaire pour jouer</p>
+<p>Vous pouvez quitter la partie en cours de recherche</p>
+<button onclick="redirectToMenu()">Quitter</button>
 
 <div id="chatMenu" class="chatMenu">
     <div id="menuChat">
@@ -85,7 +61,7 @@
             <div class="ami">
                 <div style="display: flex">
                     <div class="mitroChat">
-                        <img src="images/mitro.jpg"   id="photoChatAvecUnAmis"   alt="">
+                        <img src="images/mitro.jpg" id="photoChatAvecUnAmis" alt="">
                     </div>
                     <span class="nom" id="nomAmiID">Amis1</span>
                 </div>
@@ -100,7 +76,6 @@
         <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChat()">
     </div>
 </div>
-
 <div class="footer">
     <img id="param" src="images/param.png">
 
@@ -122,10 +97,9 @@
 </div>
 </body>
 </html>
+<script src="js/authentification.js"></script>
 <script src="js/cookie.js"></script>
 <script src="js/socket.io.js"></script>
-<script src="js/menu.js"></script>
 <script src="js/chat.js"></script>
-<script src="js/authentification.js"></script>
-<script src="js/regle.js"></script>
-<script src="js/classement.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/waiting.js"></script>

@@ -604,6 +604,7 @@ async function listeAmis(){
     }
 }
 
+
 async function deleteFriend(emetteur,receveur){
     const formDataJSON = {};
     formDataJSON["emetteur"] = emetteur;
@@ -635,5 +636,72 @@ document.addEventListener('DOMContentLoaded', async () => {
      await demandesAmisListe();
      await notif();
 });
+
+verifNbFriends();
+
+async function verifNbFriends(){
+    var nbFriends
+
+    const formDataJSON = {};
+    var user = getCookie("username");
+    formDataJSON["username"] = user;
+
+    try {
+        const response = await fetch('/api/friendsList', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur de réseau ou HTTP: ' + response.status);
+            }
+
+            return response.json(); // Convertit la réponse en JSON
+        })
+            .then(data => {
+                nbFriends = data.length;
+            })
+            .catch(error => {
+                console.error('Une erreur est survenue lors de la récupération des amis : ', error);
+            });
+
+    } catch (e) {
+        alert(e.message);
+    }
+
+    if(nbFriends === 1){
+        addAchiev("1f");
+    }else if(nbFriends >= 5 && nbFriends < 10){
+        addAchiev("2f");
+    }else if(nbFriends >= 10){
+        addAchiev("3f");
+    }
+}
+
+async function addAchiev(id){
+
+    const formDataJSON = {};
+
+    formDataJSON["username"] = getCookie("username");
+    formDataJSON["achiev"] = id;
+
+    try {
+        const response = await fetch('/api/addAchiev', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        }).then(response => {
+            if(!response.ok){
+                throw new Error('Erreur de réseau ou HTTP: ' + response.status);
+            }
+        });
+    } catch (error) {
+        console.error('Error adding achievement:', error);
+    }
+}
 
 

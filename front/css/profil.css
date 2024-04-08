@@ -329,11 +329,18 @@ input{
 
 }
 
-
 #retour{
     width: 25vh;
     margin-left: 2vh;
     margin-top: 1vh;
     margin-bottom: -5vh;
     cursor: pointer;
+}
+
+.lock{
+    opacity: 0.4;
+}
+
+.unlock{
+    opacity: 1;
 }
