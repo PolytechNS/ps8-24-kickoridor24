@@ -2,8 +2,8 @@
 <head>
     <meta charset="utf-8">
     <title>Kick'Oridor - Game</title>
-    <link rel="stylesheet" type="text/css" href="css/header-footer.css">
     <link rel="stylesheet" type="text/css" href="css/game.css">
+    <link rel="stylesheet" type="text/css" href="css/header-footer.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
 <body>
@@ -14,7 +14,7 @@
 </div>
 <div class="center">
     <h2 id="currentPlayer">Tour : playerA</h2>
-    <h2 id="nbTour">Tour : n°0</h2>
+    <h2 id="nbTour">Tour : n°200</h2>
 </div>
 
 <div class="container">
@@ -38,22 +38,6 @@
         <h2>ANTI CHEAT</h2>
         <p id="cheat">ANTI CHEAT</p>
         <button onclick="hideAntiCheat()">Valider</button>
-    </div>
-    <div class="finDePartie">
-        <div id="finLeft">
-            <img src="images/coupeLeft.png" class="coupeLeft">
-        </div>
-        <div id="finMiddle">
-            <h2>
-                Player remporte la partie
-            </h2>
-            <img src="images/celebration/SIUU.gif" class="celebrationVictoire">
-            <button onclick="window.location.href = 'index.html'">RETOUR AU MENU</button>
-        </div>
-        <div id="finRight">
-            <img src="images/coupeRight.png" class="coupeRight">
-        </div>
-
     </div>
     <div class="wrapper"></div>
     <div class="profilB">
@@ -91,7 +75,7 @@
             <div class="ami">
                 <div style="display: flex">
                     <div class="mitroChat">
-                        <img src="images/mitro.jpg" id="photoChatAvecUnAmis" alt="">
+                        <img src="images/mitro.jpg" alt="">
                     </div>
                     <span class="nom" id="nomAmiID">Amis1</span>
                 </div>
@@ -130,13 +114,7 @@
 <script src="js/cookie.js"></script>
 
 <script src="js/authentification.js"></script>
-
-<!--<script src="js/ai.js"></script>-->
-<script src="js/kickoridor24.js"></script>
-<script src="js/bot_alea.js"></script>
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/chat.js"></script>
-<script src="js/game.js"></script>
-
-
+<script src="js/gameOnline.js"></script>

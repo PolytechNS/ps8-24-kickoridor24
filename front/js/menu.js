@@ -250,6 +250,9 @@ async function getConversationNotif(){
         console.log(error.message);
     }
 }
+    function playOnline(){
+        window.location.href = 'waiting.html';
+    }
 async function getMessageById(id){
     const formDataJSON = {};
     formDataJSON["idMsg"] = id.toString();

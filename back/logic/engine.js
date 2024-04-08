@@ -12,7 +12,8 @@ let player1Position;
 let player2Position;
 var dernierTourB;
 
-
+let rooms = {};
+let varRoom = '';
 const clients = {};
 
 module.exports = function (io) {
@@ -45,6 +46,20 @@ module.exports = function (io) {
                 gameNamespace.to(room).emit('firstPlayer');
             }
         });
+        socket.on('quitRoom', () => {
+            const room = findRoomBySocketId(socket.id);
+            if (room) {
+                socket.leave(room);
+                const index = rooms[room].indexOf(socket.id);
+                if (index !== -1) {
+                    rooms[room].splice(index, 1);
+                }
+                // Si la salle est vide après le départ de l'utilisateur, supprimez-la
+                if (rooms[room].length === 0) {
+                    delete rooms[room];
+                }
+            }
+            });
         socket.on("changePage", () => {
             const room = findRoomBySocketId(socket.id);
             socket.leave(room);
@@ -72,7 +87,7 @@ module.exports = function (io) {
             // Associer l'ID de l'utilisateur à sa socket
             clients[userId] = socket;
 
-       
+        });
         socket.on('message', (data) => {
             const { senderId, ami, message } = data;
             console.log(data);
@@ -148,8 +163,8 @@ module.exports = function (io) {
 
         });
 
-
     });
+
 };
 
 function setupGame() {
@@ -166,3 +181,37 @@ function setupGame() {
     firstTurn = true;
     dernierTourB = false;
 }
+
+    function findAvailableRoom() {
+        for (let room in rooms) {
+            if (rooms[room].length < 2) {
+                return room;
+            }
+        }
+        return null;
+    }
+
+    function findAvailableRoomWithId(roomId) {
+        for (let room in rooms){
+            if (room === roomId){
+                return room;
+            }
+        }
+        return null;
+    }
+
+    function createRoom() {
+        const room = 'room' + (Math.random() * 1000).toFixed(0);
+        rooms[room] = [];
+        return room;
+    }
+
+
+    function findRoomBySocketId(socketId) {
+        for (let room in rooms) {
+            if (rooms[room].includes(socketId)) {
+                return room;
+            }
+        }
+        return null;
+    }
