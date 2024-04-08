@@ -85,6 +85,7 @@ function showAchiev(){
     document.getElementById("achiev").style.borderBottom = "4px solid #eb4f61";
     document.getElementById("info").style.borderBottom = "none";
     document.getElementById("photo").style.borderBottom = "none";
+    document.getElementById("celeb").style.borderBottom = "none";
     document.getElementById("achiev").style.backgroundColor = "#3EE4F0";
     document.getElementById("celeb").style.backgroundColor = "#E4E5E7";
     document.getElementById("info").style.backgroundColor = "#E4E5E7";
