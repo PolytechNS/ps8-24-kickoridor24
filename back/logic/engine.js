@@ -12,8 +12,10 @@ let player1Position;
 let player2Position;
 var dernierTourB;
 
+
 let rooms = {};
 let varRoom = '';
+
 const clients = {};
 
 module.exports = function (io) {
@@ -37,7 +39,7 @@ module.exports = function (io) {
 
 
             if (rooms[room].length === 2) {
-                gameNamespace.to(room).emit('startGame', room);
+                gameNamespace.to(room).emit('startGame', room);  
 
 
             } else {
@@ -144,6 +146,25 @@ module.exports = function (io) {
         socket.on('disconnect',  () => {
             
         });
+         socket.on('login', (userId) => {
+            console.log('Utilisateur', userId, 'connecté');
+            // Associer l'ID de l'utilisateur à sa socket
+            clients[userId] = socket;
+        });
+        socket.on('message', (data) => {
+            const { senderId, ami, message } = data;
+            console.log(data);
+            console.log('Message de', senderId, 'à', ami, ':', message);
+
+            // Notifier le destinataire s'il est connecté
+            if (clients[ami]) {
+                clients[ami].emit('newMessage', { senderId, message });
+            }
+        });
+        socket.on('getPlayersPosition', () => {
+           console.log('getPlayersPosition');
+           socket.emit('getPlayersPositionResponse', player1Position, player2Position);
+
     });
 };
 

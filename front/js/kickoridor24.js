@@ -1481,8 +1481,9 @@ function distanceEntrePositions(pos1,pos2,walls,board){
 }
 
 
-
-exports.setup = setup;
-exports.nextMove = nextMove;
-exports.correction = correction;
-exports.updateBoard = updateBoard;
+if (typeof exports === "object" && exports) {
+    exports.setup = setup;
+    exports.nextMove = nextMove;
+    exports.correction = correction;
+    exports.updateBoard = updateBoard;
+}

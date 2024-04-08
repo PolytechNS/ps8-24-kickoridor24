@@ -1,6 +1,13 @@
+
 if(socket == undefined) {
     const socket = io('/api/game');
 }
+
+var userID;
+
+var photoDeProfil ="images/photoProfil/Mitroglu.png";
+var celebrationBDD =null;
+
 function redirectToGame(name, value, days) {
     setCookie(name,value,days);
     window.location.href = "game.html";
@@ -197,7 +204,7 @@ async function checkFriends(){
             });
 
     } catch (e) {
-        alert(e.message);
+        console.log(error.message);
     }
 }
 var affichageNotifChat = false;
@@ -248,8 +255,25 @@ async function getConversationNotif(){
             });
 
     } catch (e) {
-        alert(e.message);
+        console.log(error.message);
     }
+}
+async function getMessageById(id){
+    const formDataJSON = {};
+    formDataJSON["idMsg"] = id.toString();
+
+    const response = await fetch('/api/getMsgById', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formDataJSON)
+    });
+    const data = await response.json();
+
+    // Retourner les données
+    return data;
+
 }
 function showHideNotif(data){
     var chatbtn =  document.getElementById("chat");
@@ -266,10 +290,56 @@ function showHideNotif(data){
     }
 }
 
-if(!window.location.href.includes("friends-page.html")) {
+if(!window.location.href.includes("friends-page.html") &&!window.location.href.includes("login.html")&&!window.location.href.includes("signup.html") ) {
     notif();
 }
+async function getId(){
+    const formDataJSON = {};
+    formDataJSON["username"] = getCookie("username");
+    try {
+        const response = await fetch('/api/retrieveUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Une erreur est survenue lors de la récupération des informations : ' + response.status);
+            }
+
+            return response.json(); // Convertit la réponse en JSON
+        }).then(data => {
+            userID = data["_id"];
+            if(photoDeProfil !== data["img"]){
+                majPhoto( data["img"]);
+
+            }
+            if(celebrationBDD == null){
+                celebrationBDD = data["celebration"];
+            }
+        });
+
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+function majPhoto(newImage){
+    photoDeProfil =newImage;
+    if(!window.location.href.includes("game.html"))
+    document.getElementById("petitePhoto").src = photoDeProfil;
+}
 async function notif() {
-    await checkFriends();
+    await getId();
+    if(!window.location.href.includes("game.html"))
+    {
+        await checkFriends();
+    }
     await getConversationNotif();
+}
+
+function previewPage(){
+    window.history.back();
 }

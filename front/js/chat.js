@@ -153,6 +153,7 @@ async function getConversation(){
 }
 
 async function openAmiChat(data) {
+
     document.getElementsByClassName("matchMsg")[0].style.display = "none";
     document.getElementsByClassName("amisMsg")[0].style.display = "none";
     document.getElementsByClassName("chatAmiMsg")[0].style.display = "flex";
@@ -160,9 +161,10 @@ async function openAmiChat(data) {
     document.getElementById("nomAmiID").textContent = data["username"];
 
 
-    var photoDIV = document.getElementsByClassName("mitroChat")[0];
-    var photo = photoDIV.getElementsByTagName('img')[0];
+    var photo = document.getElementById("photoChatAvecUnAmis");
     photo.src = data["img"];
+
+
     //charger les messages de la conversation dans la base de donnée
     var username = getCookie("username");
 
@@ -203,23 +205,7 @@ async function openAmiChat(data) {
     scrollToBott();
 }
 
-async function getMessageById(id){
-    const formDataJSON = {};
-    formDataJSON["idMsg"] = id.toString();
 
-    const response = await fetch('/api/getMsgById', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formDataJSON)
-    });
-    const data = await response.json();
-
-    // Retourner les données
-    return data;
-
-}
 function showAmisChat(){
     document.getElementsByClassName("amisMsg")[0].style.display = "flex";
     document.getElementsByClassName("matchMsg")[0].style.display = "none";
@@ -299,7 +285,8 @@ async function updateMessage(data){
             chat.innerHTML = "";
             for (var i = 0; i < data.length; i++) {
                 var div = document.createElement("div");
-                if (data[i]["emetteur"] === username) {
+
+                if (data[i]["emetteur"] === userID) {
                     div.classList.add("mesMsg");
                     var p = document.createElement("p");
                     p.classList.add("msgMoi");

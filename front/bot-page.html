@@ -23,8 +23,9 @@
                 <p class="btn"> Se déconnecter</p>
             </div>
             <div class="name">
-                <p id="name">Invité</p>
+                <p id="name"></p>
             </div>
+            <img id="petitePhoto"src="images/photoProfil/Mitroglu.png" alt="">
         </div>
     </div>
 
@@ -32,6 +33,10 @@
         <img src="images/header.png" alt="" class="bg-header">
     </div>
 </header>
+
+<div class="retour">
+    <img id="retour" src="images/retour.png" alt="" onclick="previewPage()">
+</div>
 
 <div class="container">
     <div class="Play" onclick="redirectToGame('typeDePartie','bot',7)">
@@ -63,8 +68,8 @@
         <div class="listeAmis" id="nomAmi" onclick=" showAmisChat();getConversation();">
             <div class="ami">
                 <div style="display: flex">
-                    <div class="mitroChat">
-                        <img src="images/mitro.jpg" alt="">
+                    <div class="mitroChat" >
+                        <img src="images/mitro.jpg" id="photoChatAvecUnAmis" alt="">
                     </div>
                     <span class="nom" id="nomAmiID">Amis1</span>
                 </div>

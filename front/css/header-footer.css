@@ -252,15 +252,14 @@ header {
     margin-left: 5px;
 }
 
-.mitro {
-    width: 35px; /* ajustez la taille du cercle selon vos besoins */
-    height: 35px; /* assurez-vous que la largeur et la hauteur soient les mêmes pour obtenir un cercle parfait */
-    overflow: hidden; /* assurez-vous que l'image est coupée si elle dépasse les limites du cercle */
-    border-radius: 50%; /* définir le rayon du cercle */
+
+
+#petitePhoto{
+    height: 75%;
+    aspect-ratio: 1/1;
     margin-bottom: 0.4em;
     margin-right: -4em;
 }
-
 .mitroChat{
     width: 35px; /* ajustez la taille du cercle selon vos besoins */
     height: 35px; /* assurez-vous que la largeur et la hauteur soient les mêmes pour obtenir un cercle parfait */
@@ -273,7 +272,7 @@ header {
 }
 
 .mitro img, .mitroChat img {
-    width: 150%; /* assurez-vous que l'image remplit complètement le cercle */
+        width: 150%; /* assurez-vous que l'image remplit complètement le cercle */
     margin-left: -10px;
 }
 

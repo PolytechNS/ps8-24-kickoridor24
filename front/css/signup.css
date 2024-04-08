@@ -51,11 +51,53 @@ input {
 .valider{
     margin-bottom: 3%;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     width: 100%;
 
 }
 
-#signup, #login{
-    width: 40%;
+
+
+
+#signup{
+    background-color: #3cadb6;
+    border-radius: 999px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 17.5px;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 7px 25px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: fit-content;
+    word-break: break-word;
+    border: 0;
+    margin-bottom: 2vh;
+    margin-top: -1vh;
+}
+
+#signup:hover{
+    background-color: #389ba2;
+    box-shadow: #389ba2 0 10px 20px -10px;
+}
+
+#login:hover{
+    background-color: #969696;
+}
+
+#retour{
+    width: 25vh;
+    margin-left: 2vh;
+    margin-top: 1vh;
+    margin-bottom: -2vh;
+    cursor: pointer;
+
 }
