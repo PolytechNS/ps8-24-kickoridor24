@@ -1,3 +1,5 @@
+    const socket = io('/api/game');
+
 var userID;
 
 var photoDeProfil ="images/photoProfil/Mitroglu.png";
@@ -233,7 +235,7 @@ async function getConversationNotif(){
 
                     if(data[i]["lastMsg"] != undefined ){
                         const message = await getMessageById(data[i]["lastMsg"]);
-                        if(message["lu"] == false && message["emetteur"] !== user) {
+                        if(message["lu"] == false && message["emetteur"] !== userID) {
                             affichageNotifChat = true;
                             showHideNotif();
                         }

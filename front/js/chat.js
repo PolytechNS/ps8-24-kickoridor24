@@ -1,4 +1,4 @@
-const socket = io("/api/game");
+
 socket.emit('login', getCookie("username"));
 var input = document.getElementById("messageInput");
 
@@ -116,7 +116,7 @@ async function getConversation(){
 
                             const message = await getMessageById(data[i]["lastMsg"]);
 
-                            if(message["lu"] == false && message["emetteur"] !== user) {
+                            if(message["lu"] == false && message["emetteur"] !== userID) {
                                 imgChat.src = "images/chat-notif.png";
                               //  showHideNotif("true");
                             }
@@ -183,7 +183,7 @@ async function openAmiChat(data) {
             chat.innerHTML = "";
             for (var i = 0; i < data.length; i++) {
                 var div = document.createElement("div");
-                if (data[i]["emetteur"] === username) {
+                if (data[i]["emetteur"] === userID) {
                     div.classList.add("mesMsg");
                     var p = document.createElement("p");
                     p.classList.add("msgMoi");
