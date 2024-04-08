@@ -91,7 +91,7 @@
         <div id="amisChat" onclick="showAmisChat()">
             Amis
         </div>
-        <div id="matchChat" onclick="showMatchChat(); scrollToBottMatch()">
+        <div id="matchChat" >
             En match
         </div>
     </div>
@@ -120,6 +120,10 @@
     <div class="inputEcrire" style="display: none">
         <input type="text" class="barreChat" id="messageInput" placeholder="Ecrire un message">
         <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChat()">
+    </div>
+    <div class="inputEcrire" style="display: none">
+        <input type="text" class="barreChat" id="inputMatch" placeholder="Ecrire un message">
+        <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChatMatch()">
     </div>
 </div>
 

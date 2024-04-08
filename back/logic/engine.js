@@ -178,8 +178,13 @@ module.exports = function (io) {
             gameNamespace.to(room).emit("FinDePartieOnline",txt);
 
         });
-
+        socket.on("MessageMatch",(message,username) =>{
+            console.log(message + " de " + username);
+            const room = findRoomBySocketId(socket.id);
+            gameNamespace.to(room).emit("NewMatchMsg",message,username);
+        });
     });
+
 
 };
 

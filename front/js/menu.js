@@ -58,17 +58,28 @@ function showHorsLignePlay(){
     document.getElementById("hors").style.backgroundColor = "#3EE4F0";
     document.getElementById("ligne").style.backgroundColor = "#E4E5E7";
 }
+    if(window.location.href.includes("gameOnline.html")) {
+        document.getElementById("matchChat").addEventListener('click', function () {
+            showMatchChat();
+            scrollToBottMatch()
+        })
+    }    else{
+        document.getElementById("matchChat").style.color = "#B9C0C6";
 
 
+    }
 function showMatchChat(){
-    document.getElementsByClassName("matchMsg")[0].style.display = "flex";
-    document.getElementsByClassName("amisMsg")[0].style.display = "none";
-    document.getElementsByClassName("chatAmiMsg")[0].style.display = "none";
-    document.getElementsByClassName("inputEcrire")[0].style.display = "flex";
-    document.getElementById("matchChat").style.backgroundColor = "#3EE4F0";
-    document.getElementById("amisChat").style.backgroundColor = "#E4E5E7";
-    document.getElementById("matchChat").style.borderBottom = "4px solid #eb4f61";
-    document.getElementById("amisChat").style.borderBottom = "none";
+
+        document.getElementsByClassName("matchMsg")[0].style.display = "flex";
+        document.getElementsByClassName("amisMsg")[0].style.display = "none";
+        document.getElementsByClassName("chatAmiMsg")[0].style.display = "none";
+        document.getElementsByClassName("inputEcrire")[1].style.display = "flex";
+        document.getElementById("matchChat").style.backgroundColor = "#3EE4F0";
+        document.getElementById("amisChat").style.backgroundColor = "#E4E5E7";
+        document.getElementById("matchChat").style.borderBottom = "4px solid #eb4f61";
+        document.getElementById("amisChat").style.borderBottom = "none";
+
+
 }
 
 
@@ -342,3 +353,4 @@ async function notif() {
 function previewPage(){
     window.history.back();
 }
+
