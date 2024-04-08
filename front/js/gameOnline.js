@@ -22,7 +22,7 @@ var tmpLigne = [];
 let n;
 var cellsString = [];
 var cellsGrid = [];
-
+var stop = false;
 class cellule {
     constructor(id, classes, visibilite) {
         this.class = classes;
@@ -66,13 +66,22 @@ let firstTurn = true;
 let player1Position = 280;
 let player2Position = 8;
 var dernierTourB = false;
+var currentPlayer;
+
+if(getCookie("player")=="1"){
+
+    currentPlayer = "playerA";
+}else if(getCookie("player")=="2"){
+
+    currentPlayer = "playerB";
+}
 /**--------------- SETUP GAME --------------------**/
 
 //TODO JE SAIS OU IL FAUT LA METTRE
 //setup(1);
 
 socket.on('setupGame', () => {
-    console.log("oookkk");
+
     for (i = 0; i < 289; i = i + 2) {
         if (i > 135) {
             n = 0;
@@ -90,7 +99,9 @@ socket.on('setupGame', () => {
     board.push(tmpLigne);
 
     socket.emit('getPlayersPosition');
+
     socket.on('getPlayersPositionResponse', (player1Position, player2Position) => {
+        if(stop) return;
 
         cellsString = [];
         cellsGrid = [];
@@ -152,6 +163,8 @@ socket.on('setupGame', () => {
     });
 
     socket.on('setupTheGame', () => {
+        if(stop) return;
+
         if (getCookie("typeDePartie") === "resumeGame") {
             loadGame();
         } else {
@@ -239,8 +252,12 @@ function mettreAJourTableau(tableau1, tableau2) {
 }
 
 function setUpGame(gameState) {
+
+    if(stop) return;
     socket.emit('setUpGame');
     socket.on('setUpGameResponse', (activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells) => {
+        if(stop) return;
+
         cells = createDivsWithClassesAndAttributes(cells);
         if (gameState === undefined) {
 
@@ -328,7 +345,7 @@ function setUpGame(gameState) {
         checkTour201();
         checkCrossing(player1Position, player2Position);
     });
-    socket.emit('endSetupGame');
+    socket.emit('endSetupGame',currentPlayer);
 }
 
 /*--------------- END SETUP GAME --------------------*/
@@ -348,6 +365,8 @@ socket.on('game', (player1Pos, player2Pos, cels, pAWalls, pBWalls, nbWallPA, nbW
     tour = lap;
     firstTurn = first;
     dernierTourB = dernierLapB;
+
+    stop = true;
 });
 
 function changeVisibility(rigthCell, leftCell, player, horizontale) {
@@ -599,7 +618,7 @@ async function retrieveGameBDD(username) {
 }
 
 function loadBoard(tab) {
-    console.log("nnnaaann");
+
     var wallA = 0;
     var wallB = 0;
 
@@ -673,6 +692,8 @@ function showForfaitB() {
 function checkCrossing(playerAPosition, playerBPosition) {
     var gagneA = false;
     var gagneB = false;
+    console.log("CHECK")
+    console.log(playerBPosition);
     for (var i = 0; i < lanePlayerB.length; i++) {
         if (lanePlayerB[i].contains(cells[playerAPosition])) {
 
@@ -687,6 +708,7 @@ function checkCrossing(playerAPosition, playerBPosition) {
     }
     for (var i = 0; i < lanePlayerA.length; i++) {
         if (lanePlayerA[i].contains(cells[playerBPosition])) {
+            console.log("b WIN")
             gagneB = true;
         }
     }
@@ -733,13 +755,13 @@ function checkTour201() {
         topRows.forEach(row => row.classList.add('first-turn'));
 
         // Afficher le message pour le premier tour
-        const message = document.createElement('div');
+    /*    const message = document.createElement('div');
         message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
         message.classList.add('message');
         message.style.position = 'fixed';
         message.style.top = '50%';
         message.style.left = '50%';
-        wrapper.appendChild(message);
+        wrapper.appendChild(message);*/
         //si une case de top-row est cliquée alors on move le joueur
 
         topRows.forEach(row => row.addEventListener('click', () => movePlyerFirstTurn(row.getAttribute('id') - 1)));
@@ -747,10 +769,17 @@ function checkTour201() {
 }
 
 function activateFog(cells) {
-    if (activePlayer == "playerB") {
+    if (currentPlayer == "playerB") {
         for (let i = 0; i < cells.length; i++) {
             if (cells[i].getAttribute('visibility') <= "0") {
                 cells[i].classList.remove('fog');
+
+            }
+            if(cells[i].classList.contains("playerAFog")){
+                if(cells[i].getAttribute('visibility') <= "0" ||checkJoueurColle()) {
+                    cells[i].classList.add('playerA');
+                    cells[i].classList.remove('playerAFog');
+                }
             }
             if (i === player2Position) {
                 cells[i].classList.add('playerB');
@@ -764,7 +793,7 @@ function activateFog(cells) {
                 }
             }
         }
-    } else if (activePlayer == "playerA") {
+    } else if (currentPlayer == "playerA") {
         for (let i = 0; i < cells.length; i++) {
             if (i === player1Position) {
                 cells[i].classList.add('playerA');
@@ -772,6 +801,12 @@ function activateFog(cells) {
             }
             if (cells[i].getAttribute('visibility') >= "0") {
                 cells[i].classList.remove('fog');
+            }
+            if(cells[i].classList.contains("playerBFog")){
+                if(cells[i].getAttribute('visibility') >= "0" ||checkJoueurColle()) {
+                    cells[i].classList.add('playerB');
+                    cells[i].classList.remove('playerBFog');
+                }
             }
             if (cells[i].getAttribute('visibility') < "0") {
                 cells[i].classList.add('fog');
@@ -817,6 +852,7 @@ function checkJoueurColle() {
 }
 
 function handleWall(cellIndex) {
+    if(activePlayer != currentPlayer) return ;
     const row = Math.floor(cellIndex / 17);
     const col = cellIndex % 17;
 
@@ -1229,13 +1265,14 @@ function changeActivePlayer() {
         document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
         if (tour <= 200)
             document.getElementById('nbTour').textContent = `Tour : n°${tour - 1}`;
-        showAntiCheat();
+        if(getCookie("typeDePartie") !== "enLigne")
+            showAntiCheat();
 
         tour--;
 
         activateFog(cells);
         checkCrossing(player1Position, player2Position);
-        if (activePlayer === "playerA") {
+        if (currentPlayer === "playerA") {
             showForfaitA();
             hideForfaitB();
         } else {
@@ -1246,7 +1283,7 @@ function changeActivePlayer() {
         murAPose = new Array(3);
         checkTour201();
     }
-    saveToBack();
+    //saveToBack();
 }
 
 function convertBoard() {
@@ -1290,8 +1327,7 @@ function movePlyerFirstTurn(cellIndex) {
     cells = cellsGrid;
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du haut et si c'est au tour du joueur A
     //deplacer le joueur sur la cellule cliqué si elle est sur la ligne du bas et si c'est au tour du joueur B
-
-    if (activePlayer === 'playerA' && cellIndex >= 272 && cellIndex <= 288 && cells[cellIndex].classList.contains('first-turn')) {
+    if (activePlayer === currentPlayer && activePlayer === 'playerA' && cellIndex >= 272 && cellIndex <= 288 && cells[cellIndex].classList.contains('first-turn')) {
         cells[player1Position].classList.remove('playerA');
         player1Position = cellIndex;
         cells[player1Position].classList.add('playerA');
@@ -1299,6 +1335,7 @@ function movePlyerFirstTurn(cellIndex) {
         topRows.forEach(row => row.classList.remove('first-turn'));
         const message = document.querySelector('.message');
         message.parentNode.removeChild(message);
+
         changeVisibilityPlayer(false, player1Position, "playerA");
         firstTurn = false;
         newMove.player = 'playerA';
@@ -1306,8 +1343,9 @@ function movePlyerFirstTurn(cellIndex) {
         newMove.position = player1Position;
 
         mettreAJourTableau(cellsGrid, cells);
+        saveToBack();
         changeActivePlayer();
-    } else if (activePlayer === 'playerB' && cellIndex >= 0 && cellIndex <= 16 && cells[cellIndex].classList.contains('first-turn')) {
+    } else if (activePlayer === currentPlayer && activePlayer === 'playerB' && cellIndex >= 0 && cellIndex <= 16 && cells[cellIndex].classList.contains('first-turn')) {
 
         cells[player2Position].classList.remove('playerB');
         player2Position = cellIndex;
@@ -1401,7 +1439,8 @@ function changeVisibilityPlayer(remove, position, player) {
 }
 
 function movePlayer(cellIndex) {
-
+    if(activePlayer != currentPlayer)
+        return;
 
     if (firstTurn) {
         return;
@@ -1454,7 +1493,7 @@ function movePlayer(cellIndex) {
 
         changeVisibilityPlayer(false, activePlayer === 'playerA' ? player1Position : player2Position, activePlayer);
         mettreAJourTableau(cellsGrid, cells);
-
+        saveToBack()
         changeActivePlayer();
     }
 }
@@ -1508,5 +1547,19 @@ function handleCellClick(cellIndex, position) {
 
 function saveToBack() {
     cellsTmp = getClassesAndAttributesFromDivs(cellsGrid);
-    socket.emit('saveToBack', activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cellsTmp, playerAWalls, playerBWalls, firstTurn, dernierTourB);
+    socket.emit('saveToBackOnline', activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cellsTmp, playerAWalls, playerBWalls, firstTurn, dernierTourB);
 }
+socket.on('MajOnline', (player1Pos, player2Pos, cels, pAWalls, pBWalls, nbWallPA, nbWallPB, activeP, lap, first, dernierLapB) => {
+    player1Position = player1Pos;
+    player2Position = player2Pos;
+    cells = createDivsWithClassesAndAttributes(cels);
+    playerAWalls = pAWalls;
+    playerBWalls = pBWalls;
+    nbWallPlayerA = nbWallPA;
+    nbWallPlayerB = nbWallPB;
+    activePlayer = activeP;
+    tour = lap;
+    firstTurn = first;
+    dernierTourB = dernierLapB;
+    changeActivePlayer();
+});

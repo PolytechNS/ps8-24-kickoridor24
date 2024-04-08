@@ -1,4 +1,6 @@
-const socket = io("/api/game");
+if(socket == undefined) {
+    const socket = io('/api/game');
+}
 socket.emit('login', getCookie("username"));
 var input = document.getElementById("messageInput");
 

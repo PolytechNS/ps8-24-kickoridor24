@@ -1,18 +1,23 @@
 const socket = io('/api/game');
 
-
+setCookie("player", "0", -1);
 socket.emit('joinGame');
 socket.on('joinedGame', (room) => {
     console.log(room);
+
 });
 
 socket.on('startGame', (room) => {
-    setCookie("typeDePartie", "online", 1);
+    setCookie("typeDePartie", "enLigne", 1);
     setCookie("room", room, 1);
     if(!getCookie("player") == "1"){
+        console.log("ok");
         setCookie("player", "2", 1);
     }
-    window.location.href = "game.html?room=" + room;
+    console.log(getCookie("username"));
+    console.log(getCookie("player"));
+    socket.emit("changePage");
+   window.location.href = "gameOnline.html?room=" + room;
 });
 
 socket.on('firstPlayer', () => {
@@ -22,5 +27,7 @@ socket.on('firstPlayer', () => {
 
 
 function redirectToMenu() {
+    socket.emit('quitRoom');
+    setCookie('typeDePartie','',-1);
     window.location.href = "play-page.html";
 }

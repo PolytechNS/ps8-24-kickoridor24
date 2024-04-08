@@ -1,5 +1,6 @@
-const socket = io('/api/game');
-
+if(socket == undefined) {
+    const socket = io('/api/game');
+}
 function redirectToGame(name, value, days) {
     setCookie(name,value,days);
     window.location.href = "game.html";
