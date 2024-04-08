@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kick'oridor - Matchmaking</title>
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <link rel="stylesheet" type="text/css" href="css/header-footer.css">
+</head>
+<header>
+    <div class="cnt-header">
+        <div class="nav">
+            <img id="home" src="images/home.png" onclick="redirectToMenu()">
+            <div class="logo">
+                <img src="images/kickoridor24.png">
+            </div>
+        </div>
+        <div class="connection">
+            <div id="se-connecter" class="connexion" onclick="redirectToLogin()">
+                <p class="btn"> Se connecter</p>
+            </div>
+            <div id="se-deconnecter" class="connexion" style="display: none" onclick="redirectToLogin()">
+                <p class="btn"> Se déconnecter</p>
+            </div>
+            <div class="name">
+                <p id="name">Invité</p>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <img src="images/header.png" alt="" class="bg-header">
+    </div>
+</header>
+<body>
+
+    <h1>Attente d'un adversaire</h1>
+    <p>En attente d'un adversaire pour jouer</p>
+    <p>Vous pouvez quitter la partie en cours de recherche</p>
+    <button onclick="redirectToMenu()">Quitter</button>
+
+
+    <div class="footer">
+        <img id="param" src="images/param.png">
+
+
+        <div id="amisDiv" onclick="redirectToFriendsPage()">
+            <img id="amisImg" src="images/friends.png">
+            <p id="amisTexte">AMIS</p>
+            <span class="notification-badge"> </span>
+        </div>
+        <div id="chat" onclick="openChat()">
+            <img src="images/chat.png">
+            <p id="chatting">CHAT</p>
+            <span class="notification-badge"> </span>
+        </div>
+
+
+
+
+    </div>
+</body>
+</html>
+
+<script src="js/cookie.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/wating.js"></script>
