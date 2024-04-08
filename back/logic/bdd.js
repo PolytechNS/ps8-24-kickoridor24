@@ -592,6 +592,50 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
+    }else if (request.method === "POST" && request.url === "/api/getAllUsers") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const users = await allPlayersList();
+                if (users != null) {
+                    response.setHeader('Content-Type', 'application/json');
+                    response.write(JSON.stringify(users));
+                    response.end();
+                } else {
+                    response.statusCode = 404;
+                    response.end("No users found");
+                }
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 500;
+                response.end("Internal Server Error");
+            }
+        });
+    }
+}
+
+
+async function allPlayersList() {
+    try {
+        const users = await client.db("kickoridor").collection("users").find().toArray();
+
+        // Vérifier s'il y a des utilisateurs dans la base de données
+        if (users.length > 0) {
+            // Utiliser Promise.all pour exécuter les requêtes findUser de manière asynchrone
+            const usersDetails = await Promise.all(users.map(async (user) => {
+                return await findUserById({_id: user._id}); // Supposant que findUserById est une fonction qui trouve un utilisateur par son ID
+            }));
+
+            return usersDetails;
+        } else {
+            return []; // Retourner un tableau vide si aucun utilisateur n'est trouvé dans la base de données
+        }
+    } catch (error) {
+        console.error("Erreur lors de la récupération des utilisateurs :", error);
+        throw error;
     }
 }
 

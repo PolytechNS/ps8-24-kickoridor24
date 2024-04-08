@@ -110,13 +110,6 @@
     margin-left: -10px;
 }
 
-#retour{
-    width: 25vh;
-    margin-left: 2vh;
-    margin-top: 1vh;
-    margin-bottom: -2vh;
-    cursor: pointer;
-
 .resume {
 
     background-color: #E4E5E7;
@@ -127,7 +120,7 @@
     height: 60vh;
     width: 20vw;
     background-image: url("../images/fondProfilGris.png");
-   /* padding: 0.2em 4em 6em 0.4em;*/
+    /* padding: 0.2em 4em 6em 0.4em;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -138,14 +131,14 @@
 }
 
 .resume p{
-   font-size: 2vh;
+    font-size: 2vh;
     color: black;
     font-weight: bold;
 }
- #photoChoisieInfo{
+#photoChoisieInfo{
     height: 12vh;
-     border-radius: 50%;
-     border: 2px solid red;
+    border-radius: 50%;
+    border: 2px solid red;
 }
 #celebrationChoisieInfo{
     height: 16vh;
@@ -193,7 +186,7 @@
 
 }
 .gap{
-  font-size: 1vh;
+    font-size: 1vh;
 }
 
 .contenuSearch{
@@ -333,4 +326,14 @@ input{
     font-family: 'Roboto Condensed', sans-serif;
     color: black;
     font-size: 3vh;
+
+}
+
+
+#retour{
+    width: 25vh;
+    margin-left: 2vh;
+    margin-top: 1vh;
+    margin-bottom: -5vh;
+    cursor: pointer;
 }
