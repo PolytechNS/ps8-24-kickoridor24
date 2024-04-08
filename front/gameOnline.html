@@ -7,11 +7,27 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
 <body>
-<div class="header">
-    <img id="home" src="images/home.png" onclick="redirectToMenu()">
-    <img id="kickoridor" src="images/kickoridor.png">
-    <img id="vingt" src="images/24.png">
-</div>
+<header>
+    <div class="cnt-header">
+        <div class="nav">
+            <div class="logo">
+                <img src="images/kickoridor24.png">
+            </div>
+        </div>
+        <div class="connection">
+
+            <div class="name" onclick="redirectToProfil()">
+                <p id="name"></p>
+            </div>
+            <img id="petitePhoto"src="images/photoProfil/Mitroglu.png" alt="">
+
+        </div>
+    </div>
+
+    <div>
+        <img src="images/header.png" alt="" class="bg-header">
+    </div>
+</header>
 <div class="center">
     <h2 id="currentPlayer">Tour : playerA</h2>
     <h2 id="nbTour">Tour : n°200</h2>
@@ -128,7 +144,7 @@
 
 
 <script src="js/cookie.js"></script>
-
+<script src="js/elo.js"></script>
 <script src="js/authentification.js"></script>
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>

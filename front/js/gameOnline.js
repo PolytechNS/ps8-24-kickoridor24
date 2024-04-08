@@ -1,5 +1,5 @@
 
-
+socket.emit('login', getCookie("username"));
 socket.emit("joinGameWithRoom", getCookie("room"));
 socket.on("gameStarted" , () => {
     console.log("gameStarted");
@@ -756,10 +756,16 @@ function victoire(txt) {
 }
 socket.on("FinDePartieOnline",(txt) => {
     showVictoire(txt);
-    calculerElo(txt);
+    if(txt == currentPlayer)
+         calculerElo(1,0);
+    else if(txt == "match nul !"){
+        calculerElo(0.5,0.5);
+    }else{
+        calculerElo(0,1);
+    }
     // window.location.href = 'index.html';})
 });
-async function calculerElo(txt){
+async function calculerElo(res1,res2){
 
 }
 function showVictoire(txt){
@@ -772,10 +778,11 @@ function showVictoire(txt){
     else {
         divMid.getElementsByTagName('h2')[0].textContent = txt + " remporte la partie";
 
-        if (txt == "playerA") {
+        if (txt == currentPlayer) {
             if (getCookie("username") != null) {
                 divMid.getElementsByTagName('h2')[0].textContent = getCookie("username") + " remporte la partie";
             }
+            console.log(celebrationBDD)
             if (celebrationBDD != null) {
                 divMid.getElementsByTagName('img')[0].src = celebrationBDD + '.gif';
 
@@ -1623,7 +1630,7 @@ socket.on('MajOnline', (player1Pos, player2Pos, cels, pAWalls, pBWalls, nbWallPA
 });
 
 function returnMenu(){
-    socket.emit("changePage");
+    //socket.emit("changePage");
     window.location.href = 'index.html';
 
 }

@@ -305,13 +305,16 @@ async function getId(){
 
             return response.json(); // Convertit la réponse en JSON
         }).then(data => {
+
             userID = data["_id"];
             if(photoDeProfil !== data["img"]){
                 majPhoto( data["img"]);
 
             }
-            if(celebrationBDD == null){
+            console.log(celebrationBDD == null);
+            if(celebrationBDD !== data["celebration"]){
                 celebrationBDD = data["celebration"];
+                console.log(celebrationBDD);
             }
         });
 
@@ -327,8 +330,9 @@ function majPhoto(newImage){
     document.getElementById("petitePhoto").src = photoDeProfil;
 }
 async function notif() {
+
     await getId();
-    if(!window.location.href.includes("game.html"))
+    if(!window.location.href.includes("game.html") || !window.location.href.includes("gameOnline.html"))
     {
         await checkFriends();
     }

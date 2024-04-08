@@ -21,7 +21,7 @@ module.exports = function (io) {
 
     gameNamespace.on('connection', (socket) => {
 
-
+        console.log("llllaaaaa")
         setupGame();
         socket.emit('setupGame');
 
@@ -100,13 +100,15 @@ module.exports = function (io) {
             }
         });
         socket.on('getPlayersPosition', () => {
-            //socket.emit('getPlayersPositionResponse', player1Position, player2Position);
+
             gameNamespace.to(varRoom).emit('getPlayersPositionResponse', player1Position, player2Position);
            //console.log('getPlayersPosition');
            //socket.emit('getPlayersPositionResponse', player1Position, player2Position);
 
         });
-
+        socket.on('getPlayersPositionOffline', () => {
+            socket.emit('getPlayersPositionResponse', player1Position, player2Position);
+        });
         socket.on('addCellFirtTime', (cell) => {
             console.log('addCellFirtTime');
             cells = cell;
@@ -120,9 +122,7 @@ module.exports = function (io) {
 
 
         socket.on('endSetupGame', (currentpalyer) => {
-            console.log(socket.id + "  " + currentpalyer)
-            const room = findRoomBySocketId(socket.id);
-            console.log(rooms[room].length)
+
             socket.emit('game', player1Position, player2Position, cells, playerAWalls, playerBWalls, nbWallPlayerA, nbWallPlayerB, activePlayer, tour, firstTurn, dernierTourB);
         });
 
@@ -165,6 +165,16 @@ module.exports = function (io) {
         });
         socket.on("VictoireOnline", (txt) => {
             const room = findRoomBySocketId(socket.id);
+            const socketsInRoom = io.sockets.adapter.rooms.get(room);
+
+            // Envoyer un événement à chaque socket dans la salle pour supprimer la salle
+            if (socketsInRoom) {
+                socketsInRoom.forEach(socketId => {
+                    io.to(socketId).emit("SupprimerRoom", room);
+                });
+            }
+
+            delete rooms[room];
             gameNamespace.to(room).emit("FinDePartieOnline",txt);
 
         });

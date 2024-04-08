@@ -67,6 +67,7 @@ var gameState1 = new gameState(playerAWalls,playerBWalls,board);
 //setup(1);
 
 socket.on('setupGame', () => {
+
     for (i = 0; i < 289; i = i + 2) {
         if (i > 135) {
             n = 0;
@@ -83,8 +84,9 @@ socket.on('setupGame', () => {
     }
     board.push(tmpLigne);
 
-    socket.emit('getPlayersPosition');
+    socket.emit('getPlayersPositionOffline');
     socket.on('getPlayersPositionResponse', (player1Position, player2Position) => {
+        console.log("ookk")
         cellsString = [];
         cellsGrid = [];
         for (i = 1; i <= 289; i++) {
@@ -145,6 +147,7 @@ socket.on('setupGame', () => {
     });
 
     socket.on('setupTheGame', () => {
+        console.log("BIIITTEE")
         if (getCookie("typeDePartie") === "resumeGame") {
             loadGame();
         } else {
@@ -236,6 +239,7 @@ function setUpGame() {
     saveToBack();
     socket.emit('setUpGame');
     socket.on('setUpGameResponse', (activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells) => {
+        console.log("WAAAA")
         cells = createDivsWithClassesAndAttributes(cells);
 
 

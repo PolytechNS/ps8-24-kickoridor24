@@ -63,3 +63,7 @@ if(newEloJoueur2 < 0){
 
 console.log("Nouvel elo joueur 1 : " + Math.ceil(newEloJoueur1) + " (" + diffEloJoueur1 + ")");
 console.log("Nouvel elo joueur 2 : " + Math.ceil(newEloJoueur2) + " (" + diffEloJoueur2 + ")");
+
+function calculElo(resJoueur1,resJoueur2){
+
+}
