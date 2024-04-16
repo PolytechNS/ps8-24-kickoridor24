@@ -461,6 +461,15 @@
         border-radius: 50%;
         display: none;
     }
+    #retour{
+        width: 25vh;
+        aspect-ratio: 4/1;
+        margin-left: 2vh;
+        margin-top: 1vh;
+        margin-bottom: 1vh;
+        cursor: pointer;
+
+    }
 @media screen and (max-width: 750px) {
     .logo{display: none}
     .connexion {
