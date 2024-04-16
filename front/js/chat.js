@@ -252,14 +252,25 @@ async function openChat() {
     }
     var chatMenu = document.getElementById("chatMenu");
     var chat = document.getElementById("chat");
+    console.log(  )
 
     if (chatMenu.classList.contains("show")) {
         chatMenu.classList.remove("show");
-        chat.style.width = "10%";
+        if(document.body.clientWidth <=750 ){
+            chat.style.width = "30%";
+        }else{
+            chat.style.width = "10%";
+        }
+
         getConversationNotif();
     } else {
         chatMenu.classList.add("show");
-        chat.style.width = "22%";
+        if(document.body.clientWidth <=750 ){
+            chat.style.width = "60%";
+        }else{
+            chat.style.width = "22%";
+        }
+
         getConversation();
     }
 }
