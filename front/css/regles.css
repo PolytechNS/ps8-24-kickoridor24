@@ -13,7 +13,7 @@
 }
 
 .btnJouer{
-    width: 120vh;
+    width: 65vw;
 }
 
 .Regles, .Commandes, .Classement{
@@ -22,7 +22,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
-    width: 700px;
+    width: 65vw;
     font-size: 1.2em;
     /*changer couleur du texte*/
     color: #eb4f61;
@@ -36,6 +36,7 @@
     /*width qui rempli tout l'espace dispo*/
     width: 100%;
     font-family: 'Roboto Condensed', sans-serif;
+
 }
 
 .topButton{
@@ -66,7 +67,7 @@
     flex-direction: column;
     margin: 0 auto;
     /*centrer verticalement*/
-    height: 78%;
+    height: 70vh;
 
 }
 
@@ -183,35 +184,119 @@
 }
 
 #souris{
-    width: 20vh;
+    display: flex;
+    width: 15vw;
+    aspect-ratio: 1/1;
+}
+#phone{
+display: none;
 }
 
 #europa, #conference, #ligue1{
-    width: 100vh;
+    width: 60vw;
 }
 
 #ucl{
-    width: 85vh;
-    margin-right: 14.5vh;
+    width: 50vw;
+    margin-right: 9vw;
 }
 
 #ligue2{
-    width: 85vh;
-    margin-left: 14.5vh;
+    width: 50vw;
+    margin-left: 9vw;
 }
 
 #ucl, #ligue2, #europa, #conference, #ligue1{
     margin-top: 2.5vh;
 }
-
-#retour{
-    width: 25vh;
-    margin-left: 2vh;
-    margin-top: 1vh;
-    margin-bottom: -3vh;
-    cursor: pointer;
+.phoneFleche{
+    display: none;
+}
+.phoneRank{
+    display: none;
 }
 
+@media screen and (max-width: 750px) {
 
+    #souris{
+        display: none;
 
+    }
+    #phone{
+        display: flex;
+        width: 15vw;
+        aspect-ratio: 1/1;
+    }
 
+    .topButton{
+        background-color:  #E4E5E7;
+        font-size: 1em;
+        font-weight: bold;
+        padding: 0.2em 0.5em;
+        margin-bottom: 0.2em;
+        /*ajouter une bordure en bas*/
+        min-width: 50px;
+    }
+
+    #ucl, #ligue2, #europa, #conference, #ligue1{
+        display: none;
+    }
+    .phoneFleche{
+        display: flex;
+        width: 10vw;
+        margin-top: 1vh;
+        margin-bottom: 1vh;
+    }
+    .phoneRank{
+        display: flex;
+        width: 60vw;
+    }
+}
+
+@media screen and (max-width: 300px) {
+
+    .btnJouer{
+        width: 35vw;
+        font-size: 1em;
+    }
+    .lesRegles{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        height: 40vh;
+        overflow-y: scroll;
+        font-size: 0.7em;
+        margin-bottom: 1vh;
+        margin-right: 0.5vh;
+        margin-left: 1vh;
+        line-height: 1.5em;
+        color: black;
+    }
+    .lesCommandes{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        height: 40vh;
+        overflow-y: scroll;
+        font-size: 0.7em;
+        margin-bottom: 1vh;
+        margin-right: 0.5vh;
+        margin-left: 1vh;
+        line-height: 1.5em;
+        color: black;
+    }
+    #souris{
+        display: none;
+
+    }
+    #phone{
+        display: none;
+
+    }
+
+    #ucl, #ligue2, #europa, #conference, #ligue1{
+        display: none;
+    }
+}

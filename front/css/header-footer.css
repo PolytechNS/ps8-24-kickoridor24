@@ -98,16 +98,17 @@
     .footer {
         background-image: url('../images/footer.png');
         background-position: right;
-        background-size: contain;
-        width: 100%;
+        background-size: cover;
         background-repeat: no-repeat;
         display: flex;
         min-width: 275px;
+        width: 100%;
         align-items: center;
         justify-content: flex-end;
         height: 7vh;
         margin-top: auto; /* Ajoutez cette ligne pour forcer le pied de page en bas */
-        margin-bottom: 0%; /* Ajoutez cette ligne pour forcer le pied de page en bas */
+        margin-bottom: -1.25%; /* Ajoutez cette ligne pour forcer le pied de page en bas */
+        width: 100vw;
     }
 
     .connexion {
@@ -152,10 +153,12 @@
         background-color: #B9C0C6;
         padding: 0.19%;
         cursor: pointer;
+        align-items: center;
     }
     #chat img, #amisDiv img{
         width:auto;
-        height: 5vh;
+        height: 5vw;
+        max-height: 72%;
     }
 
     #chat:hover, #amisDiv:hover {
@@ -471,7 +474,7 @@
 
     }
 @media screen and (max-width: 750px) {
-    .logo{display: none}
+
     .connexion {
         font-family: 'Roboto Condensed', sans-serif;
         font-size: 0.5em;
@@ -493,6 +496,7 @@
         background-color: #B9C0C6;
         padding: 0.19%;
         cursor: pointer;
+        align-items: center;
     }
     #chat img, #amisDiv img{
         width:auto;
@@ -519,7 +523,8 @@
         justify-content: flex-end;
         height: 5vh;
         margin-top: auto; /* Ajoutez cette ligne pour forcer le pied de page en bas */
-        margin-bottom: 0%; /* Ajoutez cette ligne pour forcer le pied de page en bas */
+        margin-bottom: -1.25%; /* Ajoutez cette ligne pour forcer le pied de page en bas */
+        width: 100vw;
     }
     #param {
         width:auto;
@@ -556,3 +561,8 @@
         font-size: 2vh;
     }
 }
+    @media screen and (max-width: 500px) {
+        .logo {
+            display: none
+        }
+    }

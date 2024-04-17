@@ -1,6 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kick'Oridor - Menu</title>
     <link rel="stylesheet" type="text/css" href="css/play-page.css">
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
@@ -53,28 +54,28 @@
     <div class="onlinePlay" style="display: flex">
         <div class="Play" onclick="redirectToGame('typeDePartie','1v1local',7)">
             <h2 class="btnJouer"> PARTIE AMICALE</h2>
-            <img id="amical" src="images/amical.png" alt="">
+            <img class="imgBTN" id="amical" src="images/amical.png" alt="">
         </div>
         <div class="Play" onclick="playOnline()">
             <h2 class="btnJouer"> PARTIE EN LIGNE</h2>
-            <img id="online" src="images/online.png" alt="">
+            <img class="imgBTN" id="online" src="images/online.png" alt="">
         </div>
     </div>
 
     <div class="horsLignePlay" style="display: none">
         <div class="Play" onclick="redirectToBotPage()">
             <h2 class="btnHORSLIGNEBTN"> CONTRE L'IA</h2>
-            <img id="ia" src="images/ia.png" alt="">
+            <img class="imgBTN" id="ia" src="images/ia.png" alt="">
         </div>
 
         <div class="Play" onclick="redirectToGame('typeDePartie','1v1local',7)">
             <h2 class="btnHORSLIGNEBTN"> 1V1 LOCAL</h2>
-            <img id="local" src="images/local.png" alt="">
+            <img class="imgBTN" id="local" src="images/local.png" alt="">
         </div>
 
         <div class="Play" id="resumeGameButton" onclick="redirectToGame('typeDePartie','resumeGame',7)">
             <h2 class="btnHORSLIGNEBTN"> REPRENDRE LA PARTIE</h2>
-            <img id="resume" src="images/resume.png" alt="">
+            <img class="imgBTN" id="resume" src="images/resume.png" alt="">
         </div>
     </div>
 

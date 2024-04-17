@@ -27,6 +27,33 @@
     cursor: pointer;
 }
 
+    .PlayBot {
+        background-color: #E4E5E7;
+        font-family: 'Roboto Condensed', sans-serif;
+        font-size: 1.5vw;
+        /*changer couleur du texte*/
+        color: #eb4f61;
+        width: 24%;
+        height: 34%;
+        max-height: 300px;
+        margin: 0.5em;
+        box-shadow: 0 3px 3px 0 #676767;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        transition: background-color 0.3s ease; /* Animation de transition pour un effet plus fluide */
+
+    }
+
+
+
+    .PlayBot:hover {
+        background-color: #eb4f61;
+        color: #E4E5E7;
+        box-shadow: 0 3px 3px 0 #676767;
+        /*afficher le curseur pointer*/
+        cursor: pointer;
+    }
 
 .btn{
     margin: 0.4em 0.3em 0.3em 0.3em;
@@ -38,6 +65,12 @@
     width: 20vw;
     margin: 0.1em 0.2em 0.2em 0.2em;
 }
+    .btnJouerBot{
+        height: 23vh;
+        max-height: 300px;
+        width: 20vw;
+        margin: 0.1em 0.2em 0.2em 0.2em;
+    }
 
 .container {
     display: flex;
@@ -114,7 +147,8 @@
 }
 
 #aleaBot, #smartBot{
-    width: 10vh;
+    width: 10vw;
+    max-width: 10vh;
     margin-right: 0.5vh;
 }
 
@@ -144,8 +178,31 @@
             transition: background-color 0.3s ease; /* Animation de transition pour un effet plus fluide */
 
         }
+        .PlayBot {
+            background-color: #E4E5E7;
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 2.5vh;
+            /*changer couleur du texte*/
+            color: #eb4f61;
+            width: 70%;
+            height: 30%;
+            max-height: 300px;
+            margin: 0.5em;
+            box-shadow: 0 3px 3px 0 #676767;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            transition: background-color 0.3s ease; /* Animation de transition pour un effet plus fluide */
+            min-width: 200px;
+        }
         .btnJouer{
             height: 13vh;
+            max-height: 300px;
+            width: 30vw;
+            margin: 0.1em 0.2em 0.2em 0.2em;
+        }
+        .btnJouerBot{
+            height: 20vh;
             max-height: 300px;
             width: 30vw;
             margin: 0.1em 0.2em 0.2em 0.2em;
