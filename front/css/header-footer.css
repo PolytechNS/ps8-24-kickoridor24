@@ -11,12 +11,13 @@
         flex-direction: column;
         min-height: 97vh;
         font-family: 'Roboto Condensed', sans-serif;
+
     }
 
     header {
         position: relative;
         margin: 6px;
-        height: 50px;
+        height: 6vh;
 
     }
 
@@ -71,7 +72,7 @@
 
     .name {
         font-family: 'Roboto Condensed', sans-serif;
-        font-size: 1.1em;
+        font-size: 3vh;
         color: #212121;
         display: flex;
         align-items: center;
@@ -107,7 +108,7 @@
         justify-content: flex-end;
         height: 7vh;
         margin-top: auto; /* Ajoutez cette ligne pour forcer le pied de page en bas */
-        margin-bottom: -1.25%; /* Ajoutez cette ligne pour forcer le pied de page en bas */
+        margin-bottom: 0%; /* Ajoutez cette ligne pour forcer le pied de page en bas */
         width: 100vw;
     }
 
@@ -128,7 +129,7 @@
         margin-left: 1.5vh;
         margin-right: 1.5vh;
         margin-top: 1.4vh;
-        font-size: 1.2em;
+        font-size: 2.5vh;
     }
 
 
@@ -147,7 +148,7 @@
     #chat, #amisDiv {
         display: flex;
         width: 10%;
-        height: 72%;
+        height: 6vh;
         margin-bottom: 0.7%;
         margin-right: 0.3%;
         background-color: #B9C0C6;
@@ -471,15 +472,24 @@
         margin-top: 1vh;
         margin-bottom: 1vh;
         cursor: pointer;
-
+    position: absolute;
     }
-@media screen and (max-width: 750px) {
-
+    @media screen and (max-aspect-ratio: 4/3.1) {
+        #retour{
+            width: 25vh;
+            aspect-ratio: 4/1;
+            margin-left: 2vh;
+            margin-top: 1vh;
+            margin-bottom: 1vh;
+            cursor: pointer;
+            position: relative;
+        }
     .connexion {
         font-family: 'Roboto Condensed', sans-serif;
         font-size: 0.5em;
         color: #E4E5E7;
         height: 84%;
+        width: fit-content;
         margin-bottom: 1.1vh;
         margin-right: 0.5vh;
         background-color: #9f9f9f;
@@ -500,7 +510,7 @@
     }
     #chat img, #amisDiv img{
         width:auto;
-        height: 3vh;
+        height: 5vh;
     }
 
     #chatting, #amisTexte {
@@ -541,8 +551,8 @@
         width: 82.4%;
         position: absolute;
         height: 80%;
-        margin-left: 17%;
-        margin-top: 20%;
+        margin-left: 17vw;
+
         background-color: #86A1B9;
         font-size: 3vh;
 
@@ -560,8 +570,17 @@
         margin-left: 1vh;
         font-size: 2vh;
     }
+
+        .btn {
+            margin-left: 1.5vh;
+            margin-right: 1.5vh;
+            margin-top: 1.4vh;
+            font-size: 2.5vw;
+            white-space: nowrap;
+        }
+
 }
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 750px) {
         .logo {
             display: none
         }

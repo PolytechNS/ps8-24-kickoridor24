@@ -253,7 +253,7 @@ async function recupInfoJoueur(){
 
 
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
     console.log(listeAchiev);
 }
@@ -325,7 +325,7 @@ async function  selectNewCeleb(){
 
 
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
 }
 async function  selectNewImg(){
@@ -351,7 +351,7 @@ async function  selectNewImg(){
 
 
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
 }
 
@@ -379,7 +379,7 @@ async function  newName(){
 
 
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
 }
 async function  newMail(){
@@ -405,7 +405,7 @@ async function  newMail(){
 
 
        } catch (error) {
-           alert(error.message);
+           console.log(error.message);
        }
 }
 async function  newMDP(){
@@ -431,6 +431,6 @@ async function  newMDP(){
 
 
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
 }

@@ -252,12 +252,13 @@ async function openChat() {
     }
     var chatMenu = document.getElementById("chatMenu");
     var chat = document.getElementById("chat");
-    console.log(  )
+    const aspectRatio = window.innerWidth / window.innerHeight;
 
     if (chatMenu.classList.contains("show")) {
         chatMenu.classList.remove("show");
-        if(document.body.clientWidth <=750 ){
+        if(aspectRatio <= 4/3.1 ){
             chat.style.width = "30%";
+
         }else{
             chat.style.width = "10%";
         }
@@ -265,7 +266,7 @@ async function openChat() {
         getConversationNotif();
     } else {
         chatMenu.classList.add("show");
-        if(document.body.clientWidth <=750 ){
+        if(aspectRatio <= 4/3.1 ){
             chat.style.width = "60%";
         }else{
             chat.style.width = "22%";

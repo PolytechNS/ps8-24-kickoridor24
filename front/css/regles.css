@@ -36,7 +36,7 @@
     /*width qui rempli tout l'espace dispo*/
     width: 100%;
     font-family: 'Roboto Condensed', sans-serif;
-
+    margin-top: 10vh;
 }
 
 .topButton{
@@ -94,7 +94,9 @@
     line-height: 1.5em;
     color: black;
 }
-
+.touche{
+    height: 50vh;
+}
 .liste{
     list-style-type: none;
 }
@@ -218,10 +220,13 @@ display: none;
 
 @media screen and (max-width: 750px) {
 
-    #souris{
-        display: none;
+  .souris{
+      height: 50vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
 
-    }
+  }
     #phone{
         display: flex;
         width: 15vw;
