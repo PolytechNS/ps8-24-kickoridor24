@@ -11,7 +11,7 @@ var lanePlayerB;
 var partieChargee = false;
 var gState;
 var board = [];
-
+var stop = false;
 let i;
 var tmpLigne = [];
 let n;
@@ -86,7 +86,7 @@ socket.on('setupGame', () => {
 
     socket.emit('getPlayersPositionOffline');
     socket.on('getPlayersPositionResponse', (player1Position, player2Position) => {
-        console.log("ookk")
+        if(stop) return;
         cellsString = [];
         cellsGrid = [];
         for (i = 1; i <= 289; i++) {
@@ -147,7 +147,7 @@ socket.on('setupGame', () => {
     });
 
     socket.on('setupTheGame', () => {
-        console.log("BIIITTEE")
+        if(stop) return;
         if (getCookie("typeDePartie") === "resumeGame") {
             loadGame();
         } else {
@@ -236,10 +236,11 @@ function mettreAJourTableau(tableau1, tableau2) {
 }
 
 function setUpGame() {
+    if(stop) return;
     saveToBack();
     socket.emit('setUpGame');
     socket.on('setUpGameResponse', (activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells) => {
-        console.log("WAAAA")
+        if(stop) return;
         cells = createDivsWithClassesAndAttributes(cells);
 
 
@@ -322,9 +323,7 @@ function setUpGame() {
             const message = document.createElement('div');
             message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
             message.classList.add('message');
-            message.style.position = 'fixed';
-            message.style.top = '50%';
-            message.style.left = '50%';
+
             wrapper.appendChild(message);
 
             //si une case de top-row est cliquée alors on move le joueur
@@ -372,6 +371,7 @@ socket.on('game', (player1Pos, player2Pos, cels, pAWalls, pBWalls, nbWallPA, nbW
     tour = lap;
     firstTurn = first;
     dernierTourB = dernierLapB;
+    stop = true;
 });
 
 function changeVisibility(rigthCell, leftCell, player, horizontale) {
@@ -673,6 +673,16 @@ function hideAntiCheat() {
 }
 
 function hideValider() {
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    if(aspectRatio <= 4/3.1){
+        document.getElementsByClassName("profilA")[0].style.display = "grid";
+        document.getElementsByClassName("profilB")[0].style.display = "grid";
+        document.getElementById("nbWallPlayerA").style.display = "block";
+        document.getElementById("nbWallPlayerB").style.display = "block";
+        document.getElementsByClassName("sauvegarder")[0].style.display = "block";
+        document.getElementsByClassName("forfait")[0].style.display = "block";
+        document.getElementsByClassName("forfait")[1].style.display = "block";
+    }
     document.querySelector('#validerA').style.display = 'none';
     document.querySelector('#validerB').style.display = 'none';
     murAPose = new Array(3);
@@ -794,9 +804,7 @@ function checkTour201() {
         const message = document.createElement('div');
         message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
         message.classList.add('message');
-        message.style.position = 'fixed';
-        message.style.top = '50%';
-        message.style.left = '50%';
+
         wrapper.appendChild(message);
         //si une case de top-row est cliquée alors on move le joueur
 
@@ -1226,6 +1234,17 @@ function changeActivePlayer() {
     }
 
     activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
+    if(activePlayer == 'playerA'){
+        var profilA = document.getElementsByClassName('profilA')[0];
+        profilA.getElementsByTagName('h3')[0].style.backgroundColor = "lightgreen";
+        var profilB = document.getElementsByClassName('profilB')[0];
+        profilB.getElementsByTagName('h3')[0].style.backgroundColor = "#F67E8C";
+    }else{
+        var profilB = document.getElementsByClassName('profilB')[0];
+        profilB.getElementsByTagName('h3')[0].style.backgroundColor = "lightgreen";
+        var profilA = document.getElementsByClassName('profilA')[0];
+        profilA.getElementsByTagName('h3')[0].style.backgroundColor = "#F67E8C";
+    }
     document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
     if (tour <= 200)
         document.getElementById('nbTour').textContent = `Tour : n°${200 -(tour - 1)}`;
@@ -1527,6 +1546,21 @@ function movePlayer(cellIndex) {
 }
 
 function showValider() {
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    if(aspectRatio <= 4/3.1){
+        if(activePlayer == "playerA"){
+            document.getElementsByClassName("profilA")[0].style.display = "flex";
+            document.getElementById("nbWallPlayerA").style.display = "none";
+        }
+
+        else {
+            document.getElementsByClassName("profilB")[0].style.display = "flex";
+            document.getElementById("nbWallPlayerB").style.display = "none";
+        }
+        document.getElementsByClassName("sauvegarder")[0].style.display = "none";
+        document.getElementsByClassName("forfait")[0].style.display = "none";
+        document.getElementsByClassName("forfait")[1].style.display = "none";
+    }
     var id = "#valider";
     if (activePlayer === 'playerA')
         id += "A";

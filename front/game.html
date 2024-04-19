@@ -1,6 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kick'Oridor - Game</title>
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
     <link rel="stylesheet" type="text/css" href="css/game.css">
@@ -41,8 +42,9 @@
 
 <div class="container">
     <div class="profilA">
-        <h3>Player A</h3>
+        <h3 style="background-color: lightgreen">Player A</h3>
         <p id="nbWallPlayerA">Murs restant : 10</p>
+
         <div class="sauvegarder">
             <button class="sauvegarderButton" onclick="sauvegarderLaPartie()">Sauvegarder</button>
         </div>
@@ -79,7 +81,7 @@
     </div>
     <div class="wrapper"></div>
     <div class="profilB">
-        <h3>Player B</h3>
+        <h3 style="background-color: #F67E8C">Player B</h3>
         <p id="nbWallPlayerB">Murs restant : 10</p>
         <div class="forfait" id="forfaitB">
             <button class="forfaitButton" onclick="declarerForfait()">Déclarer forfait</button>

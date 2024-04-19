@@ -334,8 +334,7 @@ function setUpGame(gameState) {
             message.innerHTML = '1er tour !<br> Placez votre joueur sur une case de la ligne de départ';
             message.classList.add('message');
             message.style.position = 'fixed';
-            message.style.top = '50%';
-            message.style.left = '50%';
+
             wrapper.appendChild(message);
 
             //si une case de top-row est cliquée alors on move le joueur
@@ -689,6 +688,16 @@ function hideAntiCheat() {
 }
 
 function hideValider() {
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    if(aspectRatio <= 4/3.1){
+        document.getElementsByClassName("profilA")[0].style.display = "grid";
+        document.getElementsByClassName("profilB")[0].style.display = "grid";
+        document.getElementById("nbWallPlayerA").style.display = "block";
+        document.getElementById("nbWallPlayerB").style.display = "block";
+        document.getElementsByClassName("sauvegarder")[0].style.display = "block";
+        document.getElementsByClassName("forfait")[0].style.display = "block";
+        document.getElementsByClassName("forfait")[1].style.display = "block";
+    }
     document.querySelector('#validerA').style.display = 'none';
     document.querySelector('#validerB').style.display = 'none';
     murAPose = new Array(3);
@@ -1256,6 +1265,17 @@ function getValidMoves(position) {
 
 function changeActivePlayer() {
         activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
+    if(activePlayer == 'playerA'){
+        var profilA = document.getElementsByClassName('profilA')[0];
+        profilA.getElementsByTagName('h3')[0].style.backgroundColor = "lightgreen";
+        var profilB = document.getElementsByClassName('profilB')[0];
+        profilB.getElementsByTagName('h3')[0].style.backgroundColor = "#F67E8C";
+    }else{
+        var profilB = document.getElementsByClassName('profilB')[0];
+        profilB.getElementsByTagName('h3')[0].style.backgroundColor = "lightgreen";
+        var profilA = document.getElementsByClassName('profilA')[0];
+        profilA.getElementsByTagName('h3')[0].style.backgroundColor = "#F67E8C";
+    }
         document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
         if (tour <= 200)
             document.getElementById('nbTour').textContent = `Tour : n°${200 -(tour - 1)}`;
@@ -1493,6 +1513,21 @@ function movePlayer(cellIndex) {
 }
 
 function showValider() {
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    if(aspectRatio <= 4/3.1){
+        if(activePlayer == "playerA"){
+            document.getElementsByClassName("profilA")[0].style.display = "flex";
+            document.getElementById("nbWallPlayerA").style.display = "none";
+        }
+
+        else {
+            document.getElementsByClassName("profilB")[0].style.display = "flex";
+            document.getElementById("nbWallPlayerB").style.display = "none";
+        }
+        document.getElementsByClassName("sauvegarder")[0].style.display = "none";
+        document.getElementsByClassName("forfait")[0].style.display = "none";
+        document.getElementsByClassName("forfait")[1].style.display = "none";
+    }
     var id = "#valider";
     if (activePlayer === 'playerA')
         id += "A";
