@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kick'oridor - Matchmaking</title>
-    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <link rel="stylesheet" type="text/css" href="css/waiting.css">
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
 </head>
+
+<body>
 <header>
     <div class="cnt-header">
         <div class="nav">
@@ -33,13 +36,17 @@
         <img src="images/header.png" alt="" class="bg-header">
     </div>
 </header>
-<body>
-
-<h1>Attente d'un adversaire</h1>
-<p>En attente d'un adversaire pour jouer</p>
-<p>Vous pouvez quitter la partie en cours de recherche</p>
-<button onclick="redirectToMenu()">Quitter</button>
-
+<div class="all">
+    <div class="container">
+        <h1>Attente d'un adversaire</h1>
+        <p>En attente d'un adversaire pour jouer</p>
+        <img src="images/loading.gif">
+        <div id="quitterWaiting">
+        <p>Vous pouvez quitter la partie en cours de recherche</p>
+        <button class="quitter" onclick="redirectToMenu()">Quitter</button>
+        </div>
+    </div>
+</div>
 <div id="chatMenu" class="chatMenu">
     <div id="menuChat">
         <div id="amisChat" onclick="showAmisChat()">
@@ -102,4 +109,4 @@
 <script src="js/socket.io.js"></script>
 <script src="js/chat.js"></script>
 <script src="js/menu.js"></script>
-<script src="js/waiting.js"></script>
+<!--<script src="js/waiting.js"></script>
