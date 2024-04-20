@@ -468,4 +468,7 @@ button {
     .finDePartie{
         max-height:53vh ;
     }
+    .forfaitGrand{
+        grid-column: span 2;
+    }
 }

@@ -1,3 +1,15 @@
+const aspectRatio = window.innerWidth / window.innerHeight;
+
+const inputElement = document.getElementById('searchInput');
+
+// Ajout de l'écouteur d'événements
+inputElement.addEventListener('keydown', function(event) {
+    // Vérifie si la touche pressée est "Entrée" (code 13)
+    if (event.keyCode === 13) {
+        // Placez ici le code que vous souhaitez exécuter lorsque la touche "Entrée" est pressée
+        ajouterAmisListe()
+    }
+});
 async function ajouterAmisListe(){
     var name = document.getElementById('searchInput').value;
 
@@ -42,12 +54,14 @@ async function ajouterAmisListe(){
                         var nom = document.createElement("p");
                         var username = data[i]["username"];
                         nom.textContent = username;
-                        nom.style.width = '10vh';
+                        nom.classList.add("amiName");
+
                         div.appendChild(nom);
                         var elo = document.createElement("p");
                         elo.textContent = data[i]["elo"];
                         elo.style.width = '8vh';
                         elo.style.fontWeight = 'bold';
+                        elo.classList.add("elo");
                         div.appendChild(elo);
                         if(parseInt( data[i]["elo"]) > 1999){
                             div.style.background ='url("images/uclTest.png")';
@@ -78,34 +92,10 @@ async function ajouterAmisListe(){
 
                         let btn = document.createElement("button");
                         btn.textContent = "AJOUTER";
-                        btn.style.appearance = 'none';
-                        btn.style.backfaceVisibility = 'hidden';
+                        btn.classList.add("addBTN");
+
                         btn.style.backgroundColor = '#38cfda';
-                        btn.style.borderRadius = '8px';
-                        btn.style.borderStyle = 'none';
-                        btn.style.boxShadow = 'rgba(231, 76, 60, .15) 0 4px 9px';
-                        btn.style.boxSizing = 'border-box';
-                        btn.style.color = '#fff';
-                        btn.style.cursor = 'pointer';
-                        btn.style.display = 'inline-block';
-                        btn.style.fontFamily = 'Inter,-apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif';
-                        btn.style.fontSize = '11px';
-                        btn.style.fontWeight = '600';
-                        btn.style.letterSpacing = 'normal';
-                        btn.style.lineHeight = '1.5';
-                        btn.style.outline = 'none';
-                        btn.style.overflow = 'hidden';
-                        btn.style.padding = '4px 8px';
-                        btn.style.position = 'relative';
-                        btn.style.textAlign = 'center';
-                        btn.style.textDecoration = 'none';
-                        btn.style.transform = 'translate3d(0, 0, 0)';
-                        btn.style.transition = 'all .3s';
-                        btn.style.userSelect = 'none';
-                        btn.style.webkitUserSelect = 'none';
-                        btn.style.touchAction = 'manipulation';
-                        btn.style.verticalAlign = 'top';
-                        btn.style.whiteSpace = 'nowrap';
+
                         //hover
                         btn.addEventListener('mouseover', function() {
                             btn.style.backgroundColor = '#31a5ad';
@@ -221,12 +211,14 @@ async function demandesAmisListe(){
                         var nom = document.createElement("p");
 
                         nom.textContent = username;
-                        nom.style.width = '10vh';
+                        nom.classList.add("amiName");
+
                         div.appendChild(nom);
                         var elo = document.createElement("p");
                         elo.textContent = data[i]["elo"];
                         elo.style.width = '8vh';
                         elo.style.fontWeight = 'bold';
+                        elo.classList.add("elo");
                         div.appendChild(elo);
                         if(parseInt( data[i]["elo"]) > 1999){
                             div.style.background ='url("images/uclTest.png")';
@@ -256,36 +248,9 @@ async function demandesAmisListe(){
                         }
                         let btnV = document.createElement("button");
                         btnV.textContent = "AJOUTER";
-                        btnV.style.marginLeft = '-5vw';
-                        btnV.style.appearance = 'none';
-                        btnV.style.backfaceVisibility = 'hidden';
+                        btnV.classList.add("addBTN");
                         btnV.style.backgroundColor = '#38cfda';
-                        btnV.style.borderRadius = '8px';
-                        btnV.style.borderStyle = 'none';
-                        btnV.style.boxShadow = 'rgba(231, 76, 60, .15) 0 4px 9px';
-                        btnV.style.boxSizing = 'border-box';
-                        btnV.style.color = '#fff';
-                        btnV.style.cursor = 'pointer';
-                        btnV.style.display = 'inline-block';
-                        btnV.style.fontFamily = 'Inter,-apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif';
-                        btnV.style.fontSize = '11px';
-                        btnV.style.fontWeight = '600';
-                        btnV.style.letterSpacing = 'normal';
-                        btnV.style.lineHeight = '1.5';
-                        btnV.style.outline = 'none';
-                        btnV.style.overflow = 'hidden';
-                        btnV.style.padding = '4px 8px';
-                        btnV.style.position = 'relative';
-                        btnV.style.textAlign = 'center';
-                        btnV.style.textDecoration = 'none';
-                        btnV.style.transform = 'translate3d(0, 0, 0)';
-                        btnV.style.transition = 'all .3s';
-                        btnV.style.userSelect = 'none';
-                        btnV.style.webkitUserSelect = 'none';
-                        btnV.style.touchAction = 'manipulation';
-                        btnV.style.verticalAlign = 'top';
-                        btnV.style.whiteSpace = 'nowrap';
-                        //hover
+
                         btnV.addEventListener('mouseover', function() {
                             btnV.style.backgroundColor = '#31a5ad';
                             btnV.style.opacity = '1';
@@ -319,32 +284,9 @@ async function demandesAmisListe(){
 
                         let btnD = document.createElement("button");
                         btnD.textContent = "SUPPRIMER";
+                        btnD.classList.add("suppBTN");
 
-                        btnD.style.appearance = 'none';
-                        btnD.style.backfaceVisibility = 'hidden';
                         btnD.style.backgroundColor = '#eb4f61';
-                        btnD.style.borderRadius = '8px';
-                        btnD.style.borderStyle = 'none';
-                        btnD.style.boxShadow = 'rgba(231, 76, 60, .15) 0 4px 9px';
-                        btnD.style.boxSizing = 'border-box';
-                        btnD.style.color = '#fff';
-                        btnD.style.cursor = 'pointer';
-                        btnD.style.display = 'inline-block';
-                        btnD.style.fontFamily = 'Inter,-apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif';
-                        btnD.style.fontSize = '11px';
-                        btnD.style.fontWeight = '600';
-                        btnD.style.letterSpacing = 'normal';
-                        btnD.style.lineHeight = '1.5';
-                        btnD.style.outline = 'none';
-                        btnD.style.overflow = 'hidden';
-                        btnD.style.padding = '4px 8px';
-                        btnD.style.position = 'relative';
-                        btnD.style.textAlign = 'center';
-                        btnD.style.textDecoration = 'none';
-                        btnD.style.transform = 'translate3d(0, 0, 0)';
-                        btnD.style.transition = 'all .3s';
-                        btnD.style.userSelect = 'none';
-                        btnD.style.webkitUserSelect = 'none';
 
                         //hover
                         btnD.addEventListener('mouseover', function() {
@@ -489,13 +431,16 @@ async function listeAmis(){
                         let nom = document.createElement("p");
 
                         nom.textContent = username;
-                        nom.style.width = '10vh';
+                        nom.classList.add("amiName");
+
                         div.appendChild(nom);
                         let elo = document.createElement("p");
                         elo.textContent = data[i]["elo"];
-                        div.appendChild(elo);
+                        elo.classList.add("elo");
+
                         elo.style.width = '8vh';
                         elo.style.fontWeight = 'bold';
+                        div.appendChild(elo);
                         if(parseInt( data[i]["elo"]) > 1999){
                             div.style.background ='url("images/uclTest.png")';
                             div.style.backgroundSize = 'cover';
@@ -507,7 +452,7 @@ async function listeAmis(){
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>999){
-                            div.style.background ='url("images/conferencetest.png")';
+                            div.style.background ='url("images/conference-amisPHONE.png")';
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
@@ -525,35 +470,10 @@ async function listeAmis(){
 
                         let btn = document.createElement("button");
                         btn.textContent = "SUPPRIMER";
+                        btn.classList.add("suppBTN");
 
-                        btn.style.appearance = 'none';
-                        btn.style.backfaceVisibility = 'hidden';
                         btn.style.backgroundColor = '#eb4f61';
-                        btn.style.borderRadius = '8px';
-                        btn.style.borderStyle = 'none';
-                        btn.style.boxShadow = 'rgba(231, 76, 60, .15) 0 4px 9px';
-                        btn.style.boxSizing = 'border-box';
-                        btn.style.color = '#fff';
-                        btn.style.cursor = 'pointer';
-                        btn.style.display = 'inline-block';
-                        btn.style.fontFamily = 'Inter,-apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif';
-                        btn.style.fontSize = '11px';
-                        btn.style.fontWeight = '600';
-                        btn.style.letterSpacing = 'normal';
-                        btn.style.lineHeight = '1.5';
-                        btn.style.outline = 'none';
-                        btn.style.overflow = 'hidden';
-                        btn.style.padding = '4px 8px';
-                        btn.style.position = 'relative';
-                        btn.style.textAlign = 'center';
-                        btn.style.textDecoration = 'none';
-                        btn.style.transform = 'translate3d(0, 0, 0)';
-                        btn.style.transition = 'all .3s';
-                        btn.style.userSelect = 'none';
-                        btn.style.webkitUserSelect = 'none';
-                        btn.style.touchAction = 'manipulation';
-                        btn.style.verticalAlign = 'top';
-                        btn.style.whiteSpace = 'nowrap';
+
                         //hover
                         btn.addEventListener('mouseover', function() {
                             btn.style.backgroundColor = '#bb404e';

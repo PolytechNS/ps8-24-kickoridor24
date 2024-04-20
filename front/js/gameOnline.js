@@ -266,8 +266,12 @@ function setUpGame(gameState) {
         }
         hideAntiCheat();
         hideValider();
-        if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null)
+        if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null) {
             hideSauvegarder();
+            console.log("ooouuiii");
+            document.getElementsByClassName("forfait")[0].classList.add("forfaitGrand");
+            document.getElementsByClassName("forfait")[1].classList.add("forfaitGrand");
+        }
         if (currentPlayer === "playerA") {
             showForfaitA();
             hideForfaitB();
@@ -689,14 +693,16 @@ function hideAntiCheat() {
 
 function hideValider() {
     const aspectRatio = window.innerWidth / window.innerHeight;
-    if(aspectRatio <= 4/3.1){
-        document.getElementsByClassName("profilA")[0].style.display = "grid";
-        document.getElementsByClassName("profilB")[0].style.display = "grid";
-        document.getElementById("nbWallPlayerA").style.display = "block";
-        document.getElementById("nbWallPlayerB").style.display = "block";
-        document.getElementsByClassName("sauvegarder")[0].style.display = "block";
-        document.getElementsByClassName("forfait")[0].style.display = "block";
-        document.getElementsByClassName("forfait")[1].style.display = "block";
+    if(aspectRatio <= 4/3.1) {
+        if (currentPlayer == "playerA") {
+            document.getElementsByClassName("profilA")[0].style.display = "grid";
+            document.getElementById("nbWallPlayerA").style.display = "block";
+            document.getElementsByClassName("forfait")[0].style.display = "block";
+        } else {
+            document.getElementsByClassName("profilB")[0].style.display = "grid";
+            document.getElementById("nbWallPlayerB").style.display = "block";
+            document.getElementsByClassName("forfait")[1].style.display = "block";
+        }
     }
     document.querySelector('#validerA').style.display = 'none';
     document.querySelector('#validerB').style.display = 'none';
@@ -1514,19 +1520,16 @@ function movePlayer(cellIndex) {
 
 function showValider() {
     const aspectRatio = window.innerWidth / window.innerHeight;
-    if(aspectRatio <= 4/3.1){
-        if(activePlayer == "playerA"){
+    if(aspectRatio <= 4/3.1) {
+        if (currentPlayer == "playerA") {
             document.getElementsByClassName("profilA")[0].style.display = "flex";
             document.getElementById("nbWallPlayerA").style.display = "none";
-        }
-
-        else {
+            document.getElementsByClassName("forfait")[0].style.display = "none";
+        } else {
             document.getElementsByClassName("profilB")[0].style.display = "flex";
             document.getElementById("nbWallPlayerB").style.display = "none";
+            document.getElementsByClassName("forfait")[1].style.display = "none";
         }
-        document.getElementsByClassName("sauvegarder")[0].style.display = "none";
-        document.getElementsByClassName("forfait")[0].style.display = "none";
-        document.getElementsByClassName("forfait")[1].style.display = "none";
     }
     var id = "#valider";
     if (activePlayer === 'playerA')
