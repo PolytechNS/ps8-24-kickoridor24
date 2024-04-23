@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kick'oridor - Matchmaking</title>
-    <link rel="stylesheet" type="text/css" href="css/waiting.css">
+    <title>Kick'Oridor - Menu</title>
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
-
 <body>
 <header>
     <div class="cnt-header">
@@ -24,10 +23,10 @@
             <div id="se-deconnecter" class="connexion" style="display: none" onclick="redirectToLogin()">
                 <p class="btn"> Se déconnecter</p>
             </div>
-            <div class="name">
+            <div class="name" onclick="redirectToProfil()">
                 <p id="name"></p>
             </div>
-            <img id="petitePhoto"src="images/photoProfil/Mitroglu.png" alt="">
+            <img id="petitePhoto" src="images/photoProfil/Mitroglu.png" alt="">
 
         </div>
     </div>
@@ -36,25 +35,34 @@
         <img src="images/header.png" alt="" class="bg-header">
     </div>
 </header>
-<div class="all">
-    <div class="container">
-        <h1>Attente d'un adversaire</h1>
-        <p>En attente d'un adversaire pour jouer</p>
-        <img src="images/loading.gif">
-        <div id="quitterWaiting">
-        <p>Vous pouvez quitter la partie en cours de recherche</p>
-        <button class="quitter" onclick="redirectToMenu()">Quitter</button>
-        </div>
+
+<div class="titre">
+    <img id="titre" src="images/titre.png" alt="">
+</div>
+<div class="container">
+    <div class="Play" onclick="redirectToPlayPage()">
+        <h2 class="btnJouer"> JOUER</h2>
+        <img class="icon" src="images/icon-jouer.png">
+    </div>
+
+    <div class="Play" onclick="redirectToRegle()">
+        <h2 class="btnJouer"> LES REGLES</h2>
+        <img class="icon" id="regle" src="images/icon-regle.png">
+    </div>
+
+    <div id="classement" class="Play" onclick="redirectToClassement()">
+        <h2 class="btnJouer"> CLASSEMENTS</h2>
     </div>
 </div>
+
 <div id="chatMenu" class="chatMenu">
     <div id="menuChat">
-        <div id="amisChat" onclick="showAmisChat()">
-            Amis
-        </div>
-        <div id="matchChat" >
-            En match
-        </div>
+    <div id="amisChat" onclick="showAmisChat()">
+        Amis
+    </div>
+    <div id="matchChat" >
+        En match
+    </div>
     </div>
 
     <div class="amisMsg" style="display: flex">
@@ -83,6 +91,7 @@
         <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChat()">
     </div>
 </div>
+
 <div class="footer">
     <img id="param" src="images/param.png">
 
@@ -104,9 +113,9 @@
 </div>
 </body>
 </html>
-<script src="js/authentification.js"></script>
 <script src="js/cookie.js"></script>
 <script src="js/socket.io.js"></script>
-<script src="js/chat.js"></script>
 <script src="js/menu.js"></script>
-<!--<script src="js/waiting.js"></script>
+<script src="js/chat.js"></script>
+
+<script src="js/authentification.js"></script>

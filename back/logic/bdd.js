@@ -3,11 +3,11 @@ const jwt = require("jsonwebtoken");
 
 const argument = process.argv[2];
 
-let uri;
+let uri = "http://kickoridor.ps8.academy//:27017";
 if(argument === "dev"){
     console.log("mongo dev on localhost");
     uri = 'mongodb://localhost:27017';
-}else{
+}else if(argument === "prod"){
     console.log("mongo prod on mongo");
     uri = 'mongodb://mongo:27017';
 }

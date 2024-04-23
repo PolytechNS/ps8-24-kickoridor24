@@ -3,7 +3,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kick'Oridor - Menu</title>
-    <link rel="stylesheet" type="text/css" href="css/menu.css">
+    <link rel="stylesheet" type="text/css" href="css/play-page.css">
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
@@ -26,7 +26,7 @@
             <div class="name" onclick="redirectToProfil()">
                 <p id="name"></p>
             </div>
-            <img id="petitePhoto"src="images/photoProfil/Mitroglu.png" alt="">
+            <img id="petitePhoto" src="images/photoProfil/Mitroglu.png" alt="">
         </div>
     </div>
 
@@ -39,16 +39,47 @@
     <img id="retour" src="images/retour.png" alt="" onclick="previewPage()">
 </div>
 
-<div class="container">
-    <div class="PlayBot" onclick="redirectToGame('typeDePartie','bot',7)">
-        <h2 class="btnJouerBot"> JOUER CONTRE UN BOT ALEATOIRE</h2>
-        <img id="aleaBot" src="images/aleaBot.png" alt="">
+<div class="all">
+<div class="navClass">
+    <div id="ligne" class="topButton" >
+        <a class="navButton"> En ligne</a>
     </div>
 
-    <div class="PlayBot" onclick="redirectToGame('typeDePartie','bot_v2',7)">
-        <h2 class="btnJouerBot"> JOUER CONTRE UN BOT INTELLIGENT</h2>
-        <img id="smartBot" src="images/smartBot.png" alt="">
+    <div id="hors" class="topButton" >
+        <a class="navButton"> Hors ligne</a>
     </div>
+</div>
+
+<div class="container">
+    <div class="onlinePlay" style="display: flex">
+        <div class="Play" onclick="redirectToGame('typeDePartie','1v1local',7)">
+            <h2 class="btnJouer"> PARTIE AMICALE</h2>
+            <img class="imgBTN" id="amical" src="images/amical.png" alt="">
+        </div>
+        <div class="Play" onclick="playOnline()">
+            <h2 class="btnJouer"> PARTIE EN LIGNE</h2>
+            <img class="imgBTN" id="online" src="images/online.png" alt="">
+        </div>
+    </div>
+
+    <div class="horsLignePlay" style="display: none">
+        <div class="Play" onclick="redirectToBotPage()">
+            <h2 class="btnHORSLIGNEBTN"> CONTRE L'IA</h2>
+            <img class="imgBTN" id="ia" src="images/ia.png" alt="">
+        </div>
+
+        <div class="Play" onclick="redirectToGame('typeDePartie','1v1local',7)">
+            <h2 class="btnHORSLIGNEBTN"> 1V1 LOCAL</h2>
+            <img class="imgBTN" id="local" src="images/local.png" alt="">
+        </div>
+
+        <div class="Play" id="resumeGameButton" onclick="redirectToGame('typeDePartie','resumeGame',7)">
+            <h2 class="btnHORSLIGNEBTN"> REPRENDRE LA PARTIE</h2>
+            <img class="imgBTN" id="resume" src="images/resume.png" alt="">
+        </div>
+    </div>
+
+</div>
 </div>
 
 <div id="chatMenu" class="chatMenu">
@@ -71,7 +102,7 @@
         <div class="listeAmis" id="nomAmi" onclick=" showAmisChat();getConversation();">
             <div class="ami">
                 <div style="display: flex">
-                    <div class="mitroChat" >
+                    <div class="mitroChat">
                         <img src="images/mitro.jpg" id="photoChatAvecUnAmis" alt="">
                     </div>
                     <span class="nom" id="nomAmiID">Amis1</span>
@@ -113,4 +144,5 @@
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/chat.js"></script>
+<script src="js/play-page.js"></script>
 <script src="js/authentification.js"></script>

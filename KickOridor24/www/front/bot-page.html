@@ -2,9 +2,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kick'Oridor - Game</title>
+    <title>Kick'Oridor - Menu</title>
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
-    <link rel="stylesheet" type="text/css" href="css/game.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
 <body>
@@ -26,8 +26,7 @@
             <div class="name" onclick="redirectToProfil()">
                 <p id="name"></p>
             </div>
-            <img id="petitePhoto"src="images/photoProfil/Mitroglu.png" alt="">
-
+            <img id="petitePhoto" src="images/photoProfil/Mitroglu.png" alt="">
         </div>
     </div>
 
@@ -35,65 +34,23 @@
         <img src="images/header.png" alt="" class="bg-header">
     </div>
 </header>
-<div class="center">
-    <h2 id="currentPlayer">Tour : playerA</h2>
-    <h2 id="nbTour">Tour : n°0</h2>
+
+<div class="retour">
+    <img id="retour" src="images/retour.png" alt="" onclick="previewPage()">
 </div>
 
 <div class="container">
-    <div class="profilA">
-        <h3 style="background-color: lightgreen">Player A</h3>
-        <p id="nbWallPlayerA">Murs restant : 10</p>
-
-        <div class="sauvegarder">
-            <button class="sauvegarderButton" onclick="sauvegarderLaPartie()">Sauvegarder</button>
-        </div>
-        <div class="forfait" id="forfaitA">
-            <button class="forfaitButton" onclick="declarerForfait()">Déclarer forfait</button>
-        </div>
-        <div id="validerA" class="valider">
-            <p>VALIDER</p>
-            <button class="okButton" onclick="validerWall()">ok</button>
-            <button class="notokButton" onclick="annulerWall()">annuler</button>
-        </div>
-
-    </div>
-    <div class="anti-cheat">
-        <h2>ANTI CHEAT</h2>
-        <p id="cheat">ANTI CHEAT</p>
-        <button onclick="hideAntiCheat()">Valider</button>
-    </div>
-    <div class="finDePartie">
-        <div id="finLeft">
-            <img src="images/coupeLeft.png" class="coupeLeft">
-        </div>
-        <div id="finMiddle">
-            <h2>
-                Player remporte la partie
-            </h2>
-            <img src="images/celebration/SIUU.gif" class="celebrationVictoire">
-            <button onclick="window.location.href = 'index.html'">RETOUR AU MENU</button>
-        </div>
-        <div id="finRight">
-            <img src="images/coupeRight.png" class="coupeRight">
-        </div>
-
-    </div>
-    <div class="wrapper"></div>
-    <div class="profilB">
-        <h3 style="background-color: #F67E8C">Player B</h3>
-        <p id="nbWallPlayerB">Murs restant : 10</p>
-        <div class="forfait" id="forfaitB">
-            <button class="forfaitButton" onclick="declarerForfait()">Déclarer forfait</button>
-        </div>
-        <div id="validerB" class="valider">
-            <p>VALIDER</p>
-            <button class="okButton" onclick="validerWall()">ok</button>
-            <button class="notokButton" onclick="annulerWall()">annuler</button>
-        </div>
+    <div class="PlayBot" onclick="redirectToGame('typeDePartie','bot',7)">
+        <h2 class="btnJouerBot"> JOUER CONTRE UN BOT ALEATOIRE</h2>
+        <img id="aleaBot" src="images/aleaBot.png" alt="">
     </div>
 
+    <div class="PlayBot" onclick="redirectToGame('typeDePartie','bot_v2',7)">
+        <h2 class="btnJouerBot"> JOUER CONTRE UN BOT INTELLIGENT</h2>
+        <img id="smartBot" src="images/smartBot.png" alt="">
+    </div>
 </div>
+
 <div id="chatMenu" class="chatMenu">
     <div id="menuChat">
         <div id="amisChat" onclick="showAmisChat()">
@@ -114,7 +71,7 @@
         <div class="listeAmis" id="nomAmi" onclick=" showAmisChat();getConversation();">
             <div class="ami">
                 <div style="display: flex">
-                    <div class="mitroChat">
+                    <div class="mitroChat" >
                         <img src="images/mitro.jpg" id="photoChatAvecUnAmis" alt="">
                     </div>
                     <span class="nom" id="nomAmiID">Amis1</span>
@@ -135,6 +92,11 @@
     <img id="param" src="images/param.png">
 
 
+    <div id="amisDiv" onclick="redirectToFriendsPage()">
+        <img id="amisImg" src="images/friends.png">
+        <p id="amisTexte">AMIS</p>
+        <span class="notification-badge"> </span>
+    </div>
     <div id="chat" onclick="openChat()">
         <img src="images/chat.png">
         <p id="chatting">CHAT</p>
@@ -146,21 +108,9 @@
 
 </div>
 </body>
-
-
 </html>
-
-
 <script src="js/cookie.js"></script>
-
-<script src="js/authentification.js"></script>
-
-<!--<script src="js/ai.js"></script>-->
-<script src="js/kickoridor24.js"></script>
-<script src="js/bot_alea.js"></script>
 <script src="js/socket.io.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/chat.js"></script>
-<script src="js/game.js"></script>
-
-
+<script src="js/authentification.js"></script>

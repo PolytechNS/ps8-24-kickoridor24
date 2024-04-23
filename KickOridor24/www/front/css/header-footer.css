@@ -121,14 +121,15 @@
         margin-right: 0.5vh;
         background-color: #9f9f9f;
         cursor: pointer;
+        display: flex;
         align-items: center;
-        justify-content: center;
     }
 
     .btn {
         margin-left: 1.5vh;
         margin-right: 1.5vh;
-        margin-top: 1.4vh;
+        margin-top: 0px;
+        margin-bottom: 0px;
         font-size: 2.5vh;
     }
 
@@ -182,13 +183,13 @@
     .chatMenu.show {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items:  center;
         justify-content: flex-start;
         width: 22.4%;
         position: absolute;
         height: 80%;
         margin-left: 77.35%;
-        margin-top: 11vh;
+        margin-top: 9.8vh;
         background-color: #86A1B9;
     }
 
@@ -496,6 +497,8 @@
         cursor: pointer;
         align-items: center;
         justify-content: center;
+        display: flex;
+        align-items: center;
     }
     #chat, #amisDiv {
         display: flex;
@@ -551,8 +554,8 @@
         width: 82.4%;
         position: absolute;
         height: 80%;
-        margin-left: 17vw;
-
+        margin-left: 17.3vw;
+        margin-top: 15.6vh;
         background-color: #86A1B9;
         font-size: 3vh;
 
@@ -574,7 +577,7 @@
         .btn {
             margin-left: 1.5vh;
             margin-right: 1.5vh;
-            margin-top: 1.4vh;
+            margin-top: 0px;
             font-size: 2.5vw;
             white-space: nowrap;
         }

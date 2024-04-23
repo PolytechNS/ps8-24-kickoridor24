@@ -3,7 +3,7 @@ if(!window.location.href.includes("game.html") || !window.location.href.includes
     window.onload = function () {
         if (getUsername() !== null) {
             document.getElementById("se-connecter").style.display = "none";
-            document.getElementById("se-deconnecter").style.display = "block";
+            document.getElementById("se-deconnecter").style.display = "flex";
             document.getElementsByClassName("name")[0].innerHTML = getUsername();
             document.getElementsByClassName("name")[0].style.cursor = "pointer";
             //make bold when hover
@@ -16,7 +16,7 @@ if(!window.location.href.includes("game.html") || !window.location.href.includes
             }
         }
         if (getUsername() == null) {
-            document.getElementById("se-connecter").style.display = "block";
+            document.getElementById("se-connecter").style.display = "flex";
             document.getElementById("se-deconnecter").style.display = "none";
             document.getElementsByClassName("name")[0].innerHTML = "Invité";
             document.getElementsByClassName("name")[0].style.cursor = "pointer";

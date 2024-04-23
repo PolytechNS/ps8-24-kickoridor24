@@ -248,7 +248,7 @@ function setUpGame() {
         HideVictoire();
 
         hideValider();
-        document.getElementsByClassName("forfait")[1].classList.add("forfaitGrand");
+
         if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null) {
             hideSauvegarder();
             document.getElementsByClassName("forfait")[0].classList.add("forfaitGrand");
@@ -682,7 +682,8 @@ function hideValider() {
         if (activePlayer == "playerA") {
             document.getElementsByClassName("profilA")[0].style.display = "grid";
             document.getElementById("nbWallPlayerA").style.display = "block";
-            document.getElementsByClassName("sauvegarder")[0].style.display = "block";
+            if(!(getCookie("typeDePartie") === "enLigne" || getCookie("username") == null))
+                document.getElementsByClassName("sauvegarder")[0].style.display = "block";
             document.getElementsByClassName("forfait")[0].style.display = "block";
         } else {
             document.getElementsByClassName("profilB")[0].style.display = "grid";
@@ -696,11 +697,13 @@ function hideValider() {
 }
 
 function hideSauvegarder() {
+    console.log("lll");
     document.querySelector('.sauvegarder').style.display = 'none';
 }
 
 function hideForfaitA() {
     document.querySelector('#forfaitA').style.display = 'none';
+    if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null)
     document.getElementsByClassName("sauvegarder")[0].style.gridColumn ="span 2";
 }
 
@@ -711,6 +714,7 @@ function hideForfaitB() {
 
 function showForfaitA() {
     document.querySelector('#forfaitA').style.display = 'grid';
+    if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null)
     document.getElementsByClassName("sauvegarder")[0].style.gridColumn ="span 1";
 }
 
