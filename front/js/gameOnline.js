@@ -793,7 +793,7 @@ socket.on("Victoire", async (playerWin, playerLose) => {
 
     await sendElo(playerWin, Math.ceil(newEloWinner));
 
-    showVictoire(playerWin, newEloWinner, diffElo);
+    showVictoire(playerWin, Math.ceil(newEloWinner), diffElo);
 
 });
 
@@ -818,7 +818,7 @@ socket.on("Defaite", async (playerLose, playerWin) => {
 
     await sendElo(playerLose, Math.ceil(newEloLoser));
 
-    showVictoire(txt, Math.ceil(newEloLoser), diffElo);
+    showVictoire(playerWin, Math.ceil(newEloLoser), diffElo);
 });
 
 socket.on("MatchNul", async (player1, player2) => {
