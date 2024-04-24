@@ -21,7 +21,6 @@ module.exports = function (io) {
 
     gameNamespace.on('connection', (socket) => {
 
-        console.log("llllaaaaa")
         setupGame();
         socket.emit('setupGame');
 
@@ -59,11 +58,11 @@ module.exports = function (io) {
                     delete rooms[room];
                 }
             }
-            });
+        });
         socket.on("changePage", () => {
             const room = findRoomBySocketId(socket.id);
             socket.leave(room);
-            if(rooms[room])
+            if (rooms[room])
                 rooms[room].splice(socket.id, 1);
         });
         socket.on('joinGameWithRoom', (room) => {
@@ -81,7 +80,7 @@ module.exports = function (io) {
                 //gameNamespace.to(roomId).emit('setupGame');
 
             }
-           });
+        });
 
         socket.on('login', (userId) => {
             console.log('Utilisateur', userId, 'connecté');
@@ -90,20 +89,20 @@ module.exports = function (io) {
 
         });
         socket.on('message', (data) => {
-            const { senderId, ami, message } = data;
+            const {senderId, ami, message} = data;
             console.log(data);
             console.log('Message de', senderId, 'à', ami, ':', message);
 
             // Notifier le destinataire s'il est connecté
             if (clients[ami]) {
-                clients[ami].emit('newMessage', { senderId, message });
+                clients[ami].emit('newMessage', {senderId, message});
             }
         });
         socket.on('getPlayersPosition', () => {
 
             gameNamespace.to(varRoom).emit('getPlayersPositionResponse', player1Position, player2Position);
-           //console.log('getPlayersPosition');
-           //socket.emit('getPlayersPositionResponse', player1Position, player2Position);
+            //console.log('getPlayersPosition');
+            //socket.emit('getPlayersPositionResponse', player1Position, player2Position);
 
         });
         socket.on('getPlayersPositionOffline', () => {
@@ -163,25 +162,55 @@ module.exports = function (io) {
         socket.on('disconnect', () => {
 
         });
-        socket.on("VictoireOnline", (txt) => {
-            const room = findRoomBySocketId(socket.id);
-            const socketsInRoom = io.sockets.adapter.rooms.get(room);
+        socket.on("VictoireOnline", (txt,player,socketId) => {
 
-            // Envoyer un événement à chaque socket dans la salle pour supprimer la salle
-            if (socketsInRoom) {
-                socketsInRoom.forEach(socketId => {
-                    io.to(socketId).emit("SupprimerRoom", room);
-                });
+            console.log('VictoireOnline : ', txt);
+            console.log('Player : ', player);
+            console.log('SocketId : ', socketId);
+
+
+            const room = findRoomBySocketId(socket.id);
+            const socketsInRoom = io.of("/api/game").adapter.rooms
+
+            const socketIds = Array.from(socketsInRoom.get(room));
+
+
+            let idBDD = [];
+            socketIds.forEach(id => {
+                idBDD.push(getUserIdBySocketId(id));
+            });
+
+
+            let namePlayerSocket = getUserIdBySocketId(socketId);
+            let nameOtherplayer;
+
+            idBDD.forEach(id => {
+                if(id != namePlayerSocket){
+                    nameOtherplayer = id;
+                }
+            });
+
+
+            if(txt === 'match nul !' ){
+                socket.emit('MatchNul', namePlayerSocket, nameOtherplayer);
+            }else if(player == 1 && txt == 'PlayerA'){
+                socket.emit('Victoire', namePlayerSocket, nameOtherplayer);
+            }else if(player == 2 && txt == 'PlayerA'){
+                socket.emit('Defaite', namePlayerSocket, nameOtherplayer);
+            }else if(player == 1 && txt == 'PlayerB'){
+                socket.emit('Defaite', namePlayerSocket, nameOtherplayer);
+            }else if(player == 2 && txt == 'PlayerB'){
+                socket.emit('Victoire', namePlayerSocket, nameOtherplayer);
+            }else{
+                console.log('Erreur');
             }
 
-            delete rooms[room];
-            gameNamespace.to(room).emit("FinDePartieOnline",txt);
-
         });
-        socket.on("MessageMatch",(message,username) =>{
+
+        socket.on("MessageMatch", (message, username) => {
             console.log(message + " de " + username);
             const room = findRoomBySocketId(socket.id);
-            gameNamespace.to(room).emit("NewMatchMsg",message,username);
+            gameNamespace.to(room).emit("NewMatchMsg", message, username);
         });
     });
 
@@ -203,36 +232,45 @@ function setupGame() {
     dernierTourB = false;
 }
 
-    function findAvailableRoom() {
-        for (let room in rooms) {
-            if (rooms[room].length < 2) {
-                return room;
-            }
+function findAvailableRoom() {
+    for (let room in rooms) {
+        if (rooms[room].length < 2) {
+            return room;
         }
-        return null;
     }
+    return null;
+}
 
-    function findAvailableRoomWithId(roomId) {
-        for (let room in rooms){
-            if (room === roomId){
-                return room;
-            }
+function findAvailableRoomWithId(roomId) {
+    for (let room in rooms) {
+        if (room === roomId) {
+            return room;
         }
-        return null;
     }
+    return null;
+}
 
-    function createRoom() {
-        const room = 'room' + (Math.random() * 1000).toFixed(0);
-        rooms[room] = [];
-        return room;
-    }
+function createRoom() {
+    const room = 'room' + (Math.random() * 1000).toFixed(0);
+    rooms[room] = [];
+    return room;
+}
 
 
-    function findRoomBySocketId(socketId) {
-        for (let room in rooms) {
-            if (rooms[room].includes(socketId)) {
-                return room;
-            }
+function findRoomBySocketId(socketId) {
+    for (let room in rooms) {
+        if (rooms[room].includes(socketId)) {
+            return room;
         }
-        return null;
     }
+    return null;
+}
+
+function getUserIdBySocketId(socketId) {
+    for (let userId in clients) {
+        if (clients[userId].id === socketId) {
+            return userId;
+        }
+    }
+    return null; // Retourne null si aucun utilisateur n'est associé à cet ID de socket
+}
