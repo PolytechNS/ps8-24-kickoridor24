@@ -23,6 +23,8 @@ let n;
 var cellsString = [];
 var cellsGrid = [];
 var stop = false;
+let win = false;
+
 class cellule {
     constructor(id, classes, visibilite) {
         this.class = classes;
@@ -739,36 +741,159 @@ function checkCrossing(playerAPosition, playerBPosition) {
     }
     if ((gagneA && gagneB) || tour === 0) {
         victoire("match nul !");
-
     } else if (gagneA) {
         victoire("PlayerA");
-
     } else if (gagneB) {
         victoire("PlayerB");
-
     }
 }
 
 function victoire(txt) {
-    //alert(txt);
-    socket.emit("VictoireOnline",txt);
+    if(win === true) return;
+
+    win = true;
+    socket.emit("VictoireOnline",txt, getCookie("player"),socket.id);
 
 }
-socket.on("FinDePartieOnline",(txt) => {
-    showVictoire(txt);
+/*socket.on("FinDePartieOnline",(txt, clientsInRoom) => {
+
     if(txt == currentPlayer)
-         calculerElo(1,0);
+         calculerElo(1,0, clientsInRoom);
     else if(txt == "match nul !"){
-        calculerElo(0.5,0.5);
+        calculerElo(0.5,0.5, clientsInRoom);
     }else{
-        calculerElo(0,1);
+        calculerElo(0,1, clientsInRoom);
     }
     // window.location.href = 'index.html';})
 });
-async function calculerElo(res1,res2){
 
+async function calculerElo(res1,res2, clientsInRoom){
+    console.log(clientsInRoom);
+}*/
+
+socket.on("Victoire", async (playerWin, playerLose) => {
+
+    const eloPlayerWin = await getElo(playerWin);
+    const eloPlayerLose = await getElo(playerLose);
+
+    const k = 30;
+
+
+    const newEloWinner = parseInt(eloPlayerWin) + k * (1 - (1/ (1 + Math.pow(10,(eloPlayerLose - eloPlayerWin) / 400))));
+
+    let diffElo = newEloWinner - eloPlayerWin;
+
+    if(diffElo > 0){
+        diffElo = "+" + Math.ceil(diffElo);
+    }else{
+        diffElo = Math.ceil(diffElo);
+    }
+
+    console.log(Math.ceil(newEloWinner) + "(" + diffElo + ")");
+
+    await sendElo(playerWin, Math.ceil(newEloWinner));
+
+    showVictoire(playerWin, newEloWinner, diffElo);
+
+});
+
+socket.on("Defaite", async (playerLose, playerWin) => {
+
+    const eloPlayerWin = await getElo(playerWin);
+    const eloPlayerLose = await getElo(playerLose);
+
+    const k = 30;
+
+    const newEloLoser = parseInt(eloPlayerLose) + k * (0 - (1 / (1 + Math.pow(10, (eloPlayerWin - eloPlayerLose) / 400))));
+
+    let diffElo = newEloLoser - eloPlayerLose;
+
+    if (diffElo > 0) {
+        diffElo = "+" + Math.ceil(diffElo);
+    } else {
+        diffElo = Math.ceil(diffElo);
+    }
+
+    console.log(Math.ceil(newEloLoser) + "(" + diffElo + ")");
+
+    await sendElo(playerLose, Math.ceil(newEloLoser));
+
+    showVictoire(txt, Math.ceil(newEloLoser), diffElo);
+});
+
+socket.on("MatchNul", async (player1, player2) => {
+    //TODO MATCH NUL
+    console.log("Match Nul");
+
+    console.log("Player 1 : ", player1);
+    console.log("Player 2 : ", player2);
+
+    const eloPlayerWin = await getElo(player1);
+    const eloPlayerLose = await getElo(player2);
+
+    console.log("Elo Player 1 : ", eloPlayerWin);
+    console.log("Elo Player 2 : ", eloPlayerLose);
+
+    const k = 30;
+
+
+    const newEloWinner = parseInt(eloPlayerWin) + k * (0.5 - (1 / (1 + Math.pow(10, (eloPlayerLose - eloPlayerWin) / 400))));
+
+    let diffElo = newEloWinner - eloPlayerWin;
+
+    if (diffElo > 0) {
+        diffElo = "+" + Math.ceil(diffElo);
+    } else {
+        diffElo = Math.ceil(diffElo);
+    }
+
+    console.log(Math.ceil(newEloWinner) + "(" + diffElo + ")");
+
+    await sendElo(player1, Math.ceil(newEloWinner));
+
+    showVictoire("match nul !", Math.ceil(newEloWinner), diffElo);
+})
+
+async function sendElo(username,elo){
+    const formDataJSON = {};
+    formDataJSON["username"] = username;
+    formDataJSON["elo"] = elo;
+    try {
+        const response = await fetch('/api/updateElo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataJSON)
+        });
+    } catch (e) {
+        alert(e.message);
+    }
 }
-function showVictoire(txt){
+
+async function getElo(username) {
+
+    try {
+        const response = await fetch('/api/getElo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username })
+        });
+
+        if (!response.ok) {
+            var err = await response.text();
+            throw new Error('Une erreur est survenue lors de la récupération de l\'elo : ' + err);
+        }
+
+        return await response.text();
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+function showVictoire(txt, newElo, diffElo){
     document.querySelector('.finDePartie').style.display = 'flex';
     const divMid = document.getElementById("finMiddle");
     if(txt == "match nul !"){
@@ -777,6 +902,7 @@ function showVictoire(txt){
     }
     else {
         divMid.getElementsByTagName('h2')[0].textContent = txt + " remporte la partie";
+        divMid.getElementsByTagName('h3')[0].textContent = "Votre nouvel elo : " + newElo + " (" + diffElo + ")";
 
         if (txt == currentPlayer) {
             if (getCookie("username") != null) {
