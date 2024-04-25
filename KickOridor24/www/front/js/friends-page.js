@@ -49,6 +49,14 @@ async function ajouterAmisListe(){
                         div.classList.add("profilAmis");
                         var img = document.createElement("img");
                         img.src = data[i]["img"];
+                        if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                            img.style.width = '6.25vh';
+                            img.style.height = '6.25vh';
+                            //border
+                            img.style.border = '5px solid #E4E5E7';
+                            img.style.borderRadius = '50%';
+                            img.style.marginLeft = '-2vh';
+                        }
 
                         div.appendChild(img);
                         var nom = document.createElement("p");
@@ -64,27 +72,42 @@ async function ajouterAmisListe(){
                         elo.classList.add("elo");
                         div.appendChild(elo);
                         if(parseInt( data[i]["elo"]) > 1999){
-                            div.style.background ='url("images/uclTest.png")';
+                            if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ucl-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/uclTest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>1499){
-                            div.style.background ='url("images/europaTest.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/europa-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/europaTest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>999){
-                            div.style.background ='url("images/conferencetest.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/conference-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/conferencetest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>499){
-                            div.style.background ='url("images/ligue1.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ligue1-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/ligue1.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'repeat';
                             div.style.backgroundPosition = 'center';
                         }else{
-                            div.style.background ='url("images/ligue2.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ligue2-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/ligue2.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
@@ -94,7 +117,7 @@ async function ajouterAmisListe(){
                         btn.textContent = "AJOUTER";
                         btn.classList.add("addBTN");
 
-                        btn.style.backgroundColor = '#38cfda';
+                        btn.style.backgroundColor = '#00b7c4';
 
                         //hover
                         btn.addEventListener('mouseover', function() {
@@ -107,7 +130,7 @@ async function ajouterAmisListe(){
                         }
                         );
                         btn.addEventListener('mouseout', function() {
-                            btn.style.backgroundColor = '#38cfda';
+                            btn.style.backgroundColor = '#00b7c4';
                             btn.style.opacity = '1';
                             btn.style.transform = 'translateY(0)';
                             btn.style.transitionDuration = '.35s';
@@ -207,6 +230,15 @@ async function demandesAmisListe(){
 
                         var img = document.createElement("img");
                         img.src = data[i]["img"];
+                        if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                            img.style.width = '6.25vh';
+                            img.style.height = '6.25vh';
+                            //border
+                            img.style.border = '5px solid #E4E5E7';
+                            img.style.borderRadius = '50%';
+                            img.style.marginLeft = '-2vh';
+
+                        }
                         div.appendChild(img);
                         var nom = document.createElement("p");
 
@@ -221,27 +253,42 @@ async function demandesAmisListe(){
                         elo.classList.add("elo");
                         div.appendChild(elo);
                         if(parseInt( data[i]["elo"]) > 1999){
-                            div.style.background ='url("images/uclTest.png")';
+                            if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ucl-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/uclTest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>1499){
-                            div.style.background ='url("images/europaTest.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/europa-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/europaTest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>999){
-                            div.style.background ='url("images/conferencetest.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/conference-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/conferencetest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>499){
-                            div.style.background ='url("images/ligue1.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ligue1-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/ligue1.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'repeat';
                             div.style.backgroundPosition = 'center';
                         }else{
-                            div.style.background ='url("images/ligue2.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ligue2-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/ligue2.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
@@ -249,7 +296,8 @@ async function demandesAmisListe(){
                         let btnV = document.createElement("button");
                         btnV.textContent = "AJOUTER";
                         btnV.classList.add("addBTN");
-                        btnV.style.backgroundColor = '#38cfda';
+                        btnV.style.backgroundColor = '#00b7c4';
+                        btnV.style.marginLeft = '-3vw';
 
                         btnV.addEventListener('mouseover', function() {
                             btnV.style.backgroundColor = '#31a5ad';
@@ -261,7 +309,7 @@ async function demandesAmisListe(){
                         }
                         );
                         btnV.addEventListener('mouseout', function() {
-                            btnV.style.backgroundColor = '#38cfda';
+                                btnV.style.backgroundColor = '#00b7c4';
                             btnV.style.opacity = '1';
                             btnV.style.transform = 'translateY(0)';
                             btnV.style.transitionDuration = '.35s';
@@ -287,6 +335,7 @@ async function demandesAmisListe(){
                         btnD.classList.add("suppBTN");
 
                         btnD.style.backgroundColor = '#eb4f61';
+                        btnD.style.marginLeft = '-7vw';
 
                         //hover
                         btnD.addEventListener('mouseover', function() {
@@ -427,6 +476,14 @@ async function listeAmis(){
 
                         var img = document.createElement("img");
                         img.src = data[i]["img"];
+                        if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                            img.style.width = '6.25vh';
+                            img.style.height = '6.25vh';
+                            //border
+                            img.style.border = '5px solid #E4E5E7';
+                            img.style.borderRadius = '50%';
+                            img.style.marginLeft = '-2vh';
+                        }
                         div.appendChild(img);
                         let nom = document.createElement("p");
 
@@ -442,27 +499,42 @@ async function listeAmis(){
                         elo.style.fontWeight = 'bold';
                         div.appendChild(elo);
                         if(parseInt( data[i]["elo"]) > 1999){
-                            div.style.background ='url("images/uclTest.png")';
+                            if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ucl-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/uclTest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>1499){
-                            div.style.background ='url("images/europaTest.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/europa-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/europaTest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>999){
-                            div.style.background ='url("images/conference-amisPHONE.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/conference-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/conferencetest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>499){
-                            div.style.background ='url("images/ligue1.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ligue1-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/ligue1.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'repeat';
                             div.style.backgroundPosition = 'center';
                         }else{
-                            div.style.background ='url("images/ligue2.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ligue2-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/ligue2.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';

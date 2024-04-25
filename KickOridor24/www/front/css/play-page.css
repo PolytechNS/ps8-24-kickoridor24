@@ -2,13 +2,15 @@
 .Play {
     background-color: #E4E5E7;
     font-family: 'Roboto Condensed', sans-serif;
-    /*changer couleur du texte*/
     color: #eb4f61;
+    width: 45%;
+    height: 45%;
+    max-height: 300px;
     box-shadow: 0 3px 3px 0 #676767;
-    margin-right: 1.2vh;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    transition: background-color 0.3s ease;
 }
 
 .Play:hover {
@@ -34,6 +36,7 @@
     height: 23vh;
     width: 13vw;
     padding: 0.1em 0.2em 0.2em 0.2em;
+    margin-top: unset;
 }
 .onlinePlay, .horsLignePlay{
     display: flex;
@@ -102,13 +105,12 @@
 }
 .all{
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     margin: 0 auto;
-    /*centrer verticalement*/
-    height: 70%;
-
+    height: 75%;
+    margin-top: 7vh;
 }
 
 .btnJouer{
@@ -132,6 +134,10 @@
     cursor: pointer;
 }
 
+.navClass2{
+    display: none;
+}
+
 @media screen and (max-aspect-ratio: 4/3.1) {
     .container {
         display: flex;
@@ -139,7 +145,7 @@
         /*placer les div au centre horizontalement et verticalement*/
         align-items: center;
         min-height: 60vh;
-        justify-content: center;
+        justify-content: flex-start;
     }
 
     .onlinePlay, .horsLignePlay{
@@ -162,14 +168,13 @@
         width: 70%;
         height: 15vh;
         max-height: 300px;
-        min-width: 215px;
-        margin: 0.5em;
+        margin: 0.2em;
         box-shadow: 0 3px 3px 0 #676767;
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
         transition: background-color 0.3s ease; /* Animation de transition pour un effet plus fluide */
-
+        min-width: 200px;
     }
     .btnJouer{
         height: 13vh;
@@ -185,12 +190,12 @@
      }
 
     #amical{
-        width: 9.5vh;
+        width: 20%;
         margin-right: 1vh;
     }
 
     #online{
-        width: 7.5vh;
+        width: 20%;
         margin: 1vh;
     }
     .navClass{
@@ -201,6 +206,122 @@
         /*width qui rempli tout l'espace dispo*/
         width: 100%;
         font-family: 'Roboto Condensed', sans-serif;
+    }
+
+    .navClass2{
+        display: flex;
+        margin-bottom: 1.5vh;
+    }
+
+    .navClass2 *{
+        box-sizing: border-box;
+    }
+
+    .Play{
+        font-size: 1em;
+    }
+
+    .select{
+        background: #2a2f3b;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 2px #2a2f3b solid;
+        border-radius: 0.5em;
+        padding : 1em;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .selected{
+        margin-right: 2vh;
+    }
+
+    .select-clicked{
+        border: 2px #26489a solid;
+        box-shadow: 0 0 0.8em #26489a;
+    }
+
+    .select:hover{
+        background: #323741;
+    }
+
+    .fleche{
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 6px solid #fff;
+        transition: 0.3s;
+    }
+
+    .fleche-rotate{
+        transform: rotate(180deg);
+    }
+
+    .menu{
+        list-style: none;
+        padding: 0.2em 0.5em;
+        background: #323741;
+        border: 1px #363a43 solid;
+        box-shadow: 0 0.5em 1em rgb(0, 0, 0, 0.1);
+        border-radius: 0.5em;
+        position: absolute;
+        margin-top: 7vh;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20vh;
+        opacity: 0;
+        display: none;
+        transition: 0.2s;
+        z-index: 10;
+        position: absolute;
+    }
+
+    .topButton{
+        /*enlever tout le css*/
+        background: unset;
+        margin: unset;
+        padding: unset;
+        border: unset;
+        font-weight: unset;
+        color: white;
+        font-size: 1.2em;
+    }
+
+    .menu li{
+        padding: 0.7em 0.5em;
+        border-radius: 0.5em;
+        margin: 0.2em 0;
+        cursor: pointer;
+    }
+
+    .menu-open{
+        display: block;
+        opacity: 1;
+    }
+
+    .menu li:hover{
+        background: #2a2d35;
+    }
+    .navClass{
+        display: none;
+    }
+
+    #ia{
+        width : 20%;
+    }
+
+    #local{
+        width: 20%;
+        margin-right: 1vh;
+    }
+
+    #resume{
+        width: 20%;
+        margin-top: 1vh;
+        margin-right: 1vh;
     }
 
 }

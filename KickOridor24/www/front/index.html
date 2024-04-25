@@ -3,12 +3,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kick'Oridor - Menu</title>
-    <link rel="stylesheet" type="text/css" href="css/menu.css">
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
 <body>
-<header>
+<div class="header">
     <div class="cnt-header">
         <div class="nav">
             <img id="home" src="images/home.png" onclick="redirectToMenu()">
@@ -27,19 +27,17 @@
                 <p id="name"></p>
             </div>
             <img id="petitePhoto" src="images/photoProfil/Mitroglu.png" alt="">
-
         </div>
     </div>
-
-    <div>
-        <img src="images/header.png" alt="" class="bg-header">
+    <span id="triangle_fond"></span>
     </div>
-</header>
 
-<div class="titre">
-    <img id="titre" src="images/titre.png" alt="">
-</div>
+<div class="big-container">
+    <div class="titre">
+        <img id="titre" src="images/titre.png" alt="">
+    </div>
 <div class="container">
+
     <div class="Play" onclick="redirectToPlayPage()">
         <h2 class="btnJouer"> JOUER</h2>
         <img class="icon" src="images/icon-jouer.png">
@@ -53,6 +51,7 @@
     <div id="classement" class="Play" onclick="redirectToClassement()">
         <h2 class="btnJouer"> CLASSEMENTS</h2>
     </div>
+</div>
 </div>
 
 <div id="chatMenu" class="chatMenu">
@@ -92,7 +91,10 @@
     </div>
 </div>
 
-<div class="footer">
+<footer class="footer">
+    <span id="triangle_inverse_fond"></span>
+
+    <div class="cnt-footer">
     <img id="param" src="images/param.png">
 
 
@@ -106,11 +108,11 @@
         <p id="chatting">CHAT</p>
         <span class="notification-badge"> </span>
     </div>
+    </div>
 
 
 
-
-</div>
+</footer>
 </body>
 </html>
 <script src="js/cookie.js"></script>

@@ -4,11 +4,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kick'Oridor - Game</title>
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
+
     <link rel="stylesheet" type="text/css" href="css/game.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
 <body>
-<header>
+<div class="header">
     <div class="cnt-header">
         <div class="nav">
             <img id="home" src="images/home.png" onclick="redirectToMenu()">
@@ -27,14 +28,10 @@
                 <p id="name"></p>
             </div>
             <img id="petitePhoto" src="images/photoProfil/Mitroglu.png" alt="">
-
         </div>
     </div>
-
-    <div>
-        <img src="images/header.png" alt="" class="bg-header">
-    </div>
-</header>
+    <span id="triangle_fond"></span>
+</div>
 <div class="center">
     <h2 id="currentPlayer">Tour : playerA</h2>
     <h2 id="nbTour">Tour : n°0</h2>
@@ -131,20 +128,28 @@
     </div>
 </div>
 
-<div class="footer">
-    <img id="param" src="images/param.png">
+<footer class="footer">
+    <span id="triangle_inverse_fond"></span>
+
+    <div class="cnt-footer">
+        <img id="param" src="images/param.png">
 
 
-    <div id="chat" onclick="openChat()">
-        <img src="images/chat.png">
-        <p id="chatting">CHAT</p>
-        <span class="notification-badge"> </span>
+        <div id="amisDiv" onclick="redirectToFriendsPage()">
+            <img id="amisImg" src="images/friends.png">
+            <p id="amisTexte">AMIS</p>
+            <span class="notification-badge"> </span>
+        </div>
+        <div id="chat" onclick="openChat()">
+            <img src="images/chat.png">
+            <p id="chatting">CHAT</p>
+            <span class="notification-badge"> </span>
+        </div>
     </div>
 
 
 
-
-</div>
+</footer>
 </body>
 
 
