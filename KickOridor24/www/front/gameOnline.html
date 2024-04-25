@@ -38,7 +38,7 @@
 
 <div class="container">
     <div class="profilA">
-        <h3 style="background-color: lightgreen" >Player A</h3>
+        <h3 id="namePlayerA" style="background-color: lightgreen" >Player A</h3>
         <p id="nbWallPlayerA">Murs restant : 10</p>
         <span id="chronometreA">1:00</span>
         <div class="sauvegarder">
@@ -67,6 +67,9 @@
             <h2>
                 Player remporte la partie
             </h2>
+            <h3>
+                Nouvel elo
+            </h3>
             <img src="images/celebration/SIUU.gif" class="celebrationVictoire">
             <button onclick=returnMenu()>RETOUR AU MENU</button>
         </div>
@@ -81,7 +84,7 @@
         <img >
     </div>
     <div class="profilB">
-        <h3 style="background-color: #F67E8C" >Player B</h3>
+        <h3 id="namePlayerB" style="background-color: #F67E8C" >Player B</h3>
         <p id="nbWallPlayerB">Murs restant : 10</p>
         <span id="chronometreB">1:00</span>
         <div class="forfait" id="forfaitB">
@@ -154,9 +157,6 @@
             <span class="notification-badge"> </span>
         </div>
     </div>
-
-
-
 </footer>
 </body>
 

@@ -1,8 +1,10 @@
 
 setCookie("player", "0", -1);
+
 socket.emit('joinGame');
 socket.on('joinedGame', (room) => {
     console.log(room);
+    setCookie("option","",1);
 
 });
 var gamePrete = false;
