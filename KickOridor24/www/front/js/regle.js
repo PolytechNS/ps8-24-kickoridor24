@@ -1,3 +1,4 @@
+
 function showRegle(){
     console.log("showRegle")
     document.getElementsByClassName("Regles")[0].style.display = "flex";
@@ -9,6 +10,7 @@ function showRegle(){
     document.getElementById("commande").style.backgroundColor = "#E4E5E7";
     document.getElementById("classement").style.backgroundColor = "#E4E5E7";
     document.getElementById("regle").style.backgroundColor = "#3EE4F0";
+    navigator.vibrate(1000)
 }
 
 function showCommandes(){
@@ -22,6 +24,7 @@ function showCommandes(){
     document.getElementById("commande").style.backgroundColor = "#3EE4F0";
     document.getElementById("classement").style.backgroundColor = "#E4E5E7";
     document.getElementById("regle").style.backgroundColor = "#E4E5E7";
+    navigator.vibrate(1000)
 }
 
 function showRangs(){
@@ -35,6 +38,7 @@ function showRangs(){
     document.getElementById("classement").style.backgroundColor = "#3EE4F0";
     document.getElementById("commande").style.backgroundColor = "#E4E5E7";
     document.getElementById("regle").style.backgroundColor = "#E4E5E7";
+    navigator.vibrate(1000)
 }
 
 const dropdowns = document.querySelectorAll('.navClass2');

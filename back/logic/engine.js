@@ -15,7 +15,7 @@ var dernierTourB;
 let rooms = {};
 let varRoom = '';
 const clients = {};
-
+let clientReady ={};
 module.exports = function (io) {
     gameNamespace = io.of('/api/game');
 
@@ -35,7 +35,6 @@ module.exports = function (io) {
             socket.join(room);
             rooms[room].push(socket.id);
             socket.emit('joinedGame', room);
-
 
             if (rooms[room].length === 2) {
                 gameNamespace.to(room).emit('startGame', room);
@@ -80,6 +79,7 @@ module.exports = function (io) {
                 if (rooms[roomId].length === 2) {
 
                     gameNamespace.to(roomId).emit('gameStarted');
+                    clientReady[roomId]= 0;
                     //gameNamespace.to(roomId).emit('setupGame');
 
                 }
@@ -115,7 +115,9 @@ module.exports = function (io) {
         socket.on('addCellFirtTime', (cell) => {
             console.log('addCellFirtTime');
             cells = cell;
-            socket.emit('setupTheGame');
+                socket.emit('setupTheGame');
+
+
         });
 
         socket.on('setUpGame', () => {
@@ -178,6 +180,7 @@ module.exports = function (io) {
             }
 
             delete rooms[room];
+            delete clientReady[room];
             gameNamespace.to(room).emit("FinDePartieOnline",txt);
 
         });

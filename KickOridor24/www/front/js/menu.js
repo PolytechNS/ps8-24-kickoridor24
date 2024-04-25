@@ -25,7 +25,7 @@ function redirectToClassement() {
 
 function redirectToRegle() {
     window.location.href = "regle-page.html";
-    navigator.vibrate(3000);
+
 }
 
 function redirectToPlayPage() {

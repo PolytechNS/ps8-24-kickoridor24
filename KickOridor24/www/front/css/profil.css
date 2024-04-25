@@ -9,6 +9,10 @@
     padding: 0.2em 4em 6em 0.4em;
 
 }
+.selected2{
+    background-color: #eb4f6170 ;
+    border: 3px solid #eb4f61;
+}
 .searchPNG{
     display: none;
 }
@@ -181,6 +185,7 @@ h2{
     gap: 1vh;
     /* padding: 0.2em 4em 6em 0.4em; */
     min-width: 150px;
+    align-items: center;
 }
 
 .contenu input{
@@ -270,6 +275,7 @@ h2{
     font-weight: bold;
     font-family: 'Roboto Condensed', sans-serif;
     color: black;
+    margin: unset;
 }
 
 #gridCeleb{
@@ -310,6 +316,7 @@ h2{
     width: 250px;
     height: 250px;
     padding-top: 1vh;
+    justify-content: space-between;
 }
 .affichageCeleb img{
     width: 70%;
@@ -319,6 +326,7 @@ h2{
     font-weight: bold;
     font-family: 'Roboto Condensed', sans-serif;
     color: black;
+    margin: unset;
 }
 
 input{
@@ -538,6 +546,7 @@ input{
     .select:hover{
         background: #323741;
     }
+
 
     .fleche{
         width: 0;
