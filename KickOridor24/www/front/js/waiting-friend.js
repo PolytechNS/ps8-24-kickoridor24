@@ -6,11 +6,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const title = document.getElementById('title');
     title.innerHTML = "Attente de la réponse de " + friend;
 
-
     if (getCookie("player") == "1") {
         socket.emit('joinGame');
         socket.on('joinedGame', async (room) => {
-            console.log(room);
+            console.log("test : " , room);
             roomId = room;
             await inviteFriend(getCookie("username"), friend, roomId);
         });
@@ -29,8 +28,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
     async function inviteFriend(emetteur, receveur, roomId) {
+        console.log("inviteFriend");
         const formDataJSON = {};
         formDataJSON["emetteur"] = emetteur;
         formDataJSON["receveur"] = receveur;

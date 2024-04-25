@@ -38,10 +38,7 @@ module.exports = function (io) {
 
             if (rooms[room].length === 2) {
                 gameNamespace.to(room).emit('startGame', room);
-
-
             } else {
-
                 gameNamespace.to(room).emit('firstPlayer');
             }
         });

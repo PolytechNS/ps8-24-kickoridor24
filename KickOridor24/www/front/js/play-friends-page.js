@@ -113,7 +113,7 @@ async function inviteListe(){
                         btnV.textContent = "ACCEPTER";
                         btnV.classList.add("addBTN");
 
-                        btn.style.backgroundColor = '#00b7c4';
+                        btnV.style.backgroundColor = '#00b7c4';
 
                         //hover
                         btnV.addEventListener('mouseover', function() {
