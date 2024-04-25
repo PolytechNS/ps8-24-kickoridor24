@@ -32,9 +32,14 @@ const nameUrl = urlParams.get('player');
 
 if(getCookie("player") == "1") {
     document.getElementById('namePlayerA').innerText = getCookie("username");
-    document.getElementById('namePlayerB').innerText = nameUrl;
+    if(nameUrl){
+        document.getElementById('namePlayerB').innerText = nameUrl;
+    }
+
 }else{
-    document.getElementById('namePlayerA').innerText = nameUrl;
+    if(nameUrl){
+        document.getElementById('namePlayerB').innerText = nameUrl;
+    }
     document.getElementById('namePlayerB').innerText = getCookie("username");
 }
 
