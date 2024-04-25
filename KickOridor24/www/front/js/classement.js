@@ -63,6 +63,14 @@ async function AllUserClassement() {
 
                 var img = document.createElement("img");
                 img.src = data[i]["img"];
+                //media query screen and (max-aspect-ratio: 4/3.1)
+                if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                    img.style.width = '6.25vh';
+                    img.style.height = '6.25vh';
+                    //border
+                    img.style.border = '5px solid #E4E5E7';
+                    img.style.borderRadius = '50%';
+                }
                 div.appendChild(img);
                 let nom = document.createElement("p");
 
@@ -75,27 +83,42 @@ async function AllUserClassement() {
                 elo.style.width = '8vh';
                 elo.style.fontWeight = 'bold';
                 if(parseInt( data[i]["elo"]) > 1999){
-                    div.style.background ='url("images/uclTest.png")';
+                    if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                        div.style.background ='url("images/ucl-modifie.png")';
+                    }
+                    else{div.style.background ='url("images/uclTest.png")';}
                     div.style.backgroundSize = 'cover';
                     div.style.backgroundRepeat = 'no-repeat';
                     div.style.backgroundPosition = 'center';
                 }else if(parseInt( data[i]["elo"])>1499){
-                    div.style.background ='url("images/europaTest.png")';
+                    if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                        div.style.background ='url("images/europa-modifie.png")';
+                    }
+                    else{div.style.background ='url("images/europaTest.png")';}
                     div.style.backgroundSize = 'cover';
                     div.style.backgroundRepeat = 'no-repeat';
                     div.style.backgroundPosition = 'center';
                 }else if(parseInt( data[i]["elo"])>999){
-                    div.style.background ='url("images/conferencetest.png")';
+                    if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                        div.style.background ='url("images/conference-modifie.png")';
+                    }
+                    else{div.style.background ='url("images/conferencetest.png")';}
                     div.style.backgroundSize = 'cover';
                     div.style.backgroundRepeat = 'no-repeat';
                     div.style.backgroundPosition = 'center';
                 }else if(parseInt( data[i]["elo"])>499){
-                    div.style.background ='url("images/ligue1.png")';
+                    if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                        div.style.background ='url("images/ligue1-modifie.png")';
+                    }
+                    else{div.style.background ='url("images/ligue1.png")';}
                     div.style.backgroundSize = 'cover';
                     div.style.backgroundRepeat = 'repeat';
                     div.style.backgroundPosition = 'center';
                 }else{
-                    div.style.background ='url("images/ligue2.png")';
+                    if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                        div.style.background ='url("images/ligue2-modifie.png")';
+                    }
+                    else{div.style.background ='url("images/ligue2.png")';}
                     div.style.backgroundSize = 'cover';
                     div.style.backgroundRepeat = 'no-repeat';
                     div.style.backgroundPosition = 'center';
@@ -161,6 +184,13 @@ async function UserClassement() {
 
                             const img = document.createElement("img");
                             img.src = data[i]["img"];
+                            if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                img.style.width = '7vh';
+                                img.style.height = '7vh';
+                                //border
+                                img.style.border = '5px solid #E4E5E7';
+                                img.style.borderRadius = '50%';
+                            }
                             div.appendChild(img);
 
                             const nom = document.createElement("p");
@@ -176,27 +206,42 @@ async function UserClassement() {
 
                             // Appliquer le style en fonction de l'Elo
                             if(parseInt( data[i]["elo"]) > 1999){
-                                div.style.background ='url("images/uclTest.png")';
+                                if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                    div.style.background ='url("images/ucl-modifie.png")';
+                                }
+                                else{div.style.background ='url("images/uclTest.png")';}
                                 div.style.backgroundSize = 'cover';
                                 div.style.backgroundRepeat = 'no-repeat';
                                 div.style.backgroundPosition = 'center';
                             }else if(parseInt( data[i]["elo"])>1499){
-                                div.style.background ='url("images/europaTest.png")';
+                                if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                    div.style.background ='url("images/europa-modifie.png")';
+                                }
+                                else{div.style.background ='url("images/europaTest.png")';}
                                 div.style.backgroundSize = 'cover';
                                 div.style.backgroundRepeat = 'no-repeat';
                                 div.style.backgroundPosition = 'center';
                             }else if(parseInt( data[i]["elo"])>999){
-                                div.style.background ='url("images/conferencetest.png")';
+                                if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                    div.style.background ='url("images/conference-modifie.png")';
+                                }
+                                else{div.style.background ='url("images/conferencetest.png")';}
                                 div.style.backgroundSize = 'cover';
                                 div.style.backgroundRepeat = 'no-repeat';
                                 div.style.backgroundPosition = 'center';
                             }else if(parseInt( data[i]["elo"])>499){
-                                div.style.background ='url("images/ligue1.png")';
+                                if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                    div.style.background ='url("images/ligue1-modifie.png")';
+                                }
+                                else{div.style.background ='url("images/ligue1.png")';}
                                 div.style.backgroundSize = 'cover';
                                 div.style.backgroundRepeat = 'repeat';
                                 div.style.backgroundPosition = 'center';
                             }else{
-                                div.style.background ='url("images/ligue2.png")';
+                                if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                    div.style.background ='url("images/ligue2-modifie.png")';
+                                }
+                                else{div.style.background ='url("images/ligue2.png")';}
                                 div.style.backgroundSize = 'cover';
                                 div.style.backgroundRepeat = 'no-repeat';
                                 div.style.backgroundPosition = 'center';
@@ -204,7 +249,8 @@ async function UserClassement() {
 
                             if (i === userIndex) {
                                 //mettre comme ca filter: brightness(70%);
-                                div.style.filter = 'brightness(60%)';
+                                div.style.filter = 'brightness(70%)';
+
                             }
                             userListContainer.appendChild(div);
                         }
