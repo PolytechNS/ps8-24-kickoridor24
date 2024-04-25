@@ -1,0 +1,208 @@
+
+.Play {
+    background-color: #E4E5E7;
+    font-family: 'Roboto Condensed', sans-serif;
+    /*changer couleur du texte*/
+    color: #eb4f61;
+    box-shadow: 0 3px 3px 0 #676767;
+    margin-right: 1.2vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.Play:hover {
+    background-color: #eb4f61;
+    color: #E4E5E7;
+    box-shadow: 0 3px 3px 0 #676767;
+    /*afficher le curseur pointer*/
+    cursor: pointer;
+}
+
+
+.btn{
+    margin: 0.4em 0.3em 0.3em 0.3em;
+}
+
+.btnJouer{
+    height: 23vh;
+    width: 20vw;
+    padding: 0.1em 0.2em 0.2em 0.2em;
+}
+
+.btnHORSLIGNEBTN{
+    height: 23vh;
+    width: 13vw;
+    padding: 0.1em 0.2em 0.2em 0.2em;
+}
+.onlinePlay, .horsLignePlay{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    width: 700px;
+    font-size: 1.2em;
+    /*changer couleur du texte*/
+    color: #eb4f61;
+}
+
+.navClass{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+    /*width qui rempli tout l'espace dispo*/
+    width: 100%;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+.topButton{
+    background-color:  #E4E5E7;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 0.2em 0.5em;
+    margin-bottom: 0.2em;
+    /*ajouter une bordure en bas*/
+}
+
+.topButton:hover{
+    /*background-color: #3EE4F0;
+    color: #000000;*/
+    cursor: pointer;
+}
+
+#ligne{
+    background-color: #3EE4F0;
+    color: #000000;
+    border-bottom: 4px solid #eb4f61;
+}
+
+#amical{
+    width: 9.5vh;
+    margin-right: 1vh;
+}
+
+#online{
+    width: 7.5vh;
+    margin: 1vh;
+}
+
+#ia{
+    width : 10vh;
+}
+
+#local{
+    width: 10vh;
+    margin-right: 0.5vh;
+}
+#resume{
+    width: 10vh;
+    margin-right: 0.5vh;
+}
+.all{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto;
+    /*centrer verticalement*/
+    height: 70%;
+
+}
+
+.btnJouer{
+    margin : 0;
+}
+
+.icon{
+    width: 20%;
+    margin-top: 13.5vh;
+}
+
+#regle{
+    width: 18%;
+}
+
+#retour{
+    width: 25vh;
+    margin-left: 2vh;
+    margin-top: 1vh;
+    margin-bottom: -2vh;
+    cursor: pointer;
+}
+
+@media screen and (max-aspect-ratio: 4/3.1) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        /*placer les div au centre horizontalement et verticalement*/
+        align-items: center;
+        min-height: 60vh;
+        justify-content: center;
+    }
+
+    .onlinePlay, .horsLignePlay{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        width: 100vw;
+        font-size: 1.2em;
+        /*changer couleur du texte*/
+        color: #eb4f61;
+    }
+    .Play {
+        background-color: #E4E5E7;
+        font-family: 'Roboto Condensed', sans-serif;
+        font-size: 2.5vh;
+        /*changer couleur du texte*/
+        color: #eb4f61;
+        width: 70%;
+        height: 15vh;
+        max-height: 300px;
+        min-width: 215px;
+        margin: 0.5em;
+        box-shadow: 0 3px 3px 0 #676767;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        transition: background-color 0.3s ease; /* Animation de transition pour un effet plus fluide */
+
+    }
+    .btnJouer{
+        height: 13vh;
+        max-height: 300px;
+        width: 30vw;
+        margin: 0.1em 0.2em 0.2em 0.2em;
+
+    }
+    .btnHORSLIGNEBTN{
+        height: 9vh;
+        width: 30vw;
+        padding: 0.1em 0.2em 0.2em 0.2em;
+     }
+
+    #amical{
+        width: 9.5vh;
+        margin-right: 1vh;
+    }
+
+    #online{
+        width: 7.5vh;
+        margin: 1vh;
+    }
+    .navClass{
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-direction: row;
+        /*width qui rempli tout l'espace dispo*/
+        width: 100%;
+        font-family: 'Roboto Condensed', sans-serif;
+    }
+
+}
+
+

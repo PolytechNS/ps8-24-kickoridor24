@@ -48,13 +48,14 @@ async function handleBDD(request, response) {
 
                     const dataToSend = {
                         username: data.username,
-                        elo: '0',
+                        elo: '250',
                         img: 'images/photoProfil/Mitroglu.png',
                         celebration: 'images/celebration/SIUU',
                         token: token,
                         friendList: [],
                         demandes: [],
                         achiev: [],
+                        invite: [],
                     }
                     saveUser(dataToSend).then(async () => {
                             response.statusCode = 200;
@@ -674,9 +675,44 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
+    }else if (request.method === "POST" && request.url === "/api/inviteFriend") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            let token;
+            try {
+                const data = JSON.parse(body);
+                await inviteFriend(data);
+                // await client.close();
+                response.end();
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
     }
 }
 
+async function inviteFriend(data) {
+    try {
+        const userTmp = await findUser({ username: data.emetteur });
+        const inviteMap = {}; // Création de la carte pour stocker les invitations
+
+        // Créer une entrée dans la carte avec l'ID de l'utilisateur et la salle
+        inviteMap[userTmp["_id"]] = data.room;
+
+        // Mettre à jour la collection des utilisateurs avec la carte d'invitation
+        return await client.db("kickoridor").collection("users").updateOne(
+            { username: data.receveur.toString() },
+            { $addToSet: { invite: inviteMap } }
+        );
+    } finally {
+        // Code à exécuter après la mise à jour si nécessaire
+    }
+}
 
 async function allPlayersList() {
     try {
