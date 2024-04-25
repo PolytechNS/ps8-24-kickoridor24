@@ -23,7 +23,7 @@ let n;
 var cellsString = [];
 var cellsGrid = [];
 var stop = false;
-let tempsRestant = 10;
+let tempsRestant = 60;
 var chronometre;
 class cellule {
     constructor(id, classes, visibilite) {
@@ -372,7 +372,7 @@ function setUpGame(gameState) {
         }
         style.appendChild(document.createTextNode(cssA));
         style.appendChild(document.createTextNode(cssB));
-        tempsRestant = 10;
+        tempsRestant = 60;
         chronometre = setInterval(mettreAJourChronometre, 1000);
         mettreAJourTableau(cellsGrid, cells);
         checkTour201();
@@ -1309,11 +1309,13 @@ function changeActivePlayer() {
             showForfaitB();
             hideForfaitA();
         }
-
+        if(activePlayer == currentPlayer){
+            showInformation("votre tour!");
+        }
         murAPose = new Array(3);
         checkTour201();
 
-            tempsRestant = 10;
+            tempsRestant = 60;
             chronometre = setInterval(mettreAJourChronometre, 1000);
 
     //saveToBack();
@@ -1696,4 +1698,17 @@ function showInformation(txt,nb){
 function hideInformation(){
     document.getElementById("information").style.display = "none";
 }
+function showVotreTour(){
+    const message = document.createElement('div');
+    message.innerHTML = 'Votre tour !';
+    message.classList.add('message');
+    message.style.position = 'fixed';
+
+    wrapper.appendChild(message);
+    setTimeout(hideShowVotreTour,3000);
+}
+function hideShowVotreTour(){
+    document.getElementsByClassName("message")[0].style.display = "none";
+}
+
 // Appel de la fonction toutes les secondes

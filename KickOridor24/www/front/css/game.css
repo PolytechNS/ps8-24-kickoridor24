@@ -418,6 +418,7 @@ button {
     }
  #chronometreA, #chronometreB{
      grid-column: span 1;
+     font-weight: bold;
  }
     button {
         grid-column: span 1;
