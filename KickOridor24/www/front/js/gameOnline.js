@@ -778,6 +778,7 @@ function victoire(txt) {
 }
 socket.on("FinDePartieOnline",(txt) => {
     showVictoire(txt);
+    clearInterval(chronometre);
     if(txt == currentPlayer)
          calculerElo(1,0);
     else if(txt == "match nul !"){
@@ -1119,6 +1120,13 @@ function rotationWall(cellIndex) {
         leftCell.classList.add('wallTMP');
     }
     mettreAJourTableau(cellsGrid, cells);
+    if (wallPlacable() === 0) {
+        showValider();
+    } else {
+
+        showInformation("Vous ne pouvez pas poser ce mur au risque de bloquer un joueur");
+        annulerWall();
+    }
 }
 
 function removeWallTmp() {

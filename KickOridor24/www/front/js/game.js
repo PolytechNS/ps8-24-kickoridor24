@@ -1079,6 +1079,13 @@ function rotationWall(cellIndex) {
         leftCell.classList.add('wallTMP');
     }
     mettreAJourTableau(cellsGrid, cells);
+    if (wallPlacable() === 0) {
+        showValider();
+    } else {
+
+        showInformation("Vous ne pouvez pas poser ce mur au risque de bloquer un joueur");
+        annulerWall();
+    }
 }
 
 function removeWallTmp() {

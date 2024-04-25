@@ -145,14 +145,14 @@ function fillPhoto(){
             imagesContainer.appendChild(div);
 
                 if (fileName == nameSelected) {
-                    div.classList.add("selected");
+                    div.classList.add("selected2");
                     photoSelected = div;
                 }
 
             div.addEventListener('click', function () {
-                if (!div.classList.contains("selected")) {
-                    div.classList.add('selected');
-                    photoSelected.classList.remove('selected');
+                if (!div.classList.contains("selected2")) {
+                    div.classList.add('selected2');
+                    photoSelected.classList.remove('selected2');
                     photoSelected = div;
                     selectNewImg();
                 }
@@ -208,14 +208,14 @@ function fillCelebration(){
             imagesContainer.appendChild(div);
 
                 if (fileName == nameSelected) {
-                    div.classList.add("selected");
+                    div.classList.add("selected2");
                     celebrationSelected = div;
                 }
 
             div.addEventListener('click', function () {
-                if (!div.classList.contains("selected")) {
-                    div.classList.add('selected');
-                    celebrationSelected.classList.remove('selected');
+                if (!div.classList.contains("selected2")) {
+                    div.classList.add('selected2');
+                    celebrationSelected.classList.remove('selected2');
                     celebrationSelected = div;
                     selectNewCeleb();
                 }
@@ -255,7 +255,7 @@ async function recupInfoJoueur(){
     } catch (error) {
         console.log(error.message);
     }
-    console.log(listeAchiev);
+    //console.log(listeAchiev);
 }
 
 
