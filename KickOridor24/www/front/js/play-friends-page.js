@@ -1,6 +1,6 @@
 async function inviteListe(){
     var formDataJSON = {};
-    var user = getCookie("username");
+    var user = localStorage.getItem("username");
     formDataJSON["username"] = user;
     try {
         const response = await fetch('/api/askInviteList', {
@@ -142,7 +142,7 @@ async function inviteListe(){
                         btnV.addEventListener('click', function() {
                             var usernameValue = username; // Capturer la valeur de username dans cette portée
                             return function() {
-                                setCookie("player", "2", 1);
+                                localStorage.setItem("player", "2");
                                 joinGame(usernameValue, data[0].room);
                                 //validateAskFriend(getCookie("username"), usernameValue);
                             };
@@ -165,7 +165,7 @@ async function inviteListe(){
 }
 
 async function joinGame(username, room) {
-    await refuseAskInvite(getCookie("username"));
+    await refuseAskInvite(localStorage.getItem("username"));
 
     window.location.href = "waiting-friend.html?room=" + room + "&friend=" + username;
 
@@ -225,7 +225,7 @@ async function validateAskInvite(emetteur,receveur){
 
 async function listeAmis(){
     const formDataJSON = {};
-    var user = getCookie("username");
+    var user = localStorage.getItem("username");
     formDataJSON["username"] = user;
 
     try {
@@ -385,7 +385,7 @@ async function listeAmis(){
 
 
 function createRoom(receveur){
-    setCookie("player", "1", 1);
+    localStorage.setItem("player", "1");
     window.location.href = "waiting-friend.html?&friend=" + receveur;
 }
 

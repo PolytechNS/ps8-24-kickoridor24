@@ -15,6 +15,7 @@
     <preference name="scheme" value="http"/>
     <preference name="AndroidWindowSplashScreenAnimatedIcon" value="www/front/images/icon.png"/>
     <preference name="AndroidWindowSplashScreenBackground" value="#000000"/>
+    <preference name="orientation" value="portrait" />
     <access origin="http://kickoridor.ps8.academy" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <edit-config

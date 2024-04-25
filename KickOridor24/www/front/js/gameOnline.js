@@ -1,6 +1,6 @@
 
-socket.emit('login', getCookie("username"));
-socket.emit("joinGameWithRoom", getCookie("room"));
+socket.emit('login', localStorage.getItem("username"));
+socket.emit("joinGameWithRoom", localStorage.getItem("room"));
 socket.on("gameStarted" , () => {
     console.log("gameStarted");
 });
@@ -30,12 +30,12 @@ let win = false;
 const urlParams = new URLSearchParams(window.location.search);
 const nameUrl = urlParams.get('player');
 
-if(getCookie("player") == "1") {
-    document.getElementById('namePlayerA').innerText = getCookie("username");
+if(localStorage.getItem("player") == "1") {
+    document.getElementById('namePlayerA').innerText = localStorage.getItem("username");
     document.getElementById('namePlayerB').innerText = nameUrl;
 }else{
     document.getElementById('namePlayerA').innerText = nameUrl;
-    document.getElementById('namePlayerB').innerText = getCookie("username");
+    document.getElementById('namePlayerB').innerText = localStorage.getItem("username");
 }
 
 class cellule {
@@ -83,10 +83,10 @@ let player2Position = 8;
 var dernierTourB = false;
 var currentPlayer;
 
-if(getCookie("player")=="1"){
+if(localStorage.getItem("player")=="1"){
 
     currentPlayer = "playerA";
-}else if(getCookie("player")=="2"){
+}else if(localStorage.getItem("player")=="2"){
 
     currentPlayer = "playerB";
 }
@@ -180,7 +180,7 @@ socket.on('setupGame', () => {
     socket.on('setupTheGame', () => {
         if(stop) return;
 
-        if (getCookie("typeDePartie") === "resumeGame") {
+        if (localStorage.getItem("typeDePartie") === "resumeGame") {
             loadGame();
         } else {
             setUpGame();
@@ -281,7 +281,7 @@ function setUpGame(gameState) {
         }
         hideAntiCheat();
         hideValider();
-        if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null) {
+        if (localStorage.getItem("typeDePartie") === "enLigne" || localStorage.getItem("username") == null) {
             hideSauvegarder();
             console.log("ooouuiii");
             document.getElementsByClassName("forfait")[0].classList.add("forfaitGrand");
@@ -561,9 +561,11 @@ function convertGameStateToPosition(gameState) {
 
 function declarerForfait() {
     if (currentPlayer === "playerA") {
-        victoire("playerB");
+
+        victoire("PlayerB");
     } else {
-        victoire("playerA");
+
+        victoire("PlayerA");
     }
 }
 
@@ -573,7 +575,7 @@ async function sauvegarderLaPartie() {
         annulerWall();
     cells.forEach(cell => cell.classList.remove('possible-move'));
     var tab = construireEtatPartie();
-    var etat = new gameBDD(getUsername(), tab, tour, getCookie("typeDePartie"));
+    var etat = new gameBDD(getUsername(), tab, tour, localStorage.getItem("typeDePartie"));
     const formDataJSON = {};
     formDataJSON["username"] = etat.username;
     formDataJSON["board"] = etat.board;
@@ -627,7 +629,7 @@ async function loadGame() {
     loadBoard(etatPartie["board"]);
 
 
-    setCookie("typeDePartie", etatPartie["typeDePartie"], 7);
+    localStorage.setItem("typeDePartie", etatPartie["typeDePartie"]);
 
     setUpGame();
     partieChargee = true;
@@ -786,25 +788,26 @@ function victoire(txt) {
 
     win = true;
 
-    if(getCookie("option") === "friend") {
+    if(localStorage.getItem("option") === "friend") {
 
         clearInterval(chronometre);
 
         const urlParams = new URLSearchParams(window.location.search);
         const friend = urlParams.get('player');
 
-        if (txt == 'PlayerA' && getCookie("player") == "1") {
-            showVictoire(getCookie("username"), -999, 0);
-        } else if (txt == 'PlayerB' && getCookie("player") == "2") {
-            showVictoire(getCookie("username"), -999, 0);
-        } else if (txt == 'PlayerA' && getCookie("player") == "2") {
+        if (txt == 'PlayerA' && localStorage.getItem("player") == "1") {
+            showVictoire(localStorage.getItem("username"), -999, 0);
+        } else if (txt == 'PlayerB' && localStorage.getItem("player") == "2") {
+            showVictoire(localStorage.getItem("username"), -999, 0);
+        } else if (txt == 'PlayerA' && localStorage.getItem("player") == "2") {
             showVictoire(friend, -999, 0);
-        } else if (txt == 'PlayerB' && getCookie("player") == "1") {
+        } else if (txt == 'PlayerB' && localStorage.getItem("player") == "1") {
             showVictoire(friend, -999, 0);
         }
 
     }else{
-        socket.emit("VictoireOnline",txt, getCookie("player"),socket.id);
+
+        socket.emit("VictoireOnline",txt, localStorage.getItem("player"),socket.id);
     }
 }
 
@@ -937,7 +940,7 @@ async function getElo(username) {
 }
 
 function showVictoire(txt, newElo, diffElo){
-
+    navigator.vibrate(1000);
     clearInterval(chronometre);
     document.querySelector('.finDePartie').style.display = 'flex';
     const divMid = document.getElementById("finMiddle");
@@ -955,8 +958,8 @@ function showVictoire(txt, newElo, diffElo){
 
 
         if (txt == currentPlayer) {
-            if (getCookie("username") != null) {
-                divMid.getElementsByTagName('h2')[0].textContent = getCookie("username") + " remporte la partie";
+            if (localStorage.getItem("username") != null) {
+                divMid.getElementsByTagName('h2')[0].textContent = localStorage.getItem("username") + " remporte la partie";
             }
 
             if (celebrationBDD != null) {
@@ -1378,7 +1381,7 @@ function checkNoMove() {
     } else if (activePlayer === 'playerB') {
         const validMoves = getValidMoves(player2Position);
 
-        if (validMoves.length == 0 && (nbWallPlayerB === 0 || getCookie("typeDePartie") == "bot")) {
+        if (validMoves.length == 0 && (nbWallPlayerB === 0 || localStorage.getItem("typeDePartie") == "bot")) {
             showInformation("passage de tour");
             newMove.player = "playerB";
             newMove.type = "idle";
@@ -1456,7 +1459,7 @@ function changeActivePlayer() {
         document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
         if (tour <= 200)
             document.getElementById('nbTour').textContent = `Tour : n°${200 -(tour - 1)}`;
-        if(getCookie("typeDePartie") !== "enLigne")
+        if(localStorage.getItem("typeDePartie") !== "enLigne")
             showAntiCheat();
 
         tour--;

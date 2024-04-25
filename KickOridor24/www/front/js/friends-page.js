@@ -15,7 +15,7 @@ async function ajouterAmisListe(){
 
     const formDataJSON = {};
     formDataJSON["recherche"] = name;
-    formDataJSON["username"] = getCookie("username");
+    formDataJSON["username"] = localStorage.getItem("username");
     try {
         const response = await fetch('/api/FindFriends', {
             method: 'POST',
@@ -156,7 +156,7 @@ async function ajouterAmisListe(){
                         btn.addEventListener('click', function() {
                             var usernameValue = username; // Capturer la valeur de username dans cette portée
                             return function() {
-                                askFriend(getCookie("username"), usernameValue);
+                                askFriend(localStorage.getItem("username"), usernameValue);
                             };
                         }());
 
@@ -202,7 +202,7 @@ async function askFriend(emetteur,receveur){
 
 async function demandesAmisListe(){
     var formDataJSON = {};
-    var user = getCookie("username");
+    var user = localStorage.getItem("username");
     formDataJSON["username"] = user;
     try {
         const response = await fetch('/api/askFriendsList', {
@@ -345,7 +345,7 @@ async function demandesAmisListe(){
                         btnV.addEventListener('click', function() {
                             var usernameValue = username; // Capturer la valeur de username dans cette portée
                             return function() {
-                                validateAskFriend(getCookie("username"), usernameValue);
+                                validateAskFriend(localStorage.getItem("username"), usernameValue);
                             };
                         }());
 
@@ -386,7 +386,7 @@ async function demandesAmisListe(){
                         btnD.addEventListener('click', function() {
                             var usernameValue = username; // Capturer la valeur de username dans cette portée
                             return function() {
-                                deleteAskFriend(getCookie("username"), usernameValue);
+                                deleteAskFriend(localStorage.getItem("username"), usernameValue);
                             };
                         }());
 
@@ -458,7 +458,7 @@ async function validateAskFriend(emetteur,receveur){
 }
 async function listeAmis(){
     const formDataJSON = {};
-    var user = getCookie("username");
+    var user = localStorage.getItem("username");
     formDataJSON["username"] = user;
 
     try {
@@ -607,7 +607,7 @@ async function listeAmis(){
                         btn.addEventListener('click', function() {
                             var usernameValue = username; // Capturer la valeur de username dans cette portée
                             return function() {
-                                deleteFriend(getCookie("username"), usernameValue);
+                                deleteFriend(localStorage.getItem("username"), usernameValue);
                             };
                         }());
 
@@ -666,7 +666,7 @@ async function verifNbFriends(){
     var nbFriends
 
     const formDataJSON = {};
-    var user = getCookie("username");
+    var user = localStorage.getItem("username");
     formDataJSON["username"] = user;
 
     try {
@@ -707,7 +707,7 @@ async function addAchiev(id){
 
     const formDataJSON = {};
 
-    formDataJSON["username"] = getCookie("username");
+    formDataJSON["username"] = localStorage.getItem("username");
     formDataJSON["achiev"] = id;
 
     try {

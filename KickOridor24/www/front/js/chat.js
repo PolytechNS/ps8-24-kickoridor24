@@ -1,5 +1,5 @@
 
-socket.emit('login', getCookie("username"));
+socket.emit('login', localStorage.getItem("username"));
 var input = document.getElementById("messageInput");
 
 // Ajout d'un écouteur d'événements sur l'événement keydown
@@ -13,7 +13,7 @@ input.addEventListener("keydown", function(event) {
 
 async function envoyerChat(){
     const message = document.getElementById("messageInput").value;
-    var username = getCookie("username");
+    var username = localStorage.getItem("username");
     var ami = document.getElementById("nomAmiID").textContent;
 
     const formDataJSON = {};
@@ -46,7 +46,7 @@ async function envoyerChat(){
 }
 function envoyerChatMatch(){
     const message = document.getElementById("inputMatch").value;
-    var username = getCookie("username");
+    var username = localStorage.getItem("username");
     socket.emit("MessageMatch",message,username)
     document.getElementById('inputMatch').value = "";
 }
@@ -54,7 +54,7 @@ socket.on("NewMatchMsg",(message,sender) =>{
     var chat = document.getElementsByClassName("matchMsg")[0];
 
         var div = document.createElement("div");
-        if (sender === getCookie("username")) {
+        if (sender === localStorage.getItem("username")) {
             div.classList.add("mesMsg");
             var p = document.createElement("p");
             p.classList.add("msgMoi");
@@ -74,7 +74,7 @@ scrollToBott();
 async function getConversation(){
 
     const formDataJSON = {};
-    var user = getCookie("username");
+    var user = localStorage.getItem("username");
     formDataJSON["username"] = user;
 
     try {
@@ -192,7 +192,7 @@ async function openAmiChat(data) {
 
 
     //charger les messages de la conversation dans la base de donnée
-    var username = getCookie("username");
+    var username = localStorage.getItem("username");
 
     const formDataJSON = {};
     formDataJSON["username"] = username;
@@ -306,7 +306,7 @@ socket.on('newMessage', async (data) => {
 });
 
 async function updateMessage(data){
-    var username = getCookie("username");
+    var username = localStorage.getItem("username");
 
     const formDataJSON = {};
     formDataJSON["username"] = username;

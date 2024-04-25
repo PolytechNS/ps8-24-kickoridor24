@@ -204,14 +204,19 @@ module.exports = function (io) {
 
 
             if(txt === 'match nul !' ){
+
                 socket.emit('MatchNul', namePlayerSocket, nameOtherplayer);
             }else if(player == 1 && txt == 'PlayerA'){
+
                 socket.emit('Victoire', namePlayerSocket, nameOtherplayer);
             }else if(player == 2 && txt == 'PlayerA'){
+
                 socket.emit('Defaite', namePlayerSocket, nameOtherplayer);
             }else if(player == 1 && txt == 'PlayerB'){
+
                 socket.emit('Defaite', namePlayerSocket, nameOtherplayer);
             }else if(player == 2 && txt == 'PlayerB'){
+
                 socket.emit('Victoire', namePlayerSocket, nameOtherplayer);
             }else{
                 console.log('Erreur');

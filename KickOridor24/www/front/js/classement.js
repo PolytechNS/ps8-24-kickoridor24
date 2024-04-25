@@ -7,6 +7,7 @@ function showVotreClassement(){
     document.getElementById("Votre-classement").style.backgroundColor = "#3EE4F0";
 
     UserClassement();
+    navigator.vibrate(200);
 }
 
 function showClassementMonde(){
@@ -18,6 +19,7 @@ function showClassementMonde(){
     document.getElementById("Votre-classement").style.backgroundColor = "#E4E5E7";
 
     AllUserClassement();
+    navigator.vibrate(200);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -138,9 +140,9 @@ async function AllUserClassement() {
 
 async function UserClassement() {
     //classement du user connecté, prendre deux joueurs avant et 5 joueurs apres apres avoir trier par elo
-    if (getCookie("username") != null) {
+    if (localStorage.getItem("username") != null) {
         const formDataJSON = {};
-        formDataJSON["username"] = getCookie("username");
+        formDataJSON["username"] = localStorage.getItem("username");
         console.log(formDataJSON);
         try {
             const usersResponse = await fetch('/api/getAllUsers', {

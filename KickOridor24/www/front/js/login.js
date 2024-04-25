@@ -27,9 +27,11 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         });
 
         if (!response.ok) {
+            navigator.vibrate([200,100,200]);
             showMessage();
         }else if(response.ok){
-            setCookie("username",formDataJSON.username,7);
+            //setCookie("username",formDataJSON.username,7);
+            localStorage.setItem('username', formDataJSON.username);
             window.location.href = 'index.html';
         }
     } catch (error) {
@@ -38,7 +40,7 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
 });
 
 function getUsername(){
-    let username =getCookie("username");
+    let username =localStorage.getItem("username");
     if(username !== undefined){
         return username;
     }
