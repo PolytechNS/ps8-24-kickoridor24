@@ -930,7 +930,7 @@ function showVictoire(txt, newElo, diffElo){
     else {
         divMid.getElementsByTagName('h2')[0].textContent = txt + " remporte la partie";
         if(newElo < 0){
-            divMid.getElementsByTagName('h3')[0].textContent = "Partie non classé";
+            divMid.getElementsByTagName('h3')[0].textContent = "Partie non classée";
         }else {
             divMid.getElementsByTagName('h3')[0].textContent = "Votre nouvel elo : " + newElo + " (" + diffElo + ")";
         }
