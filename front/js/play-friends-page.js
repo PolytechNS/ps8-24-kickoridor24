@@ -142,71 +142,6 @@ async function inviteListe(){
 
                         div.appendChild(btnV);
 
-                        let btnD = document.createElement("button");
-                        btnD.textContent = "REFUSER";
-
-                        btnD.style.appearance = 'none';
-                        btnD.style.backfaceVisibility = 'hidden';
-                        btnD.style.backgroundColor = '#eb4f61';
-                        btnD.style.borderRadius = '8px';
-                        btnD.style.borderStyle = 'none';
-                        btnD.style.boxShadow = 'rgba(231, 76, 60, .15) 0 4px 9px';
-                        btnD.style.boxSizing = 'border-box';
-                        btnD.style.color = '#fff';
-                        btnD.style.cursor = 'pointer';
-                        btnD.style.display = 'inline-block';
-                        btnD.style.fontFamily = 'Inter,-apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif';
-                        btnD.style.fontSize = '11px';
-                        btnD.style.fontWeight = '600';
-                        btnD.style.letterSpacing = 'normal';
-                        btnD.style.lineHeight = '1.5';
-                        btnD.style.outline = 'none';
-                        btnD.style.overflow = 'hidden';
-                        btnD.style.padding = '4px 8px';
-                        btnD.style.position = 'relative';
-                        btnD.style.textAlign = 'center';
-                        btnD.style.textDecoration = 'none';
-                        btnD.style.transform = 'translate3d(0, 0, 0)';
-                        btnD.style.transition = 'all .3s';
-                        btnD.style.userSelect = 'none';
-                        btnD.style.webkitUserSelect = 'none';
-
-                        //hover
-                        btnD.addEventListener('mouseover', function() {
-                                btnD.style.backgroundColor = '#bb404e';
-                                btnD.style.opacity = '1';
-                                btnD.style.transform = 'translateY(0)';
-                                btnD.style.transitionDuration = '.35s';
-                                btnD.style.boxShadow = 'rgba(231, 76, 60, .2) 0 6px 12px';
-
-                            }
-                        );
-                        btnD.addEventListener('mouseout', function() {
-                                btnD.style.backgroundColor = '#eb4f61';
-                                btnD.style.opacity = '1';
-                                btnD.style.transform = 'translateY(0)';
-                                btnD.style.transitionDuration = '.35s';
-                            }
-                        );
-                        //mouseactive
-                        btnD.addEventListener('mousedown', function() {
-                                btnD.style.transform = 'translateY(2px)';
-                                btnD.style.transitionDuration = '.35s';
-
-                            }
-                        );
-
-                        btnD.addEventListener('click', function() {
-                            var usernameValue = username; // Capturer la valeur de username dans cette portée
-                            return function() {
-                                console.log("delete");
-                                console.log("username : ", usernameValue);
-                                //deleteAskFriend(getCookie("username"), usernameValue);
-                            };
-                        }());
-
-                        div.appendChild(btnD);
-
                         cont.appendChild(div);
                     }
                 }
@@ -221,19 +156,18 @@ async function inviteListe(){
     }
 }
 
-function joinGame(username, room){
-    //TODO SUPPRIMER DE LA BDD
+async function joinGame(username, room) {
+    await refuseAskInvite(getCookie("username"));
 
     window.location.href = "waiting-friend.html?room=" + room + "&friend=" + username;
 
 }
 
-async function refuseAskInvite(emetteur,receveur){
+async function refuseAskInvite(emetteur){
     const formDataJSON = {};
     formDataJSON["emetteur"] = emetteur;
-    formDataJSON["receveur"] = receveur;
     try {
-        const response = await fetch('/api/deleteAskFriend', {
+        const response = await fetch('/api/refuseAskInvite', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -243,7 +177,7 @@ async function refuseAskInvite(emetteur,receveur){
 
         if (!response.ok) {
             var err = await response.text();
-            throw new Error('Une erreur est survenue lors du rejet de la demande : ' + err);
+            throw new Error('Une erreur est survenue lors du rejet de l\'invitation : ' + err);
         }else{
             inviteListe();
         }

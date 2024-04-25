@@ -720,7 +720,26 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
+    }else if (request.method === "POST" && request.url === "/api/refuseAskInvite") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            let token;
+            try {
+                const data = JSON.parse(body);
+                await refuseAskInvite(data);
+                // await client.close();
+                response.end();
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
     }
+
 }
 
 async function inviteFriend(data) {
@@ -1018,6 +1037,17 @@ async function deleteAskFriend(data) {
         );
     } finally {
 
+    }
+}
+
+async function refuseAskInvite(data) {
+    try {
+        return await client.db("kickoridor").collection("users").updateOne(
+            {username: data.emetteur.toString()},
+            { $set: { invite: [] } }
+        );
+    } finally {
+        // Actions à exécuter après la suppression si nécessaire
     }
 }
 
