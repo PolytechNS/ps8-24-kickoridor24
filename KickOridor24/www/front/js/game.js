@@ -18,6 +18,25 @@ let n;
 var cellsString = [];
 var cellsGrid = [];
 
+if(getCookie("typeDePartie") == "1v1local"){
+    document.getElementById("namePlayerB").textContent = "Invité";
+}
+if(getCookie("username")){
+    document.getElementById("namePlayerA").textContent = getCookie("username");
+}else if(!getCookie("username")) {
+    document.getElementById("namePlayerA").textContent = "Invité";
+    if(getCookie("typeDePartie") == "1v1local"){
+        document.getElementById("namePlayerB").textContent = "Invité (2)";
+    }
+}
+if(getCookie("typeDePartie") == "bot_v2"){
+    document.getElementById("namePlayerB").textContent = "Bot Intelligent";
+}
+if(getCookie("typeDePartie") == "bot"){
+    document.getElementById("namePlayerB").textContent = "Bot Aléatoire";
+}
+
+
 class cellule {
     constructor(id, classes, visibilite) {
         this.class = classes;
@@ -761,6 +780,28 @@ function checkCrossing(playerAPosition, playerBPosition) {
 }
 
 function victoire(txt) {
+
+    if(txt == "PlayerA"){
+        if(getCookie("username")){
+            txt = getCookie("username");
+        }else{
+            txt = "Invité";
+        }
+    }else if(txt == "PlayerB"){
+        if(getCookie("typeDePartie") == "bot_v2"){
+            txt = "Bot Intelligent";
+        }
+        if(getCookie("typeDePartie") == "bot"){
+            txt = "Bot Aléatoire";
+        }
+        if(getCookie("typeDePartie") == "1v1local"){
+            if (getCookie("username")){
+                txt = "Invité (2)";
+            }else{
+                txt = "Invité";
+            }
+        }
+    }
 
     showVictoire(txt);
     if (partieChargee)

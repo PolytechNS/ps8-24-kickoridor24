@@ -30,11 +30,17 @@ let win = false;
 const urlParams = new URLSearchParams(window.location.search);
 const nameUrl = urlParams.get('player');
 
+
 if(localStorage.getItem("player") == "1") {
     document.getElementById('namePlayerA').innerText = localStorage.getItem("username");
-    document.getElementById('namePlayerB').innerText = nameUrl;
+    if(nameUrl){
+        document.getElementById('namePlayerB').innerText = nameUrl;
+    }
+
 }else{
-    document.getElementById('namePlayerA').innerText = nameUrl;
+    if(nameUrl){
+        document.getElementById('namePlayerB').innerText = nameUrl;
+    }
     document.getElementById('namePlayerB').innerText = localStorage.getItem("username");
 }
 
