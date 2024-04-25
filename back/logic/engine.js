@@ -15,7 +15,7 @@ var dernierTourB;
 let rooms = {};
 let varRoom = '';
 const clients = {};
-
+let clientReady = {};
 module.exports = function (io) {
     gameNamespace = io.of('/api/game');
 
@@ -34,7 +34,6 @@ module.exports = function (io) {
             socket.join(room);
             rooms[room].push(socket.id);
             socket.emit('joinedGame', room);
-
 
             if (rooms[room].length === 2) {
                 gameNamespace.to(room).emit('startGame', room);
@@ -62,6 +61,7 @@ module.exports = function (io) {
 
         socket.on('quitRoom', () => {
             const room = findRoomBySocketId(socket.id);
+
             if (room) {
                 socket.leave(room);
                 const index = rooms[room].indexOf(socket.id);
@@ -87,13 +87,16 @@ module.exports = function (io) {
             varRoom = room;
 
             socket.join(roomId);
-            rooms[roomId].push(socket.id);
+            if (rooms[roomId]) {
+                rooms[roomId].push(socket.id);
 
-            if (rooms[roomId].length === 2) {
+                if (rooms[roomId].length === 2) {
 
-                gameNamespace.to(roomId).emit('gameStarted');
-                //gameNamespace.to(roomId).emit('setupGame');
+                    gameNamespace.to(roomId).emit('gameStarted');
+                    clientReady[roomId] = 0;
+                    //gameNamespace.to(roomId).emit('setupGame');
 
+                }
             }
         });
 
@@ -127,6 +130,8 @@ module.exports = function (io) {
             console.log('addCellFirtTime');
             cells = cell;
             socket.emit('setupTheGame');
+
+
         });
 
         socket.on('setUpGame', () => {
@@ -177,7 +182,7 @@ module.exports = function (io) {
         socket.on('disconnect', () => {
 
         });
-        socket.on("VictoireOnline", (txt,player,socketId) => {
+        socket.on("VictoireOnline", (txt, player, socketId) => {
 
             console.log('VictoireOnline : ', txt);
             console.log('Player : ', player);
@@ -200,25 +205,29 @@ module.exports = function (io) {
             let nameOtherplayer;
 
             idBDD.forEach(id => {
-                if(id != namePlayerSocket){
+                if (id != namePlayerSocket) {
                     nameOtherplayer = id;
                 }
             });
 
 
-            if(txt === 'match nul !' ){
+            if (txt === 'match nul !') {
                 socket.emit('MatchNul', namePlayerSocket, nameOtherplayer);
-            }else if(player == 1 && txt == 'PlayerA'){
+            } else if (player == 1 && txt == 'PlayerA') {
                 socket.emit('Victoire', namePlayerSocket, nameOtherplayer);
-            }else if(player == 2 && txt == 'PlayerA'){
+            } else if (player == 2 && txt == 'PlayerA') {
                 socket.emit('Defaite', namePlayerSocket, nameOtherplayer);
-            }else if(player == 1 && txt == 'PlayerB'){
+            } else if (player == 1 && txt == 'PlayerB') {
                 socket.emit('Defaite', namePlayerSocket, nameOtherplayer);
-            }else if(player == 2 && txt == 'PlayerB'){
+            } else if (player == 2 && txt == 'PlayerB') {
                 socket.emit('Victoire', namePlayerSocket, nameOtherplayer);
-            }else{
+            } else {
                 console.log('Erreur');
             }
+
+            delete rooms[room];
+            delete clientReady[room];
+            gameNamespace.to(room).emit("FinDePartieOnline", txt);
 
         });
 
