@@ -1310,7 +1310,7 @@ function changeActivePlayer() {
             hideForfaitA();
         }
         if(activePlayer == currentPlayer){
-            showInformation("votre tour!");
+            showVotreTour("votre tour!");
         }
         murAPose = new Array(3);
         checkTour201();
@@ -1558,24 +1558,27 @@ function showValider() {
 }
 
 function annulerWall() {
-    const clickedCell = cells[murAPose[0]];
-    const rigthCell = cells[murAPose[1]];
-    const leftCell = cells[murAPose[2]];
+    if(murAPose[0] != undefined) {
+        const clickedCell = cells[murAPose[0]];
+        const rigthCell = cells[murAPose[1]];
+        const leftCell = cells[murAPose[2]];
 
-    clickedCell.classList.remove('wallTMP');
-    clickedCell.classList.remove('rotation');
-    rigthCell.classList.remove('wallTMP');
-    leftCell.classList.remove('wallTMP');
-    if (activePlayer === 'playerA') {
-        nbWallPlayerA++;
-        document.getElementById('nbWallPlayerA').textContent = `Murs restants : ${nbWallPlayerA}`;
-    } else {
-        nbWallPlayerB++;
-        document.getElementById('nbWallPlayerB').textContent = `Murs restants : ${nbWallPlayerB}`;
+        clickedCell.classList.remove('wallTMP');
+        clickedCell.classList.remove('rotation');
+        rigthCell.classList.remove('wallTMP');
+        leftCell.classList.remove('wallTMP');
+        if (activePlayer === 'playerA') {
+            nbWallPlayerA++;
+            document.getElementById('nbWallPlayerA').textContent = `Murs restants : ${nbWallPlayerA}`;
+        } else {
+            nbWallPlayerB++;
+            document.getElementById('nbWallPlayerB').textContent = `Murs restants : ${nbWallPlayerB}`;
+        }
+
+        mettreAJourTableau(cellsGrid, cells);
+
+        hideValider();
     }
-
-    mettreAJourTableau(cellsGrid, cells);
-    hideValider();
 }
 
 function handleCellClick(cellIndex, position) {
@@ -1597,6 +1600,10 @@ function handleCellClick(cellIndex, position) {
 
 function saveToBack() {
     cellsTmp = getClassesAndAttributesFromDivs(cellsGrid);
+    cells.forEach(cell => cell.classList.remove('possible-move'));
+    cells.forEach(cell => cell.classList.remove('wallTMP'));
+    cells.forEach(cell => cell.classList.remove('rotation'));
+
     socket.emit('saveToBackOnline', activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cellsTmp, playerAWalls, playerBWalls, firstTurn, dernierTourB);
 }
 socket.on('MajOnline', (player1Pos, player2Pos, cels, pAWalls, pBWalls, nbWallPA, nbWallPB, activeP, lap, first, dernierLapB) => {
@@ -1612,6 +1619,8 @@ socket.on('MajOnline', (player1Pos, player2Pos, cels, pAWalls, pBWalls, nbWallPA
     firstTurn = first;
     dernierTourB = dernierLapB;
     changeActivePlayer();
+    document.getElementById('nbWallPlayerA').textContent = `Murs restants : ${nbWallPlayerA}`;
+    document.getElementById('nbWallPlayerB').textContent = `Murs restants : ${nbWallPlayerB}`;
 });
 
 function returnMenu(){
@@ -1646,7 +1655,7 @@ function mettreAJourChronometre() {
         if(activePlayer == currentPlayer){
             tourpassee++;
 
-        if( tourpassee >=3){
+        if(tourpassee >=3){
             showInformation("Vous avez pris trop temps à jouer, vous avez été exclus.",3);
             declarerForfait();
         }
@@ -1698,17 +1707,15 @@ function showInformation(txt,nb){
 function hideInformation(){
     document.getElementById("information").style.display = "none";
 }
-function showVotreTour(){
-    const message = document.createElement('div');
-    message.innerHTML = 'Votre tour !';
-    message.classList.add('message');
-    message.style.position = 'fixed';
-
-    wrapper.appendChild(message);
-    setTimeout(hideShowVotreTour,3000);
+function showVotreTour(txt){
+    var info = document.getElementById("information");
+    info.getElementsByTagName("img")[0].style.display = "none";
+    info.style.display = "flex";
+    info.getElementsByTagName("p")[0].innerText = txt;
+    setTimeout(hideShowVotreTour,1000);
 }
 function hideShowVotreTour(){
-    document.getElementsByClassName("message")[0].style.display = "none";
+    document.getElementById("information").style.display = "none";
 }
 
 // Appel de la fonction toutes les secondes

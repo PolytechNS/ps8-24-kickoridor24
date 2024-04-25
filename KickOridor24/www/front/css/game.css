@@ -326,6 +326,7 @@ button {
 #chronometreA,#chronometreB{
     text-align: center;
     font-size: 2.5vh;
+    font-weight: bold;
 }
 #information{
     position: absolute;
