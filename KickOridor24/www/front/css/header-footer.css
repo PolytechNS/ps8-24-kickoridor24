@@ -484,6 +484,9 @@
         cursor: pointer;
     position: relative;
     }
+    .logoDeco{
+        display:none;
+    }
     @media screen and (max-aspect-ratio: 4/3.1) {
 
         body{
@@ -582,6 +585,26 @@
             background-color: red;
             border-radius: 50%;
             display: none;
+        }
+
+        .connexion{
+            display: none;
+        }
+
+        .logoDeco{
+            display: flex;
+            background-color: #9f9f9f;
+            cursor: pointer;
+            display: flex;
+            width: 8vh;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logoDeco img{
+            filter: invert(1);
+            width: 5vh;
         }
 }
     @media screen and (max-width: 750px) {

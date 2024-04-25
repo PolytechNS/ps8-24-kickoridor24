@@ -5,7 +5,14 @@ document.getElementById('signupForm').addEventListener('submit', async (event) =
     const confirmPassword = document.getElementById('confirmPassword').value;
 
     if (password !== confirmPassword) {
-       showMessage("Les mots de passe ne correspondent pas");
+        showMessage("Les mots de passe ne correspondent pas");
+        return;
+    }
+
+    const username = document.getElementById('username').value; // supposons que votre champ d'inscription s'appelle "username"
+
+    if (username.length > 12) {
+        showMessage("Le nom d'utilisateur ne peut pas dépasser 12 caractères");
         return;
     }
 
@@ -37,12 +44,14 @@ document.getElementById('signupForm').addEventListener('submit', async (event) =
         console.log(error.message);
     }
 });
+
 function showMessage(txt){
     var div = document.getElementById("resultatSignUpDIV");
     div.style.display = "flex";
     div.getElementsByTagName("p")[0].innerText = txt;
     document.getElementById("signup").disabled = true;
 }
+
 function hideMessage(){
     document.getElementById("resultatSignUpDIV").style.display = "none";
     document.getElementById("signup").disabled = false;

@@ -62,6 +62,16 @@ async function ajouterAmisListe(){
                         var nom = document.createElement("p");
                         var username = data[i]["username"];
                         nom.textContent = username;
+                        if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                            nom.style.textOverflow = 'ellipsis';
+                            nom.style.overflow = 'hidden';
+                            nom.style.maxWidth = '10vh';
+                        }
+                        else{
+                            nom.style.textOverflow = 'ellipsis';
+                            nom.style.overflow = 'hidden';
+                            nom.style.maxWidth = '15vh';
+                        }
                         nom.classList.add("amiName");
 
                         div.appendChild(nom);
@@ -165,6 +175,7 @@ async function ajouterAmisListe(){
         console.log(e.message);
     }
 }
+
 async function askFriend(emetteur,receveur){
     const formDataJSON = {};
     formDataJSON["emetteur"] = emetteur;
@@ -243,6 +254,16 @@ async function demandesAmisListe(){
                         var nom = document.createElement("p");
 
                         nom.textContent = username;
+                        if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                            nom.style.textOverflow = 'ellipsis';
+                            nom.style.overflow = 'hidden';
+                            nom.style.maxWidth = '10vh';
+                        }
+                        else{
+                            nom.style.textOverflow = 'ellipsis';
+                            nom.style.overflow = 'hidden';
+                            nom.style.maxWidth = '15vh';
+                        }
                         nom.classList.add("amiName");
 
                         div.appendChild(nom);
@@ -488,6 +509,16 @@ async function listeAmis(){
                         let nom = document.createElement("p");
 
                         nom.textContent = username;
+                        if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                            nom.style.textOverflow = 'ellipsis';
+                            nom.style.overflow = 'hidden';
+                            nom.style.maxWidth = '10vh';
+                        }
+                        else{
+                            nom.style.textOverflow = 'ellipsis';
+                            nom.style.overflow = 'hidden';
+                            nom.style.maxWidth = '15vh';
+                        }
                         nom.classList.add("amiName");
 
                         div.appendChild(nom);
@@ -695,5 +726,7 @@ async function addAchiev(id){
         console.error('Error adding achievement:', error);
     }
 }
-
-
+//actualise la page a chaque redimensionnement
+window.addEventListener('resize', function() {
+    location.reload();
+}, false);

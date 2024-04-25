@@ -264,3 +264,8 @@ async function UserClassement() {
         }
     }
 }
+
+//actualise la page a chaque redimensionnement
+window.addEventListener('resize', function() {
+    location.reload();
+}, false);
