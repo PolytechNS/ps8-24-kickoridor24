@@ -693,6 +693,33 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
+    }else if (request.method === "POST" && request.url === "/api/askInviteList") {
+        console.log("askInviteList");
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+                console.log("data : ", data);
+                const players = await askInviteList(data);
+                // await client.close();
+                if (players != null) {
+                    response.setHeader('Content-Type', 'application/json');
+                    response.write(JSON.stringify(players));
+                    response.end();
+                } else {
+                    response.statusCode = 404;
+                    response.end("User not found");
+                }
+            } catch (error) {
+                console.error(error.message);
+
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
     }
 }
 
@@ -842,6 +869,7 @@ async function findUser(data) {
 }
 
 async function findUserById(data) {
+    console.log("findUserByID : " , data);
     try {
 
         var idTmp = new ObjectId(data._id);
@@ -947,6 +975,39 @@ async function askFriendsList(data) {
     }
 }
 
+async function askInviteList(data) {
+    try {
+        const user = await client.db("kickoridor").collection("users").findOne({
+            username: data.username.toString()
+        });
+
+        if (user && user.invite) {
+            const inviteList = user.invite;
+            const updatedInviteList = [];
+
+            for (const invite of inviteList) {
+                const userId = Object.keys(invite)[0];
+                const roomId = invite[userId];
+
+                const invitedUser = await findUserById({_id : userId});
+
+                console.log("InvitedUser : " , invitedUser);
+
+                if (invitedUser) {
+                    updatedInviteList.push({ user: invitedUser, room: roomId });
+                }
+            }
+
+            return updatedInviteList;
+
+        } else {
+            return [];
+        }
+    } finally {
+        // Traitements de nettoyage ou finalisation
+    }
+}
+
 async function deleteAskFriend(data) {
     try {
         const userTmp = await findUser({username: data.receveur});
@@ -1004,7 +1065,6 @@ async function friendsList(data) {
             var friends = user.friendList;
             // Utiliser Promise.all pour exécuter les requêtes findUser de manière asynchrone
             const friendsDetails = await Promise.all(friends.sort().map(async (friend) => {
-
                 return await findUserById({_id: friend});
             }));
 

@@ -6,3 +6,4 @@ document.addEventListener('DOMContentLoaded', function() {
     const title = document.getElementById('title');
     title.innerHTML = "Attente de la réponse de " + friend;
 });
+

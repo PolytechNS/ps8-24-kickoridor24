@@ -1,35 +1,11 @@
 let roomId;
 
-/*async function askFriend(emetteur,receveur){
-    const formDataJSON = {};
-    formDataJSON["emetteur"] = emetteur;
-    formDataJSON["receveur"] = receveur;
-    try {
-        const response = await fetch('/api/askFriend', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formDataJSON)
-        });
-
-        if (!response.ok) {
-            var err = await response.text();
-            throw new Error('Une erreur est survenue lors de la demande d\'amis : ' + err);
-        }
-
-    } catch (error) {
-        alert(error.message);
-    }
-}*/
-
-
-async function demandesAmisListe(){
+async function inviteListe(){
     var formDataJSON = {};
     var user = getCookie("username");
     formDataJSON["username"] = user;
     try {
-        const response = await fetch('/api/askFriendsList', {
+        const response = await fetch('/api/askInviteList', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -43,6 +19,7 @@ async function demandesAmisListe(){
             return response.json(); // Convertit la réponse en JSON
         })
             .then(data => {
+                console.log(data);
                 var friendsDemands = document.getElementsByClassName("friendsDemands")[0];
                 var cont = friendsDemands.getElementsByClassName("cont")[0];
 
@@ -61,10 +38,10 @@ async function demandesAmisListe(){
                     for (var i = 0; i < data.length; i++) {
                         var div= document.createElement("div");
                         div.classList.add("profilAmis");
-                        var username = data[i]["username"];
+                        var username = data[i].user["username"];
 
                         var img = document.createElement("img");
-                        img.src = data[i]["img"];
+                        img.src = data[i].user["img"];
                         div.appendChild(img);
                         var nom = document.createElement("p");
 
@@ -72,26 +49,26 @@ async function demandesAmisListe(){
                         nom.style.width = '10vh';
                         div.appendChild(nom);
                         var elo = document.createElement("p");
-                        elo.textContent = data[i]["elo"];
+                        elo.textContent = data[i].user["elo"];
                         elo.style.width = '8vh';
                         elo.style.fontWeight = 'bold';
                         div.appendChild(elo);
-                        if(parseInt( data[i]["elo"]) > 1999){
+                        if(parseInt( data[i].user["elo"]) > 1999){
                             div.style.background ='url("images/uclTest.png")';
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
-                        }else if(parseInt( data[i]["elo"])>1499){
+                        }else if(parseInt( data[i].user["elo"])>1499){
                             div.style.background ='url("images/europaTest.png")';
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
-                        }else if(parseInt( data[i]["elo"])>999){
+                        }else if(parseInt( data[i].user["elo"])>999){
                             div.style.background ='url("images/conferencetest.png")';
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
-                        }else if(parseInt( data[i]["elo"])>499){
+                        }else if(parseInt( data[i].user["elo"])>499){
                             div.style.background ='url("images/ligue1.png")';
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'repeat';
@@ -159,7 +136,9 @@ async function demandesAmisListe(){
                         btnV.addEventListener('click', function() {
                             var usernameValue = username; // Capturer la valeur de username dans cette portée
                             return function() {
-                                validateAskFriend(getCookie("username"), usernameValue);
+                                console.log("validate");
+                                console.log("username : ", usernameValue);
+                                //validateAskFriend(getCookie("username"), usernameValue);
                             };
                         }());
 
@@ -236,7 +215,7 @@ async function demandesAmisListe(){
 
             })
             .catch(error => {
-                console.error('Une erreur est survenue lors de la récupération des demandes d\'amis : ', error);
+                console.error('Une erreur est survenue lors de la récupération des invitations : ', error);
             });
 
     } catch (e) {
@@ -244,7 +223,7 @@ async function demandesAmisListe(){
     }
 }
 
-async function deleteAskFriend(emetteur,receveur){
+async function refuseAskInvite(emetteur,receveur){
     const formDataJSON = {};
     formDataJSON["emetteur"] = emetteur;
     formDataJSON["receveur"] = receveur;
@@ -261,7 +240,7 @@ async function deleteAskFriend(emetteur,receveur){
             var err = await response.text();
             throw new Error('Une erreur est survenue lors du rejet de la demande : ' + err);
         }else{
-            demandesAmisListe();
+            inviteListe();
         }
 
     } catch (error) {
@@ -269,12 +248,12 @@ async function deleteAskFriend(emetteur,receveur){
     }
 }
 
-async function validateAskFriend(emetteur,receveur){
+async function validateAskInvite(emetteur,receveur){
     const formDataJSON = {};
     formDataJSON["emetteur"] = emetteur;
     formDataJSON["receveur"] = receveur;
     try {
-        const response = await fetch('/api/validateAskFriend', {
+        const response = await fetch('/api/validateAskInvite', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -282,11 +261,13 @@ async function validateAskFriend(emetteur,receveur){
             body: JSON.stringify(formDataJSON)
         });
 
+        //TODO AJOUTER REDIRECTION VERS ROOM
+
         if (!response.ok) {
             var err = await response.text();
-            throw new Error('Une erreur est survenue lors de la validation de la demande : ' + err);
+            throw new Error('Une erreur est survenue lors de la validation de l\'invitation : ' + err);
         }else{
-            await demandesAmisListe();
+            await inviteListe();
             await listeAmis();
         }
 
@@ -444,18 +425,14 @@ async function listeAmis(){
                                 }
                             };
                         }());
-
                         div.appendChild(btn);
-
                         cont.appendChild(div);
                     }
                 }
-
             })
             .catch(error => {
                 console.error('Une erreur est survenue lors de la récupération des amis : ', error);
             });
-
     } catch (e) {
         alert(e.message);
     }
@@ -496,36 +473,10 @@ function createRoom(receveur){
     });
 }
 
-
-/*async function deleteFriend(emetteur,receveur){
-    const formDataJSON = {};
-    formDataJSON["emetteur"] = emetteur;
-    formDataJSON["receveur"] = receveur;
-    try {
-        const response = await fetch('/api/deleteFriend', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formDataJSON)
-        });
-
-        if (!response.ok) {
-            var err = await response.text();
-            throw new Error('Une erreur est survenue lors de la suppression de l\'amis : ' + err);
-        }else{
-            listeAmis();
-        }
-
-    } catch (error) {
-        alert(error.message);
-    }
-}*/
-
 document.addEventListener('DOMContentLoaded', async () => {
     // Appeler vos fonctions asynchrones ici
     await listeAmis();
-    await demandesAmisListe();
+    await inviteListe();
     await notif();
 });
 
