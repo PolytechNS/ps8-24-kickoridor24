@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log(getCookie("username"));
         console.log(getCookie("player"));
         socket.emit("changePage");
-        window.location.href = "gameOnline.html?room=" + room;
+        window.location.href = "gameOnline.html?room=" + room + "&player=" + friend;
     });
 
     function redirectToMenu() {

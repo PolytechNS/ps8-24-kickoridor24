@@ -753,8 +753,20 @@ function victoire(txt) {
 
     win = true;
 
-    if(getCookie("option") === "friend"){
-        showVictoire(txt,-999,0);
+    if(getCookie("option") === "friend") {
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const friend = urlParams.get('player');
+
+        if (txt == 'PlayerA' && getCookie("player") == "1") {
+            showVictoire(getCookie("username"), -999, 0);
+        } else if (txt == 'PlayerB' && getCookie("player") == "2") {
+            showVictoire(getCookie("username"), -999, 0);
+        } else if (txt == 'PlayerA' && getCookie("player") == "2") {
+            showVictoire(friend, -999, 0);
+        } else if (txt == 'PlayerB' && getCookie("player") == "1") {
+            showVictoire(friend, -999, 0);
+        }
     }else{
         socket.emit("VictoireOnline",txt, getCookie("player"),socket.id);
     }
