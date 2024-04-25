@@ -359,6 +359,9 @@ button {
         width: 35vh;
         aspect-ratio: 1/1;
     }
+    #finMiddle h3{
+        width: fit-content;
+    }
     .wrapper {
         background-image: url('../images/terrain.jpg');
         background-repeat: no-repeat;
