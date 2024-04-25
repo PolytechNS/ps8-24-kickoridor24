@@ -752,8 +752,12 @@ function victoire(txt) {
     if(win === true) return;
 
     win = true;
-    socket.emit("VictoireOnline",txt, getCookie("player"),socket.id);
 
+    if(getCookie("option") === "friend"){
+        showVictoire(txt,-999,0);
+    }else{
+        socket.emit("VictoireOnline",txt, getCookie("player"),socket.id);
+    }
 }
 /*socket.on("FinDePartieOnline",(txt, clientsInRoom) => {
 
@@ -902,7 +906,12 @@ function showVictoire(txt, newElo, diffElo){
     }
     else {
         divMid.getElementsByTagName('h2')[0].textContent = txt + " remporte la partie";
-        divMid.getElementsByTagName('h3')[0].textContent = "Votre nouvel elo : " + newElo + " (" + diffElo + ")";
+        if(newElo < 0){
+            divMid.getElementsByTagName('h3')[0].textContent = "Votre nouvel elo n'est pas calculé car vous jouez contre un(e) ami(e)";
+        }else {
+            divMid.getElementsByTagName('h3')[0].textContent = "Votre nouvel elo : " + newElo + " (" + diffElo + ")";
+        }
+
 
         if (txt == currentPlayer) {
             if (getCookie("username") != null) {

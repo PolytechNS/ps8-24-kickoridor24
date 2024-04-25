@@ -1,5 +1,3 @@
-let roomId;
-
 async function inviteListe(){
     var formDataJSON = {};
     var user = getCookie("username");
@@ -136,8 +134,8 @@ async function inviteListe(){
                         btnV.addEventListener('click', function() {
                             var usernameValue = username; // Capturer la valeur de username dans cette portée
                             return function() {
-                                console.log("validate");
-                                console.log("username : ", usernameValue);
+                                setCookie("player", "2", 1);
+                                joinGame(usernameValue, data[0].room);
                                 //validateAskFriend(getCookie("username"), usernameValue);
                             };
                         }());
@@ -221,6 +219,13 @@ async function inviteListe(){
     } catch (e) {
         alert(e.message);
     }
+}
+
+function joinGame(username, room){
+    //TODO SUPPRIMER DE LA BDD
+
+    window.location.href = "waiting-friend.html?room=" + room + "&friend=" + username;
+
 }
 
 async function refuseAskInvite(emetteur,receveur){
@@ -418,11 +423,8 @@ async function listeAmis(){
                             return function() {
                                 console.log("invite");
                                 console.log("username : ", usernameValue);
-                                if(!roomId){
-                                    createRoom(usernameValue);
-                                }else{
-                                    alert("Vous avez déjà une invitation en cours");
-                                }
+
+                                createRoom(usernameValue);
                             };
                         }());
                         div.appendChild(btn);
@@ -438,39 +440,11 @@ async function listeAmis(){
     }
 }
 
-async function inviteFriend(emetteur,receveur, roomId){
-    const formDataJSON = {};
-    formDataJSON["emetteur"] = emetteur;
-    formDataJSON["receveur"] = receveur;
-    formDataJSON["room"] = roomId;
-    try {
-        const response = await fetch('/api/inviteFriend', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formDataJSON)
-        });
 
-        if (!response.ok) {
-            var err = await response.text();
-            throw new Error('Une erreur est survenue lors de l\'invitation de l\'amis : ' + err);
-        }
-
-        window.location.href = "waiting-friend.html?room=" + roomId + "&friend=" + receveur;
-
-    } catch (error) {
-        alert(error.message);
-    }
-}
 
 function createRoom(receveur){
-    socket.emit('joinGame');
-    socket.on('joinedGame', async (room) => {
-        console.log(room);
-        roomId = room;
-        await inviteFriend(getCookie("username"), receveur, roomId);
-    });
+    setCookie("player", "1", 1);
+    window.location.href = "waiting-friend.html?&friend=" + receveur;
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
