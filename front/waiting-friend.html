@@ -1,12 +1,11 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Kick'Oridor - Menu</title>
-    <link rel="stylesheet" type="text/css" href="css/play-page.css">
+    <meta charset="UTF-8">
+    <title>Kick'oridor - Matchmaking</title>
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
-<body>
 <header>
     <div class="cnt-header">
         <div class="nav">
@@ -22,10 +21,11 @@
             <div id="se-deconnecter" class="connexion" style="display: none" onclick="redirectToLogin()">
                 <p class="btn"> Se déconnecter</p>
             </div>
-            <div class="name" onclick="redirectToProfil()">
+            <div class="name">
                 <p id="name"></p>
             </div>
             <img id="petitePhoto"src="images/photoProfil/Mitroglu.png" alt="">
+
         </div>
     </div>
 
@@ -33,52 +33,13 @@
         <img src="images/header.png" alt="" class="bg-header">
     </div>
 </header>
+<body>
 
-<div class="retour">
-    <img id="retour" src="images/retour.png" alt="" onclick="previewPage()">
-</div>
-
-<div class="all">
-<div class="navClass">
-    <div id="ligne" class="topButton" >
-        <a class="navButton"> En ligne</a>
-    </div>
-
-    <div id="hors" class="topButton" >
-        <a class="navButton"> Hors ligne</a>
-    </div>
-</div>
-
-<div class="container">
-    <div class="onlinePlay" style="display: flex">
-        <div class="Play" onclick="playWithFriend()">
-            <h2 class="btnJouer"> PARTIE AMICALE</h2>
-            <img id="amical" src="images/amical.png" alt="">
-        </div>
-        <div class="Play" onclick="playOnline()">
-            <h2 class="btnJouer"> PARTIE EN LIGNE</h2>
-            <img id="online" src="images/online.png" alt="">
-        </div>
-    </div>
-
-    <div class="horsLignePlay" style="display: none">
-        <div class="Play" onclick="redirectToBotPage()">
-            <h2 class="btnHORSLIGNEBTN"> CONTRE L'IA</h2>
-            <img id="ia" src="images/ia.png" alt="">
-        </div>
-
-        <div class="Play" onclick="redirectToGame('typeDePartie','1v1local',7)">
-            <h2 class="btnHORSLIGNEBTN"> 1V1 LOCAL</h2>
-            <img id="local" src="images/local.png" alt="">
-        </div>
-
-        <div class="Play" id="resumeGameButton" onclick="redirectToGame('typeDePartie','resumeGame',7)">
-            <h2 class="btnHORSLIGNEBTN"> REPRENDRE LA PARTIE</h2>
-            <img id="resume" src="images/resume.png" alt="">
-        </div>
-    </div>
-
-</div>
+<div id="corps">
+    <h1 id="title">Attente de la réponse de</h1>
+    <p id="p1">En attente que votre ami(e) accepte l'invitation</p>
+    <p id="p2">Vous pouvez quitter la partie avant l'acceptation de votre ami(e)</p>
+    <button onclick="redirectToMenu()" id="btnQuit">Quitter</button>
 </div>
 
 <div id="chatMenu" class="chatMenu">
@@ -117,7 +78,6 @@
         <img src="images/send.png" alt="" class="envoyer" onclick="envoyerChat()">
     </div>
 </div>
-
 <div class="footer">
     <img id="param" src="images/param.png">
 
@@ -139,9 +99,9 @@
 </div>
 </body>
 </html>
+<script src="js/authentification.js"></script>
 <script src="js/cookie.js"></script>
 <script src="js/socket.io.js"></script>
-<script src="js/menu.js"></script>
 <script src="js/chat.js"></script>
-<script src="js/play-page.js"></script>
-<script src="js/authentification.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/waiting-friend.js"></script>

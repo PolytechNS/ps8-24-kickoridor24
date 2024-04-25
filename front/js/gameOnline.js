@@ -25,6 +25,17 @@ var cellsGrid = [];
 var stop = false;
 let win = false;
 
+const urlParams = new URLSearchParams(window.location.search);
+const nameUrl = urlParams.get('player');
+
+if(getCookie("player") == "1") {
+    document.getElementById('namePlayerA').innerText = getCookie("username");
+    document.getElementById('namePlayerB').innerText = nameUrl;
+}else{
+    document.getElementById('namePlayerA').innerText = nameUrl;
+    document.getElementById('namePlayerB').innerText = getCookie("username");
+}
+
 class cellule {
     constructor(id, classes, visibilite) {
         this.class = classes;
@@ -752,8 +763,24 @@ function victoire(txt) {
     if(win === true) return;
 
     win = true;
-    socket.emit("VictoireOnline",txt, getCookie("player"),socket.id);
 
+    if(getCookie("option") === "friend") {
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const friend = urlParams.get('player');
+
+        if (txt == 'PlayerA' && getCookie("player") == "1") {
+            showVictoire(getCookie("username"), -999, 0);
+        } else if (txt == 'PlayerB' && getCookie("player") == "2") {
+            showVictoire(getCookie("username"), -999, 0);
+        } else if (txt == 'PlayerA' && getCookie("player") == "2") {
+            showVictoire(friend, -999, 0);
+        } else if (txt == 'PlayerB' && getCookie("player") == "1") {
+            showVictoire(friend, -999, 0);
+        }
+    }else{
+        socket.emit("VictoireOnline",txt, getCookie("player"),socket.id);
+    }
 }
 /*socket.on("FinDePartieOnline",(txt, clientsInRoom) => {
 
@@ -902,7 +929,12 @@ function showVictoire(txt, newElo, diffElo){
     }
     else {
         divMid.getElementsByTagName('h2')[0].textContent = txt + " remporte la partie";
-        divMid.getElementsByTagName('h3')[0].textContent = "Votre nouvel elo : " + newElo + " (" + diffElo + ")";
+        if(newElo < 0){
+            divMid.getElementsByTagName('h3')[0].textContent = "Partie non classé";
+        }else {
+            divMid.getElementsByTagName('h3')[0].textContent = "Votre nouvel elo : " + newElo + " (" + diffElo + ")";
+        }
+
 
         if (txt == currentPlayer) {
             if (getCookie("username") != null) {

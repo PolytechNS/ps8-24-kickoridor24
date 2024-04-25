@@ -164,6 +164,25 @@ function showFriendsDemands(){
     document.getElementById("demandesBTN").style.backgroundColor = "#3EE4F0";
 }
 
+    function showPlayFriendsList(){
+        document.getElementsByClassName("friendsList")[0].style.display = "flex";
+        document.getElementsByClassName("friendsDemands")[0].style.display = "none";
+        document.getElementById("amisBTN").style.borderBottom = "4px solid #eb4f61";
+        document.getElementById("demandesBTN").style.borderBottom = "none";
+        document.getElementById("demandesBTN").style.backgroundColor = "#E4E5E7";
+        document.getElementById("amisBTN").style.backgroundColor = "#3EE4F0";
+    }
+
+
+    function showPlayFriendsDemands(){
+        document.getElementsByClassName("friendsDemands")[0].style.display = "flex";
+        document.getElementsByClassName("friendsList")[0].style.display = "none";
+        document.getElementById("demandesBTN").style.borderBottom = "4px solid #eb4f61";
+        document.getElementById("amisBTN").style.borderBottom = "none";
+        document.getElementById("amisBTN").style.backgroundColor = "#E4E5E7";
+        document.getElementById("demandesBTN").style.backgroundColor = "#3EE4F0";
+    }
+
 async function checkFriends(){
 
     if(getCookie("username") == null){
@@ -263,6 +282,10 @@ async function getConversationNotif(){
 }
     function playOnline(){
         window.location.href = 'waiting.html';
+    }
+
+    function playWithFriend(){
+        window.location.href = 'play-friends-page.html';
     }
 async function getMessageById(id){
     const formDataJSON = {};

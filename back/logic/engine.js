@@ -45,6 +45,21 @@ module.exports = function (io) {
                 gameNamespace.to(room).emit('firstPlayer');
             }
         });
+
+        socket.on('joinGameWithId', (room) => {
+
+            console.log('joinGameWithId');
+
+            socket.join(room);
+            rooms[room].push(socket.id);
+            socket.emit('joinedGameWithId');
+
+            if (rooms[room].length === 2) {
+                console.log('startGameHHHHHHHH');
+                gameNamespace.to(room).emit('startGame', room);
+            }
+        });
+
         socket.on('quitRoom', () => {
             const room = findRoomBySocketId(socket.id);
             if (room) {
