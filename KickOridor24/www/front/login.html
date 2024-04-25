@@ -49,11 +49,16 @@
             <input type="text" id="username" name="username" required placeholder="Nom d'utilisateur"><br><br>
             <input type="password" id="password" name="password" required placeholder="Mot de passe"><br><br>
             <div class="valider">
-                <button id="signup" onclick="redirectToSignup()">S'INSCRIRE</button>
                 <button type="submit" id="login">SE CONNECTER</button>
+                <button id="signup" onclick="redirectToSignup()">S'INSCRIRE</button>
+
 
             </div>
         </form>
+    </div>
+    <div id="resultatConnexionDIV">
+        <p id="resultatConnexionTXT"> Connexion échouée</p>
+        <btn onclick="hideMessage()">OK</btn>
     </div>
 </div>
 

@@ -21,7 +21,7 @@ module.exports = function (io) {
 
     gameNamespace.on('connection', (socket) => {
 
-        console.log("llllaaaaa")
+
         setupGame();
         socket.emit('setupGame');
 
@@ -48,6 +48,7 @@ module.exports = function (io) {
         });
         socket.on('quitRoom', () => {
             const room = findRoomBySocketId(socket.id);
+
             if (room) {
                 socket.leave(room);
                 const index = rooms[room].indexOf(socket.id);
@@ -73,13 +74,15 @@ module.exports = function (io) {
             varRoom = room;
 
             socket.join(roomId);
-            rooms[roomId].push(socket.id);
+            if(rooms[roomId]) {
+                rooms[roomId].push(socket.id);
 
-            if (rooms[roomId].length === 2) {
+                if (rooms[roomId].length === 2) {
 
-                gameNamespace.to(roomId).emit('gameStarted');
-                //gameNamespace.to(roomId).emit('setupGame');
+                    gameNamespace.to(roomId).emit('gameStarted');
+                    //gameNamespace.to(roomId).emit('setupGame');
 
+                }
             }
            });
 

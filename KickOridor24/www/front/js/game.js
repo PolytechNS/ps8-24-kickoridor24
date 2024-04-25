@@ -241,6 +241,8 @@ function setUpGame() {
     socket.emit('setUpGame');
     socket.on('setUpGameResponse', (activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cells) => {
         if(stop) return;
+        document.getElementById("nbWallPlayerA").style.gridColumn = "span 2";
+        document.getElementById("nbWallPlayerB").style.gridColumn = "span 2";
         cells = createDivsWithClassesAndAttributes(cells);
 
 
@@ -552,10 +554,10 @@ async function sauvegarderLaPartie() {
         if (!response.ok) {
             throw new Error('Une erreur est survenue lors de la sauvegarde de la partie.');
         }
-        alert('Partie sauvegardée !');
+        showInformation('Partie sauvegardée !');
         window.location.href = 'index.html';
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 
 }
@@ -621,7 +623,7 @@ async function retrieveGameBDD(username) {
             });
         return response;
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 }
 
@@ -758,7 +760,7 @@ function checkCrossing(playerAPosition, playerBPosition) {
 }
 
 function victoire(txt) {
-    //alert(txt);
+
     showVictoire(txt);
     if (partieChargee)
         supprimerAnciennePartie(getUsername());
@@ -803,7 +805,7 @@ async function supprimerAnciennePartie(user) {
             body: JSON.stringify(formDataJSON)
         });
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 }
 
@@ -907,7 +909,7 @@ function handleWall(cellIndex) {
 
 
     if ((tour === 202 && firstTurn) || (tour === 201 && firstTurn)) {
-        alert("Vous ne pouvez pas poser de mur au premier tour !");
+        showInformation("Vous ne pouvez pas poser de mur au premier tour !");
         return;
     }
 
@@ -927,7 +929,7 @@ function handleWall(cellIndex) {
         isClickedCell = false;
     }
     if ((activePlayer === 'playerA' && nbWallPlayerA === 0) || (activePlayer === 'playerB' && nbWallPlayerB === 0)) {
-        alert("Vous n'avez plus de murs !")
+        showInformation("Vous n'avez plus de murs !")
         return;
     }
 
@@ -1046,7 +1048,7 @@ function handleWall(cellIndex) {
             showValider();
         } else {
 
-            alert("Vous ne pouvez pas poser ce mur au risque de bloquer un joueur");
+            showInformation("Vous ne pouvez pas poser ce mur au risque de bloquer un joueur");
             annulerWall();
         }
 
@@ -1166,7 +1168,7 @@ function checkNoMove() {
     if (activePlayer === 'playerA') {
         const validMoves = getValidMoves(player1Position);
         if (validMoves.length == 0 && nbWallPlayerA === 0) {
-            alert("passage de tour");
+            showInformation("passage de tour");
             newMove.player = "playerA";
             newMove.type = "idle";
             newMove.position = player1Position;
@@ -1176,7 +1178,7 @@ function checkNoMove() {
         const validMoves = getValidMoves(player2Position);
 
         if (validMoves.length == 0 && (nbWallPlayerB === 0 || getCookie("typeDePartie") == "bot")) {
-            alert("passage de tour");
+            showInformation("passage de tour");
             newMove.player = "playerB";
             newMove.type = "idle";
             newMove.position = player2Position;
@@ -1631,3 +1633,18 @@ function saveToBack() {
 }
 
 
+function showInformation(txt){
+    var info = document.getElementById("information");
+    if(activePlayer == "playerA"){
+        info.style.top = "20%"
+    }else{
+        info.style.top = "80%"
+    }
+    info.style.display = "flex";
+    info.getElementsByTagName("p")[0].innerText = txt;
+    setTimeout(hideInformation,3500);
+}
+
+function hideInformation(){
+    document.getElementById("information").style.display = "none";
+}

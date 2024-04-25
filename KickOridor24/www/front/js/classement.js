@@ -109,7 +109,7 @@ async function AllUserClassement() {
                 console.error('Une erreur est survenue lors de la récupération des utilisateurs : ', error);
             });
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 }
 
@@ -214,7 +214,7 @@ async function UserClassement() {
                     console.error('Une erreur est survenue lors de la récupération des utilisateurs : ', error);
                 });
         } catch (e) {
-            alert(e.message);
+            console.log(e.message);
         }
     }
 }

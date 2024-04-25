@@ -91,9 +91,57 @@ input {
 #login:hover{
     background-color: #969696;
 }
+#resultatSignUpDIV{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    display: none;
+    background-color: #EB4F61;
+    margin-top: 1%;
 
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 30vw;
+    height: fit-content;
+    border-radius: 10px;
+    box-shadow: 0 6px 6px 0 #676767;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 1.7em;
+    color: #FFFFFF;
+    min-width: 250px;
+}
+#resultatSignUpDIV btn{
+    background-color: #3cadb6;
+    border-radius: 999px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 3vh;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 7px 25px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: fit-content;
+    word-break: break-word;
+    border: 0;
+
+    margin-top: -1vh;
+}
 
 @media screen and (max-aspect-ratio: 4/3.1) {
+    #resultatSignUpDIV{
+        width: 60%;
+        font-size: 3vh;
+        line-height: 3vh;
+    }
     .sign {
         margin-top: 1%;
         display: flex;

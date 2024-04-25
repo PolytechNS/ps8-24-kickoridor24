@@ -23,6 +23,8 @@ let n;
 var cellsString = [];
 var cellsGrid = [];
 var stop = false;
+let tempsRestant = 10;
+var chronometre;
 class cellule {
     constructor(id, classes, visibilite) {
         this.class = classes;
@@ -350,10 +352,11 @@ function setUpGame(gameState) {
 
 // Définir la règle CSS
         var cssA
-        if(currentPlayer == "playerA")
-        var cssA = '.playerA { background-image: url("'+ photoDeProfil +'"); }';
+        if(currentPlayer == "playerA") {
+             cssA = '.playerA { background-image: url("' + photoDeProfil + '"); }';
+        }
         else{
-            var cssA = '.playerB { background-image: url("'+ photoDeProfil +'"); }';
+             cssA = '.playerB { background-image: url("'+ photoDeProfil +'"); }';
         }
         var cssB;
         if(photoDeProfil == "images/photoProfil/Pedri.png"){
@@ -369,6 +372,8 @@ function setUpGame(gameState) {
         }
         style.appendChild(document.createTextNode(cssA));
         style.appendChild(document.createTextNode(cssB));
+        tempsRestant = 10;
+        chronometre = setInterval(mettreAJourChronometre, 1000);
         mettreAJourTableau(cellsGrid, cells);
         checkTour201();
         checkCrossing(player1Position, player2Position);
@@ -572,10 +577,10 @@ async function sauvegarderLaPartie() {
         if (!response.ok) {
             throw new Error('Une erreur est survenue lors de la sauvegarde de la partie.');
         }
-        alert('Partie sauvegardée !');
+        showInformation('Partie sauvegardée !');
         window.location.href = 'index.html';
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 
 }
@@ -641,7 +646,7 @@ async function retrieveGameBDD(username) {
             });
         return response;
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 }
 
@@ -697,10 +702,12 @@ function hideValider() {
         if (currentPlayer == "playerA") {
             document.getElementsByClassName("profilA")[0].style.display = "grid";
             document.getElementById("nbWallPlayerA").style.display = "block";
+            document.getElementById("chronometreA").style.display = "block";
             document.getElementsByClassName("forfait")[0].style.display = "block";
         } else {
             document.getElementsByClassName("profilB")[0].style.display = "grid";
             document.getElementById("nbWallPlayerB").style.display = "block";
+            document.getElementById("chronometreB").style.display = "block";
             document.getElementsByClassName("forfait")[1].style.display = "block";
         }
     }
@@ -765,7 +772,7 @@ function checkCrossing(playerAPosition, playerBPosition) {
 }
 
 function victoire(txt) {
-    //alert(txt);
+
     socket.emit("VictoireOnline",txt);
 
 }
@@ -823,7 +830,7 @@ async function supprimerAnciennePartie(user) {
             body: JSON.stringify(formDataJSON)
         });
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 }
 
@@ -942,7 +949,7 @@ function handleWall(cellIndex) {
 
 
     if ((tour === 202 && firstTurn) || (tour === 201 && firstTurn)) {
-        alert("Vous ne pouvez pas poser de mur au premier tour !");
+        showInformation("Vous ne pouvez pas poser de mur au premier tour !");
         return;
     }
 
@@ -962,7 +969,7 @@ function handleWall(cellIndex) {
         isClickedCell = false;
     }
     if ((activePlayer === 'playerA' && nbWallPlayerA === 0) || (activePlayer === 'playerB' && nbWallPlayerB === 0)) {
-        alert("Vous n'avez plus de murs !")
+        showInformation("Vous n'avez plus de murs !")
         return;
     }
 
@@ -1081,7 +1088,7 @@ function handleWall(cellIndex) {
             showValider();
         } else {
 
-            alert("Vous ne pouvez pas poser ce mur au risque de bloquer un joueur");
+            showInformation("Vous ne pouvez pas poser ce mur au risque de bloquer un joueur");
             annulerWall();
         }
 
@@ -1201,7 +1208,7 @@ function checkNoMove() {
     if (activePlayer === 'playerA') {
         const validMoves = getValidMoves(player1Position);
         if (validMoves.length == 0 && nbWallPlayerA === 0) {
-            alert("passage de tour");
+            showInformation("passage de tour");
             newMove.player = "playerA";
             newMove.type = "idle";
             newMove.position = player1Position;
@@ -1211,7 +1218,7 @@ function checkNoMove() {
         const validMoves = getValidMoves(player2Position);
 
         if (validMoves.length == 0 && (nbWallPlayerB === 0 || getCookie("typeDePartie") == "bot")) {
-            alert("passage de tour");
+            showInformation("passage de tour");
             newMove.player = "playerB";
             newMove.type = "idle";
             newMove.position = player2Position;
@@ -1270,6 +1277,9 @@ function getValidMoves(position) {
 }
 
 function changeActivePlayer() {
+    clearInterval(chronometre);
+    document.getElementById("chronometreA").innerText = "0:00";
+    document.getElementById("chronometreB").innerText = "0:00";
         activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
     if(activePlayer == 'playerA'){
         var profilA = document.getElementsByClassName('profilA')[0];
@@ -1302,6 +1312,9 @@ function changeActivePlayer() {
 
         murAPose = new Array(3);
         checkTour201();
+
+            tempsRestant = 10;
+            chronometre = setInterval(mettreAJourChronometre, 1000);
 
     //saveToBack();
 }
@@ -1514,6 +1527,7 @@ function movePlayer(cellIndex) {
         changeVisibilityPlayer(false, activePlayer === 'playerA' ? player1Position : player2Position, activePlayer);
         mettreAJourTableau(cellsGrid, cells);
         saveToBack()
+
         changeActivePlayer();
     }
 }
@@ -1524,9 +1538,11 @@ function showValider() {
         if (currentPlayer == "playerA") {
             document.getElementsByClassName("profilA")[0].style.display = "flex";
             document.getElementById("nbWallPlayerA").style.display = "none";
+            document.getElementById("chronometreA").style.display = "none";
             document.getElementsByClassName("forfait")[0].style.display = "none";
         } else {
             document.getElementsByClassName("profilB")[0].style.display = "flex";
+            document.getElementById("chronometreB").style.display = "none";
             document.getElementById("nbWallPlayerB").style.display = "none";
             document.getElementsByClassName("forfait")[1].style.display = "none";
         }
@@ -1601,3 +1617,83 @@ function returnMenu(){
     window.location.href = 'index.html';
 
 }
+var tourpassee = 0
+
+// Fonction pour mettre à jour le chronomètre
+function mettreAJourChronometre() {
+    // Conversion du temps restant en minutes et secondes
+    const minutes = Math.floor(tempsRestant / 60);
+    let secondes = tempsRestant % 60;
+
+    // Ajout d'un zéro devant les secondes si nécessaire
+    if (secondes < 10) {
+        secondes = "0" + secondes;
+    }
+    if(activePlayer == "playerA")
+    document.getElementById("chronometreA").innerText = minutes + ":" + secondes;
+
+    if(activePlayer == "playerB")
+    document.getElementById("chronometreB").innerText = minutes + ":" + secondes;
+    // Décrémentation du temps restant
+    tempsRestant--;
+
+    // Arrêter le chronomètre lorsque le temps est écoulé
+    if (tempsRestant < 0) {
+
+        clearInterval(chronometre);
+        if(activePlayer == currentPlayer){
+            tourpassee++;
+
+        if( tourpassee >=3){
+            showInformation("Vous avez pris trop temps à jouer, vous avez été exclus.",3);
+            declarerForfait();
+        }
+        if(tourpassee<3){
+            if(tour>200){
+                if(currentPlayer == "playerA")
+                    movePlyerFirstTurn(player1Position);
+                else
+                    movePlyerFirstTurn(player2Position);
+            }else {
+                saveToBack();
+                changeActivePlayer();
+            }
+            if(tourpassee==1)
+            showInformation("Vous avez pris trop temps à jouer, la prochaine c'est l'avertissement.",1);
+            if(tourpassee==2)
+                showInformation("Vous avez pris trop temps à jouer, c'est la dernière fois !",2);
+        }
+        }
+    }
+}
+function showInformation(txt,nb){
+    var info = document.getElementById("information");
+
+    info.style.display = "flex";
+    info.getElementsByTagName("p")[0].innerText = txt;
+    if(nb !=undefined){
+        info.getElementsByTagName("img")[0].style.display = "flex";
+        switch (nb){
+            case 1:
+                info.getElementsByTagName("img")[0].src = "images/arbitreFaute.gif"
+                break
+            case 2:
+                info.getElementsByTagName("img")[0].src = "images/arbitreJaune.gif"
+                break
+            case 3:
+                info.getElementsByTagName("img")[0].src = "images/arbitreRouge.gif"
+                break
+            default:
+                info.getElementsByTagName("img")[0].src = "images/arbitreFaute.gif"
+                break
+        }
+    }else{
+        info.getElementsByTagName("img")[0].style.display = "none";
+    }
+    setTimeout(hideInformation,5000);
+}
+
+function hideInformation(){
+    document.getElementById("information").style.display = "none";
+}
+// Appel de la fonction toutes les secondes

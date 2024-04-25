@@ -5,7 +5,7 @@ document.getElementById('signupForm').addEventListener('submit', async (event) =
     const confirmPassword = document.getElementById('confirmPassword').value;
 
     if (password !== confirmPassword) {
-        alert('Les mots de passe ne correspondent pas.');
+       showMessage()
         return;
     }
 
@@ -33,6 +33,14 @@ document.getElementById('signupForm').addEventListener('submit', async (event) =
         alert('Inscription réussie !');
         window.location.href = 'login.html';
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
 });
+function showMessage(){
+    document.getElementById("resultatSignUpDIV").style.display = "flex";
+    document.getElementById("signup").disabled = true;
+}
+function hideMessage(){
+    document.getElementById("resultatSignUpDIV").style.display = "none";
+    document.getElementById("signup").disabled = false;
+}

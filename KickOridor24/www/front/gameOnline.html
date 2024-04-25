@@ -38,6 +38,7 @@
     <div class="profilA">
         <h3 style="background-color: lightgreen" >Player A</h3>
         <p id="nbWallPlayerA">Murs restant : 10</p>
+        <span id="chronometreA">1:00</span>
         <div class="sauvegarder">
             <button class="sauvegarderButton" onclick="sauvegarderLaPartie()">Sauvegarder</button>
         </div>
@@ -73,9 +74,14 @@
 
     </div>
     <div class="wrapper"></div>
+    <div id="information" onclick="hideInformation()">
+        <p>Vous ne pouvez pas poser de mur au premier tour !</p>
+        <img >
+    </div>
     <div class="profilB">
         <h3 style="background-color: #F67E8C" >Player B</h3>
         <p id="nbWallPlayerB">Murs restant : 10</p>
+        <span id="chronometreB">1:00</span>
         <div class="forfait" id="forfaitB">
             <button class="forfaitButton" onclick="declarerForfait()">Déclarer forfait</button>
         </div>

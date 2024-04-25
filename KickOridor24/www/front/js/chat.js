@@ -41,7 +41,7 @@ async function envoyerChat(){
                 socket.emit('message',{ senderId: username, ami, message });
 
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 }
 function envoyerChatMatch(){
@@ -102,7 +102,7 @@ async function getConversation(){
                 if(data.length === 0){
                     var para = document.createElement("p");
                     para.textContent = "Aucun ami trouvé";
-                    chatMenu.appendChild(para);
+                    amisMsg.appendChild(para);
                 }else {
 
                     for (var i = 0; i < data.length; i++) {
@@ -172,7 +172,7 @@ async function getConversation(){
             });
 
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 }
 

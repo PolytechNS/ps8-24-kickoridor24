@@ -139,7 +139,7 @@ async function ajouterAmisListe(){
             });
 
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 }
 async function askFriend(emetteur,receveur){
@@ -161,7 +161,7 @@ async function askFriend(emetteur,receveur){
         }
 
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
 }
 
@@ -332,7 +332,7 @@ async function demandesAmisListe(){
             });
 
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 }
 
@@ -357,7 +357,7 @@ async function deleteAskFriend(emetteur,receveur){
         }
 
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
 }
 
@@ -383,7 +383,7 @@ async function validateAskFriend(emetteur,receveur){
         }
 
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
 }
 async function listeAmis(){
@@ -520,7 +520,7 @@ async function listeAmis(){
             });
 
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 }
 
@@ -546,7 +546,7 @@ async function deleteFriend(emetteur,receveur){
         }
 
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
 }
 
@@ -588,7 +588,7 @@ async function verifNbFriends(){
             });
 
     } catch (e) {
-        alert(e.message);
+        console.log(e.message);
     }
 
     if(nbFriends === 1){

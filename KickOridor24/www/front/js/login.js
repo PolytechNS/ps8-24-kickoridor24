@@ -1,10 +1,15 @@
 function redirectToSignup() {
     window.location.href = "signup.html";
 }
+/*document.getElementById('loginForm').addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') { // Vérification si la touche pressée est "Entrée"
 
+       // Empêche le comportement par défaut de la touche "Entrée" dans le champ d'entrée
+        document.getElementById('loginForm').submit(); // Soumet le formulaire
+    }
+});*/
 document.getElementById('loginForm').addEventListener('submit', async (event) => {
     event.preventDefault();
-
     const formData = new FormData(event.target);
     const formDataJSON = {};
 
@@ -22,14 +27,13 @@ document.getElementById('loginForm').addEventListener('submit', async (event) =>
         });
 
         if (!response.ok) {
-            alert('Connexion échouée !')
+            showMessage();
         }else if(response.ok){
             setCookie("username",formDataJSON.username,7);
-            alert('Connexion réussie !');
             window.location.href = 'index.html';
         }
     } catch (error) {
-        alert(error.message);
+        console.log(error.message);
     }
 });
 
@@ -39,4 +43,15 @@ function getUsername(){
         return username;
     }
     return null;
+}
+
+function showMessage(){
+    document.getElementById("resultatConnexionDIV").style.display = "flex";
+    document.getElementById("signup").disabled = true;
+    document.getElementById("login").disabled = true;
+}
+function hideMessage(){
+    document.getElementById("resultatConnexionDIV").style.display = "none";
+    document.getElementById("signup").disabled = false;
+    document.getElementById("login").disabled = false;
 }
