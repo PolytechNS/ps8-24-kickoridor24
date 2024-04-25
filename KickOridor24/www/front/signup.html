@@ -1,0 +1,79 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Kick'Oridor - Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/signup.css">
+    <link rel="stylesheet" type="text/css" href="css/header-footer.css">
+    <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
+</head>
+<body>
+<div class="header">
+    <div class="cnt-header">
+        <div class="nav">
+            <img id="home" src="images/home.png" onclick="redirectToMenu()">
+            <div class="logo">
+                <img src="images/kickoridor24.png">
+            </div>
+        </div>
+        <div class="connection">
+            <div class="logoDeco" onclick="redirectToLogin()">
+                <img src="images/se-deconnecter.png" alt="">
+            </div>
+            <div id="se-connecter" class="connexion" onclick="redirectToLogin()">
+                <p class="btn"> Se connecter</p>
+            </div>
+            <div id="se-deconnecter" class="connexion" style="display: none" onclick="redirectToLogin()">
+                <p class="btn"> Se déconnecter</p>
+            </div>
+            <div class="name" onclick="redirectToProfil()">
+                <p id="name"></p>
+            </div>
+            <img id="petitePhoto" src="images/photoProfil/Mitroglu.png" alt="" onclick="redirectToProfil()">
+        </div>
+    </div>
+    <span id="triangle_fond"></span>
+</div>
+
+<div class="retour">
+    <img id="retour" src="images/retour.png" alt="" onclick="previewPage()">
+</div>
+
+<div class="big-container">
+    <div class="titre">
+        <img id="titre" src="images/titre.png" alt="">
+    </div>
+<div class="container">
+    <div class="sign">
+        <h2 class="btnJouer"> S'inscrire</h2>
+        <form id="signupForm">
+            <input type="text" id="username" name="username" required placeholder="Nom d'utilisateur"><br><br>
+            <input type="email" id="email" name="email" required placeholder="Email"><br><br>
+            <input type="password" id="password" name="password" required placeholder="Mot de passe"><br><br>
+            <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirmer le mot de passe"><br><br>
+            <div class="valider">
+                <button type="submit" id="signup">S'INSCRIRE</button>
+            </div>
+        </form>
+    </div>
+    <div id="resultatSignUpDIV">
+        <p id="resultatSignUpTXT"> Les mots de passe ne correspondent pas</p>
+        <btn onclick="hideMessage()">OK</btn>
+    </div>
+</div>
+</div>
+
+<div class="footer">
+    <span id="triangle_inverse_fond"></span>
+
+    <div class="cnt-footer">
+    <img id="param" src="images/param.png">
+</div>
+</div>
+</body>
+</html>
+<script src="js/cookie.js"></script>
+<script src="js/socket.io.js"></script>
+<script src="js/signup.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/authentification.js"></script>

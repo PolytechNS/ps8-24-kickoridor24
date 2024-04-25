@@ -1,18 +1,18 @@
-const { MongoClient, ServerApiVersion, ObjectId} = require("mongodb");
+const {MongoClient, ServerApiVersion, ObjectId} = require("mongodb");
 const jwt = require("jsonwebtoken");
 
 const argument = process.argv[2];
 
-let uri;
+let uri = "http://kickoridor.ps8.academy//:27017";
 if(argument === "dev"){
     console.log("mongo dev on localhost");
     uri = 'mongodb://localhost:27017';
-}else{
+}else if(argument === "prod"){
     console.log("mongo prod on mongo");
     uri = 'mongodb://mongo:27017';
 }
 
-const client = new MongoClient(uri,  {
+const client = new MongoClient(uri, {
         serverApi: {
             version: ServerApiVersion.v1,
             strict: true,
@@ -47,15 +47,16 @@ async function handleBDD(request, response) {
 
                     const dataToSend = {
                         username: data.username,
-                        elo: '0',
+                        elo: '250',
                         img: 'images/photoProfil/Mitroglu.png',
-                        celebration:'images/celebration/SIUU',
+                        celebration: 'images/celebration/SIUU',
                         token: token,
                         friendList: [],
                         demandes: [],
-                        achiev : [],
+                        achiev: [],
+                        invite: [],
                     }
-                    saveUser(dataToSend).then(async() => {
+                    saveUser(dataToSend).then(async () => {
                             response.statusCode = 200;
                             // await client.close();
                             response.end("ok");
@@ -98,7 +99,7 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    }  else if (request.method === "POST" && request.url === "/api/retrieveUser") {
+    } else if (request.method === "POST" && request.url === "/api/retrieveUser") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -121,10 +122,10 @@ async function handleBDD(request, response) {
                     jsonResponse["password"] = token.data.password;
                     jsonResponse["achiev"] = user.achiev;
                     //await client.close();
-                        response.statusCode = 200;
-                        response.write(JSON.stringify(jsonResponse));
+                    response.statusCode = 200;
+                    response.write(JSON.stringify(jsonResponse));
 
-                        response.end();
+                    response.end();
                 } else {
                     response.statusCode = 404;
                     response.end("User not found");
@@ -135,7 +136,7 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    }else if (request.method === "POST" && request.url === "/api/gameSave") {
+    } else if (request.method === "POST" && request.url === "/api/gameSave") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -426,7 +427,7 @@ async function handleBDD(request, response) {
                 const data = JSON.parse(body);
 
                 var message = await getMsgById(data);
-    ;
+                ;
                 // await client.close();
 
                 if (message != null) {
@@ -446,7 +447,7 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    }else if (request.method === "POST" && request.url === "/api/getConversation") {
+    } else if (request.method === "POST" && request.url === "/api/getConversation") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -476,7 +477,7 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    }else if (request.method === "POST" && request.url === "/api/getConversation") {
+    } else if (request.method === "POST" && request.url === "/api/getConversation") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -506,7 +507,7 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    }else if (request.method === "POST" && request.url === "/api/changeCelebration") {
+    } else if (request.method === "POST" && request.url === "/api/changeCelebration") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -514,7 +515,7 @@ async function handleBDD(request, response) {
         request.on("end", async () => {
             try {
                 const data = JSON.parse(body);
-               await changeCelebration(data);
+                await changeCelebration(data);
                 response.end("ok");
 
             } catch (error) {
@@ -523,7 +524,7 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    }else if (request.method === "POST" && request.url === "/api/changeImg") {
+    } else if (request.method === "POST" && request.url === "/api/changeImg") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -540,7 +541,7 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    }else if (request.method === "POST" && request.url === "/api/changeMDP") {
+    } else if (request.method === "POST" && request.url === "/api/changeMDP") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -558,7 +559,7 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    }else if (request.method === "POST" && request.url === "/api/changeMail") {
+    } else if (request.method === "POST" && request.url === "/api/changeMail") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -576,7 +577,7 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    }else if (request.method === "POST" && request.url === "/api/changeName") {
+    } else if (request.method === "POST" && request.url === "/api/changeName") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -594,14 +595,14 @@ async function handleBDD(request, response) {
                 response.end("Invalid JSON");
             }
         });
-    }else if (request.method === "POST" && request.url === "/api/addAchiev") {
+    } else if (request.method === "POST" && request.url === "/api/addAchiev") {
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
         });
         request.on("end", async () => {
             try {
-              const data = JSON.parse(body);
+                const data = JSON.parse(body);
 
                 await addAchiev(data);
                 response.end("ok");
@@ -611,9 +612,9 @@ async function handleBDD(request, response) {
                 response.statusCode = 400;
                 response.end("Invalid JSON");
             }
-        });   
-    }else if (request.method === "POST" && request.url === "/api/getAllUsers") {
-      let body = "";
+        });
+    } else if (request.method === "POST" && request.url === "/api/getAllUsers") {
+        let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
         });
@@ -634,9 +635,128 @@ async function handleBDD(request, response) {
                 response.end("Internal Server Error");
             }
         });
+    } else if (request.method === "POST" && request.url === "/api/getElo") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+                const user = await findUser(data);
+                if (user != null) {
+                    response.statusCode = 200;
+                    response.end(user.elo);
+                } else {
+                    response.statusCode = 404;
+                    response.end("User not found");
+                }
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    } else if (request.method === "POST" && request.url === "/api/updateElo") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+                await updateElo(data);
+                response.end("ok");
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if (request.method === "POST" && request.url === "/api/inviteFriend") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            let token;
+            try {
+                const data = JSON.parse(body);
+                console.log(data);
+                await inviteFriend(data);
+                // await client.close();
+                response.end();
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if (request.method === "POST" && request.url === "/api/askInviteList") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            try {
+                const data = JSON.parse(body);
+                const players = await askInviteList(data);
+                // await client.close();
+                if (players != null) {
+                    response.setHeader('Content-Type', 'application/json');
+                    response.write(JSON.stringify(players));
+                    response.end();
+                } else {
+                    response.statusCode = 404;
+                    response.end("User not found");
+                }
+            } catch (error) {
+                console.error(error.message);
+
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
+    }else if (request.method === "POST" && request.url === "/api/refuseAskInvite") {
+        let body = "";
+        request.on("data", chunk => {
+            body += chunk.toString();
+        });
+        request.on("end", async () => {
+            let token;
+            try {
+                const data = JSON.parse(body);
+                await refuseAskInvite(data);
+                // await client.close();
+                response.end();
+            } catch (error) {
+                console.error(error.message);
+                response.statusCode = 400;
+                response.end("Invalid JSON");
+            }
+        });
     }
+
 }
 
+async function inviteFriend(data) {
+    try {
+        console.log("inviteFriend : ",data);
+        const userTmp = await findUser({ username: data.emetteur });
+        const inviteMap = {}; // Création de la carte pour stocker les invitations
+
+        // Créer une entrée dans la carte avec l'ID de l'utilisateur et la salle
+        inviteMap[userTmp["_id"]] = data.room;
+
+        // Mettre à jour la collection des utilisateurs avec la carte d'invitation
+        return await client.db("kickoridor").collection("users").updateOne(
+            { username: data.receveur.toString() },
+            { $addToSet: { invite: inviteMap } }
+        );
+    } finally {
+        // Code à exécuter après la mise à jour si nécessaire
+    }
+}
 
 async function allPlayersList() {
     try {
@@ -659,96 +779,110 @@ async function allPlayersList() {
     }
 }
 
-    async function getMessages(data, idConversation) {
-        try {
+async function getMessages(data, idConversation) {
+    try {
 
 
-            const messages = await client.db("kickoridor").collection("chat").find({
-                conversationID: idConversation._id
-            }).sort({date: 1}).toArray();
-            var receveur = await findUser({username : data.username});
-            var emetteur = await findUser({username : data.ami});
-            await client.db("kickoridor").collection("chat").updateMany({
-                receveur: receveur["_id"],
-                emetteur: emetteur["_id"],
-                lu: false
-            }, {
-                $set: {lu: true}
-            });
-            return messages;
+        const messages = await client.db("kickoridor").collection("chat").find({
+            conversationID: idConversation._id
+        }).sort({date: 1}).toArray();
+        var receveur = await findUser({username: data.username});
+        var emetteur = await findUser({username: data.ami});
+        await client.db("kickoridor").collection("chat").updateMany({
+            receveur: receveur["_id"],
+            emetteur: emetteur["_id"],
+            lu: false
+        }, {
+            $set: {lu: true}
+        });
+        return messages;
 
-        } finally {
+    } finally {
 
-        }
     }
+}
 
-    async function getConversationID(data) {
-        try {
-            var ami1 = await findUser({username : data.username});
-            var ami2 = await findUser({username : data.ami});
-            return await client.db("kickoridor").collection("conversation").findOne({
-                $or: [
-                    {ami1: ami1["_id"], ami2: ami2["_id"]},
-                    {ami1: ami2["_id"], ami2: ami1["_id"]}
-                ]
-            });
-        } finally {
-
-        }
-    }
-
-    async function sendMessageData(data, conversationID) {
-        try {
-            var emetteur = await findUser({username : data.username});
-            var receveur = await findUser({username : data.ami});
-
-            const msg = await client.db("kickoridor").collection("chat").insertOne({
-                conversationID: conversationID,
-                message: data.message,
-                emetteur: emetteur["_id"],
-                receveur: receveur["_id"],
-                date: Date.now(),
-                lu: false
-            }, function (err, res) {
-                if (err) throw err;
-                console.log("1 document inserted");
-            });
-            await client.db("kickoridor").collection("conversation").updateOne(
-                {"_id": conversationID},
-                {
-                    $set: {
-                        "date": Date.now(),
-                        "lastMsg": msg.insertedId
-                    }
+async function updateElo(data) {
+    try {
+        //
+        return await client.db("kickoridor").collection("users").updateOne(
+            {username: data.username},
+            {
+                $set: {
+                    "elo": data.elo.toString()
                 }
-            )
-        } finally {
-
-        }
-    }
-
-    async function saveUser(data) {
-        try {
-
-            await client.db("kickoridor").collection("users").insertOne(data, function (err, res) {
-                if (err) throw err;
-                console.log("1 document inserted");
             });
-        } finally {
-
-        }
+    } finally {
+        //
     }
+}
 
-    async function findUser(data) {
-        try {
-            //
-            return await client.db("kickoridor").collection("users").findOne({
-                username: data.username
-            });
-        } finally {
-            //
-        }
+async function getConversationID(data) {
+    try {
+        var ami1 = await findUser({username: data.username});
+        var ami2 = await findUser({username: data.ami});
+        return await client.db("kickoridor").collection("conversation").findOne({
+            $or: [
+                {ami1: ami1["_id"], ami2: ami2["_id"]},
+                {ami1: ami2["_id"], ami2: ami1["_id"]}
+            ]
+        });
+    } finally {
+
     }
+}
+
+async function sendMessageData(data, conversationID) {
+    try {
+        var emetteur = await findUser({username: data.username});
+        var receveur = await findUser({username: data.ami});
+
+        const msg = await client.db("kickoridor").collection("chat").insertOne({
+            conversationID: conversationID,
+            message: data.message,
+            emetteur: emetteur["_id"],
+            receveur: receveur["_id"],
+            date: Date.now(),
+            lu: false
+        }, function (err, res) {
+            if (err) throw err;
+        });
+        await client.db("kickoridor").collection("conversation").updateOne(
+            {"_id": conversationID},
+            {
+                $set: {
+                    "date": Date.now(),
+                    "lastMsg": msg.insertedId
+                }
+            }
+        )
+    } finally {
+
+    }
+}
+
+async function saveUser(data) {
+    try {
+
+        await client.db("kickoridor").collection("users").insertOne(data, function (err, res) {
+            if (err) throw err;
+        });
+    } finally {
+
+    }
+}
+
+async function findUser(data) {
+    try {
+        //
+        return await client.db("kickoridor").collection("users").findOne({
+            username: data.username
+        });
+    } finally {
+        //
+    }
+}
+
 async function findUserById(data) {
     try {
 
@@ -761,208 +895,250 @@ async function findUserById(data) {
     }
 }
 
-    async function saveGameState(data) {
-        try {
-            await client.connect();
-            await client.db("kickoridor").collection("gameState").insertOne(data, function (err, res) {
-                if (err) throw err;
-                console.log("1 document inserted");
-            });
-        } finally {
-            // await client.close();
-        }
+async function saveGameState(data) {
+    try {
+        await client.connect();
+        await client.db("kickoridor").collection("gameState").insertOne(data, function (err, res) {
+            if (err) throw err;
+        });
+    } finally {
+        // await client.close();
     }
+}
 
-    async function findGameState(data) {
-        try {
+async function findGameState(data) {
+    try {
 
-            return await client.db("kickoridor").collection("gameState").findOne({
-                username: data.username.toString()
-            });
-        } finally {
+        return await client.db("kickoridor").collection("gameState").findOne({
+            username: data.username.toString()
+        });
+    } finally {
 
-        }
     }
+}
 
-    async function deleteGameState(data) {
-        try {
+async function deleteGameState(data) {
+    try {
 
-            return await client.db("kickoridor").collection("gameState").deleteOne({
-                username: data.username.toString()
-            });
-        } finally {
+        return await client.db("kickoridor").collection("gameState").deleteOne({
+            username: data.username.toString()
+        });
+    } finally {
 
-        }
     }
+}
 
-    async function findFriends(data) {
-        try {
+async function findFriends(data) {
+    try {
 
-            const currentUser = await findUser(data);
-            const friendListUsers = await Promise.all(currentUser.friendList.map(async (friendID) => {
-                const tmp = await findUserById({_id :friendID});
-                return tmp["username"];
-            }));
-            const demandeListUsers = await Promise.all(currentUser.demandes.map(async (friendID) => {
-                const tmp = await findUserById({_id :friendID});
-                return tmp["username"];
-            }));
-            const exclusions = [currentUser.username, ...friendListUsers, ...demandeListUsers];
+        const currentUser = await findUser(data);
+        const friendListUsers = await Promise.all(currentUser.friendList.map(async (friendID) => {
+            const tmp = await findUserById({_id: friendID});
+            return tmp["username"];
+        }));
+        const demandeListUsers = await Promise.all(currentUser.demandes.map(async (friendID) => {
+            const tmp = await findUserById({_id: friendID});
+            return tmp["username"];
+        }));
+        const exclusions = [currentUser.username, ...friendListUsers, ...demandeListUsers];
 
-            return await client.db("kickoridor").collection("users").find({
-                username: {
-                    $regex: "^" + data.recherche.toString(),
-                    $nin: exclusions
-                }
-            }).sort({username: 1}).toArray();
-        } finally {
-
-        }
-    }
-
-    async function askFriend(data) {
-        try {
-
-            const userTmp = await findUser({username : data.emetteur});
-
-            return await client.db("kickoridor").collection("users").updateOne(
-                {username: data.receveur.toString()},
-                {$addToSet: {demandes: userTmp["_id"]}}
-            );
-        } finally {
-
-        }
-    }
-
-    async function askFriendsList(data) {
-        try {
-
-            const user = await client.db("kickoridor").collection("users").findOne({
-                username: data.username.toString()
-            });
-
-            if (user && user.demandes) {
-                // Utiliser Promise.all pour exécuter les requêtes findUser de manière asynchrone
-                const demandeDetails = await Promise.all(user.demandes.sort().map(async (demande) => {
-                    return await findUserById({_id: demande});
-                }));
-                return demandeDetails;
-            } else {
-                return []; // Retourner un tableau vide si l'utilisateur n'a pas de demandes ou si l'utilisateur n'existe pas
+        return await client.db("kickoridor").collection("users").find({
+            username: {
+                $regex: "^" + data.recherche.toString(),
+                $nin: exclusions
             }
-        } finally {
+        }).sort({username: 1}).toArray();
+    } finally {
 
-        }
     }
+}
 
-    async function deleteAskFriend(data) {
-        try {
-            const userTmp = await findUser({username : data.receveur});
+async function askFriend(data) {
+    try {
 
-            return await client.db("kickoridor").collection("users").updateOne(
-                {username: data.emetteur.toString()},
-                {$pull: {demandes: userTmp["_id"]}}
-            );
-        } finally {
+        const userTmp = await findUser({username: data.emetteur});
 
-        }
+        return await client.db("kickoridor").collection("users").updateOne(
+            {username: data.receveur.toString()},
+            {$addToSet: {demandes: userTmp["_id"]}}
+        );
+    } finally {
+
     }
+}
 
-    async function validateAskFriend(data) {
-        try {
-            const userTmp = await findUser({username : data.receveur});
-            await client.db("kickoridor").collection("users").updateOne(
-                {username: data.emetteur.toString()},
-                {
-                    $pull: {demandes: userTmp["_id"]}
+async function askFriendsList(data) {
+    try {
+
+        const user = await client.db("kickoridor").collection("users").findOne({
+            username: data.username.toString()
+        });
+
+        if (user && user.demandes) {
+            // Utiliser Promise.all pour exécuter les requêtes findUser de manière asynchrone
+            const demandeDetails = await Promise.all(user.demandes.sort().map(async (demande) => {
+                return await findUserById({_id: demande});
+            }));
+            return demandeDetails;
+        } else {
+            return []; // Retourner un tableau vide si l'utilisateur n'a pas de demandes ou si l'utilisateur n'existe pas
+        }
+    } finally {
+
+    }
+}
+
+async function askInviteList(data) {
+    try {
+        const user = await client.db("kickoridor").collection("users").findOne({
+            username: data.username.toString()
+        });
+
+        if (user && user.invite) {
+            const inviteList = user.invite;
+            const updatedInviteList = [];
+
+            for (const invite of inviteList) {
+                const userId = Object.keys(invite)[0];
+                const roomId = invite[userId];
+
+                const invitedUser = await findUserById({_id : userId});
+
+
+                if (invitedUser) {
+                    updatedInviteList.push({ user: invitedUser, room: roomId });
                 }
-            );
-            var ami1 = await findUser({username : data.emetteur});
-            var ami2 = await findUser({username : data.receveur});
-
-            await client.db("kickoridor").collection("conversation").insertOne(
-                {
-                    ami1: ami1["_id"],
-                    ami2: ami2["_id"]
-                }
-            )
-            await client.db("kickoridor").collection("users").updateOne(
-                {username: data.emetteur.toString()},
-                {$addToSet: {friendList: userTmp["_id"]}}
-            );
-            const userTmp2 = await findUser({username : data.emetteur});
-            return await client.db("kickoridor").collection("users").updateOne(
-                {username: data.receveur.toString()},
-                {$addToSet: {friendList: userTmp2["_id"]}}
-            );
-
-        } finally {
-
-        }
-    }
-
-    async function friendsList(data) {
-        try {
-
-            const user = await client.db("kickoridor").collection("users").findOne({
-                username: data.username.toString()
-            });
-
-            if (user && user.friendList) {
-                var friends = user.friendList;
-                // Utiliser Promise.all pour exécuter les requêtes findUser de manière asynchrone
-                const friendsDetails = await Promise.all(friends.sort().map(async (friend) => {
-
-                    return await findUserById({_id: friend});
-                }));
-
-                return friendsDetails;
-            } else {
-                return []; // Retourner un tableau vide si l'utilisateur n'a pas de demandes ou si l'utilisateur n'existe pas
             }
-        } finally {
 
+            return updatedInviteList;
+
+        } else {
+            return [];
         }
+    } finally {
+        // Traitements de nettoyage ou finalisation
     }
+}
 
+async function deleteAskFriend(data) {
+    try {
+        const userTmp = await findUser({username: data.receveur});
 
+        return await client.db("kickoridor").collection("users").updateOne(
+            {username: data.emetteur.toString()},
+            {$pull: {demandes: userTmp["_id"]}}
+        );
+    } finally {
 
-    async function deleteFriend(data) {
-        try {
-            const ami1 = await findUser({username : data.emetteur});
-            const ami2 = await findUser({username : data.receveur});
-            await client.db("kickoridor").collection("conversation").deleteOne(
-                {
-                    $or: [
-                        {"ami1": ami1["_id"], "ami2": ami2["_id"]},
-                        {"ami1": ami2["_id"], "ami2": ami1["_id"]}
-                    ]
-                }
-            );
-            await client.db("kickoridor").collection("users").updateOne(
-                {username: data.receveur.toString()},
-                {$pull: {friendList: ami1["_id"]}}
-            );
-            return await client.db("kickoridor").collection("users").updateOne(
-                {username: data.emetteur.toString()},
-                {$pull: {friendList: ami2["_id"]}}
-            );
-        } finally {
+    }
+}
 
+async function refuseAskInvite(data) {
+    try {
+        return await client.db("kickoridor").collection("users").updateOne(
+            {username: data.emetteur.toString()},
+            { $set: { invite: [] } }
+        );
+    } finally {
+        // Actions à exécuter après la suppression si nécessaire
+    }
+}
+
+async function validateAskFriend(data) {
+    try {
+        const userTmp = await findUser({username: data.receveur});
+        await client.db("kickoridor").collection("users").updateOne(
+            {username: data.emetteur.toString()},
+            {
+                $pull: {demandes: userTmp["_id"]}
+            }
+        );
+        var ami1 = await findUser({username: data.emetteur});
+        var ami2 = await findUser({username: data.receveur});
+
+        await client.db("kickoridor").collection("conversation").insertOne(
+            {
+                ami1: ami1["_id"],
+                ami2: ami2["_id"]
+            }
+        )
+        await client.db("kickoridor").collection("users").updateOne(
+            {username: data.emetteur.toString()},
+            {$addToSet: {friendList: userTmp["_id"]}}
+        );
+        const userTmp2 = await findUser({username: data.emetteur});
+        return await client.db("kickoridor").collection("users").updateOne(
+            {username: data.receveur.toString()},
+            {$addToSet: {friendList: userTmp2["_id"]}}
+        );
+
+    } finally {
+
+    }
+}
+
+async function friendsList(data) {
+    try {
+
+        const user = await client.db("kickoridor").collection("users").findOne({
+            username: data.username.toString()
+        });
+
+        if (user && user.friendList) {
+            var friends = user.friendList;
+            // Utiliser Promise.all pour exécuter les requêtes findUser de manière asynchrone
+            const friendsDetails = await Promise.all(friends.sort().map(async (friend) => {
+                return await findUserById({_id: friend});
+            }));
+
+            return friendsDetails;
+        } else {
+            return []; // Retourner un tableau vide si l'utilisateur n'a pas de demandes ou si l'utilisateur n'existe pas
         }
-    }
-    async function getMsgById(data) {
-        try {
-            //
+    } finally {
 
-            var idTmp = new ObjectId(data.idMsg);
-            return await client.db("kickoridor").collection("chat").findOne({
-                _id: idTmp
-            });
-        } finally {
-            //
-        }
     }
+}
+
+
+async function deleteFriend(data) {
+    try {
+        const ami1 = await findUser({username: data.emetteur});
+        const ami2 = await findUser({username: data.receveur});
+        await client.db("kickoridor").collection("conversation").deleteOne(
+            {
+                $or: [
+                    {"ami1": ami1["_id"], "ami2": ami2["_id"]},
+                    {"ami1": ami2["_id"], "ami2": ami1["_id"]}
+                ]
+            }
+        );
+        await client.db("kickoridor").collection("users").updateOne(
+            {username: data.receveur.toString()},
+            {$pull: {friendList: ami1["_id"]}}
+        );
+        return await client.db("kickoridor").collection("users").updateOne(
+            {username: data.emetteur.toString()},
+            {$pull: {friendList: ami2["_id"]}}
+        );
+    } finally {
+
+    }
+}
+
+async function getMsgById(data) {
+    try {
+        //
+
+        var idTmp = new ObjectId(data.idMsg);
+        return await client.db("kickoridor").collection("chat").findOne({
+            _id: idTmp
+        });
+    } finally {
+        //
+    }
+}
+
 async function getConversations(data) {
     try {
         const friends = await friendsList(data); // Récupérer la liste des amis de l'utilisateur
@@ -970,17 +1146,17 @@ async function getConversations(data) {
 
         // Pour chaque ami, obtenir l'ID de la conversation et le dernier message
         for (const friend of friends) {
-            const conversationID = await getConversationID({ username: data.username, ami: friend.username });
+            const conversationID = await getConversationID({username: data.username, ami: friend.username});
             const date = await getdateConversation(conversationID);
             const lastMsg = await getLastMessage(conversationID); // Fonction à implémenter
 
             // Créer un objet avec les détails de l'ami et le dernier message
             const friendWithLastMsg = {
-                _id : friend._id,
+                _id: friend._id,
                 username: friend.username,
-                img : friend.img,
+                img: friend.img,
                 lastMsg: lastMsg,
-                date : date
+                date: date
             };
 
             // Ajouter l'ami avec le dernier message au tableau des conversations
@@ -988,7 +1164,7 @@ async function getConversations(data) {
         }
 
         conversations.sort((a, b) => {
-            return b.date -a.date;
+            return b.date - a.date;
         });
 
         return conversations;
@@ -1004,7 +1180,7 @@ async function getLastMessage(conversationID) {
             const conversation = await client.db("kickoridor").collection("conversation").findOne({
                 _id: conversationID._id
             }, {
-                projection: { lastMsg: 1 } // Ne renvoie que l'attribut lastMsg
+                projection: {lastMsg: 1} // Ne renvoie que l'attribut lastMsg
             });
             return conversation ? conversation.lastMsg : null;
         } else {
@@ -1022,9 +1198,9 @@ async function getdateConversation(conversationID) {
             const conversation = await client.db("kickoridor").collection("conversation").findOne({
                 _id: conversationID._id
             }, {
-                projection: { date: 1 } // Ne renvoie que l'attribut lastMsg
+                projection: {date: 1} // Ne renvoie que l'attribut lastMsg
             });
-            return conversation.date!=undefined ? conversation.date : 0;
+            return conversation.date != undefined ? conversation.date : 0;
         } else {
             return null;
         }
@@ -1038,8 +1214,8 @@ async function changeCelebration(data) {
     try {
         //
         await client.db("kickoridor").collection("users").updateOne(
-            { username: data.username },
-            { $set: { celebration: data.celebration } }
+            {username: data.username},
+            {$set: {celebration: data.celebration}}
         );
         return true;
     } finally {
@@ -1051,8 +1227,8 @@ async function changeImg(data) {
     try {
         //
         await client.db("kickoridor").collection("users").updateOne(
-            { username: data.username },
-            { $set: { img: data.img } }
+            {username: data.username},
+            {$set: {img: data.img}}
         );
         return true;
     } finally {
@@ -1063,7 +1239,7 @@ async function changeImg(data) {
 async function changeMDP(data) {
     try {
         //
-      const user = await client.db("kickoridor").collection("users").findOne({
+        const user = await client.db("kickoridor").collection("users").findOne({
             username: data.username
         });
         var tokenTmp = verifyAccessToken(user.token);
@@ -1073,8 +1249,8 @@ async function changeMDP(data) {
         }
         var token = generateAccessToken(dataToHash);
         await client.db("kickoridor").collection("users").updateOne(
-            { username: data.username },
-            { $set: { token: token } }
+            {username: data.username},
+            {$set: {token: token}}
         );
         return true;
     } finally {
@@ -1095,8 +1271,8 @@ async function changeMail(data) {
         }
         var token = generateAccessToken(dataToHash);
         await client.db("kickoridor").collection("users").updateOne(
-            { username: data.username },
-            { $set: { token: token } }
+            {username: data.username},
+            {$set: {token: token}}
         );
         return true;
     } finally {
@@ -1108,8 +1284,8 @@ async function changeName(data) {
     try {
         //
         await client.db("kickoridor").collection("users").updateOne(
-            { username: data.username },
-            { $set: { username: data.name } }
+            {username: data.username},
+            {$set: {username: data.name}}
         );
     } finally {
         //
@@ -1120,8 +1296,8 @@ async function addAchiev(data) {
     try {
         //
         await client.db("kickoridor").collection("users").updateOne(
-            { username: data.username },
-            { $addToSet: { achiev: data.achiev } }
+            {username: data.username},
+            {$addToSet: {achiev: data.achiev}}
         );
     } finally {
         //
@@ -1133,11 +1309,12 @@ function verifyAccessToken(token) {
 
     try {
         const decoded = jwt.verify(token, secret);
-        return { success: true, data: decoded };
+        return {success: true, data: decoded};
     } catch (error) {
-        return { success: false, error: error.message };
+        return {success: false, error: error.message};
     }
 }
+
 function generateAccessToken(data) {
     const payload = {
         email: data.email,

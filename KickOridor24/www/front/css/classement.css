@@ -1,0 +1,333 @@
+
+.Play {
+    background-color: #E4E5E7;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 1.2em;
+    /*changer couleur du texte*/
+    color: #eb4f61;
+    box-shadow: 0 3px 3px 0 #676767;
+}
+
+.btn{
+    margin: 0.4em 0.3em 0.3em 0.3em;
+}
+
+.btnJouer{
+    width: 120vh;
+}
+
+.VotreClassement, .ClassementMondial{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 1.2em;
+    /*changer couleur du texte*/
+    color: #eb4f61;
+}
+
+.navClass{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+    /*width qui rempli tout l'espace dispo*/
+    width: 100%;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+.topButton{
+    background-color:  #E4E5E7;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 0.2em 0.5em;
+    margin-bottom: 0.2em;
+    /*ajouter une bordure en bas*/
+}
+
+.topButton:hover{
+    /*background-color: #3EE4F0;
+    color: #000000;*/
+    cursor: pointer;
+}
+
+#Votre-classement{
+    background-color: #3EE4F0;
+    color: #000000;
+    border-bottom: 4px solid #eb4f61;
+}
+
+.all{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 auto;
+    /*centrer verticalement*/
+    height: 73%;
+
+}
+
+.btnJouer{
+    margin: 0.2em 0.3em 0.3em 0.3em;
+}
+
+.icon{
+    width: 20%;
+    margin-top: 13.5vh;
+}
+
+.liste{
+    list-style-type: none;
+}
+
+.votreClass::-webkit-scrollbar {
+    width: 0.5em;
+}
+
+.votreClass::-webkit-scrollbar-track {
+    background: #c6cbcc;
+    border-radius: 10px;
+}
+
+.votreClass::-webkit-scrollbar-thumb {
+    background: #756d6d;
+    border-radius: 10px;
+}
+
+.votreClass::-webkit-scrollbar-thumb:hover {
+    background: #9b9191;
+}
+
+.classementMonde, .votreClass{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 50vh;
+
+    overflow-y: scroll;
+    font-size: 1em;
+    margin-bottom: 1vh;
+    line-height: 1.5em;
+    color: black;
+    padding: 1vh;
+}
+
+.classementMonde::-webkit-scrollbar {
+    width: 0.5em;
+}
+
+.classementMonde::-webkit-scrollbar-track {
+    background: #c6cbcc;
+    border-radius: 10px;
+}
+
+.classementMonde::-webkit-scrollbar-thumb {
+    background: #756d6d;
+    border-radius: 10px;
+}
+
+.classementMonde::-webkit-scrollbar-thumb:hover {
+    background: #9b9191;
+}
+
+#europa, #conference, #ligue1{
+    width: 100vh;
+}
+
+#ucl{
+    width: 85vh;
+    margin-right: 14.5vh;
+}
+
+#ligue2{
+    width: 85vh;
+    margin-left: 14.5vh;
+}
+
+#ucl, #ligue2, #europa, #conference, #ligue1{
+    margin-top: 2.5vh;
+}
+
+#retour{
+    width: 25vh;
+    margin-left: 2vh;
+    margin-top: 1vh;
+    margin-bottom: -3vh;
+    cursor: pointer;
+}
+
+.votreClass, .classementMonde {
+    background-color: #E4E5E7;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 1.2em;
+    height: 50vh;
+    width: 60vw;
+    box-shadow: 0 3px 3px 0 #676767;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+
+.profil{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: space-around;
+    width: 55vw;
+}
+.profil div{
+    border-radius: 50%;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+.profil img{
+    height: 3.5vw;
+
+    aspect-ratio: 1/1;
+}
+
+.navClass2{
+    display: none;
+}
+@media screen and (max-aspect-ratio: 4/3.1) {
+    .votreClass,.classementMonde{
+        height: 60vh;
+        width: 90vw;
+    }
+    .topButton{
+        background-color:  #E4E5E7;
+        font-size: 3vh;
+        font-weight: bold;
+        padding: 0.2em 2em;
+        margin-bottom: 0.2em;
+        /*ajouter une bordure en bas*/
+    }
+    .navClass{
+        flex-wrap: wrap;
+    }
+    .profil img{
+        height: 91.28px;
+        aspect-ratio: 1/1;
+        margin-left: -1vh;
+    }
+    .profil{
+        height: 91.28px;
+        width: 85vw;
+    }
+    .profil p{
+        font-size: 2vh;
+        font-weight: 600;
+    }
+
+    .navClass2{
+        display: flex;
+        margin-bottom: 1.5vh;
+    }
+
+    .navClass2 *{
+        box-sizing: border-box;
+    }
+
+    .Play{
+        font-size: 1em;
+    }
+
+    .select{
+        background: #2a2f3b;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 2px #2a2f3b solid;
+        border-radius: 0.5em;
+        padding : 1em;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .selected{
+        margin-right: 2vh;
+        font-size: 2.5vh;
+    }
+
+    .select-clicked{
+        border: 2px #26489a solid;
+        box-shadow: 0 0 0.8em #26489a;
+    }
+
+    .select:hover{
+        background: #323741;
+    }
+
+    .fleche{
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 6px solid #fff;
+        transition: 0.3s;
+    }
+
+    .fleche-rotate{
+        transform: rotate(180deg);
+    }
+
+    .menu{
+        list-style: none;
+        padding: 0.2em 0.5em;
+        background: #323741;
+        border: 1px #363a43 solid;
+        box-shadow: 0 0.5em 1em rgb(0, 0, 0, 0.1);
+        border-radius: 0.5em;
+        position: absolute;
+        margin-top: 7.5vh;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24vh;
+        opacity: 0;
+        display: none;
+        transition: 0.2s;
+        z-index: 10;
+        position: absolute;
+    }
+
+    .topButton{
+        /*enlever tout le css*/
+        background: unset;
+        margin: unset;
+        padding: unset;
+        border: unset;
+        font-weight: unset;
+        color: white;
+        font-size: 2.5vh;
+    }
+
+    .menu li{
+        padding: 0.7em 0.5em;
+        border-radius: 0.5em;
+        margin: 0.2em 0;
+        cursor: pointer;
+    }
+
+    .menu-open{
+        display: block;
+        opacity: 1;
+    }
+
+    .menu li:hover{
+        background: #2a2d35;
+    }
+    .navClass{
+        display: none;
+    }
+}
+
+
+
