@@ -693,7 +693,7 @@ function hideValider() {
             document.getElementsByClassName("forfait")[1].style.display = "block";
         }
     }
-        document.querySelector('#validerA').style.display = 'none';
+    document.querySelector('#validerA').style.display = 'none';
     document.querySelector('#validerB').style.display = 'none';
     murAPose = new Array(3);
 }
@@ -705,7 +705,7 @@ function hideSauvegarder() {
 
 function hideForfaitA() {
     document.querySelector('#forfaitA').style.display = 'none';
-    if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null)
+    if ( getCookie("username") != null)
     document.getElementsByClassName("sauvegarder")[0].style.gridColumn ="span 2";
 }
 
@@ -716,12 +716,13 @@ function hideForfaitB() {
 
 function showForfaitA() {
     document.querySelector('#forfaitA').style.display = 'grid';
-    if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null)
+    if ( getCookie("username") != null)
     document.getElementsByClassName("sauvegarder")[0].style.gridColumn ="span 1";
 }
 
 function showForfaitB() {
     document.querySelector('#forfaitB').style.display = 'grid';
+    document.querySelector('#forfaitB').style.gridColumn = 'span 2';
 }
 
 function checkCrossing(playerAPosition, playerBPosition) {
