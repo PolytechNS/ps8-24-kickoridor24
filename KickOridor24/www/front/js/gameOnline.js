@@ -23,10 +23,8 @@ let n;
 var cellsString = [];
 var cellsGrid = [];
 var stop = false;
-<<<<<<< HEAD:KickOridor24/www/front/js/gameOnline.js
 let tempsRestant = 60;
 var chronometre;
-=======
 let win = false;
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -40,7 +38,6 @@ if(getCookie("player") == "1") {
     document.getElementById('namePlayerB').innerText = getCookie("username");
 }
 
->>>>>>> dev:front/js/gameOnline.js
 class cellule {
     constructor(id, classes, visibilite) {
         this.class = classes;
@@ -785,24 +782,13 @@ function checkCrossing(playerAPosition, playerBPosition) {
 }
 
 function victoire(txt) {
-<<<<<<< HEAD:KickOridor24/www/front/js/gameOnline.js
-
-    socket.emit("VictoireOnline",txt);
-
-}
-socket.on("FinDePartieOnline",(txt) => {
-    showVictoire(txt);
-    clearInterval(chronometre);
-    if(txt == currentPlayer)
-         calculerElo(1,0);
-    else if(txt == "match nul !"){
-        calculerElo(0.5,0.5);
-=======
     if(win === true) return;
 
     win = true;
 
     if(getCookie("option") === "friend") {
+
+        clearInterval(chronometre);
 
         const urlParams = new URLSearchParams(window.location.search);
         const friend = urlParams.get('player');
@@ -816,28 +802,15 @@ socket.on("FinDePartieOnline",(txt) => {
         } else if (txt == 'PlayerB' && getCookie("player") == "1") {
             showVictoire(friend, -999, 0);
         }
->>>>>>> dev:front/js/gameOnline.js
+
     }else{
         socket.emit("VictoireOnline",txt, getCookie("player"),socket.id);
     }
 }
-/*socket.on("FinDePartieOnline",(txt, clientsInRoom) => {
-
-    if(txt == currentPlayer)
-         calculerElo(1,0, clientsInRoom);
-    else if(txt == "match nul !"){
-        calculerElo(0.5,0.5, clientsInRoom);
-    }else{
-        calculerElo(0,1, clientsInRoom);
-    }
-    // window.location.href = 'index.html';})
-});
-
-async function calculerElo(res1,res2, clientsInRoom){
-    console.log(clientsInRoom);
-}*/
 
 socket.on("Victoire", async (playerWin, playerLose) => {
+
+    clearInterval(chronometre);
 
     const eloPlayerWin = await getElo(playerWin);
     const eloPlayerLose = await getElo(playerLose);
@@ -865,6 +838,8 @@ socket.on("Victoire", async (playerWin, playerLose) => {
 
 socket.on("Defaite", async (playerLose, playerWin) => {
 
+    clearInterval(chronometre);
+
     const eloPlayerWin = await getElo(playerWin);
     const eloPlayerLose = await getElo(playerLose);
 
@@ -888,6 +863,8 @@ socket.on("Defaite", async (playerLose, playerWin) => {
 });
 
 socket.on("MatchNul", async (player1, player2) => {
+
+    clearInterval(chronometre);
     //TODO MATCH NUL
     console.log("Match Nul");
 
@@ -960,6 +937,8 @@ async function getElo(username) {
 }
 
 function showVictoire(txt, newElo, diffElo){
+
+    clearInterval(chronometre);
     document.querySelector('.finDePartie').style.display = 'flex';
     const divMid = document.getElementById("finMiddle");
     if(txt == "match nul !"){
