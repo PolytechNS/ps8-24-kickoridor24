@@ -214,8 +214,8 @@
     }
     .profil img{
         height: 91.28px;
-
         aspect-ratio: 1/1;
+        margin-left: -1vh;
     }
     .profil{
         height: 91.28px;

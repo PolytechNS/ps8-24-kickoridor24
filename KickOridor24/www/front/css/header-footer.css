@@ -74,7 +74,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        max-width: 14vh;
+        max-width: 18vh;
     }
 
     .se-connecter {
@@ -198,7 +198,7 @@
         position: absolute;
         height: 80%;
         margin-left: 77.35%;
-        margin-top: 9.8vh;
+        margin-top: 11vh;
         background-color: #86A1B9;
     }
 
