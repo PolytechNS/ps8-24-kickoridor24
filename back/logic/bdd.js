@@ -643,7 +643,6 @@ async function handleBDD(request, response) {
         request.on("end", async () => {
             try {
                 const data = JSON.parse(body);
-                console.log(data)
                 const user = await findUser(data);
                 if (user != null) {
                     response.statusCode = 200;
@@ -683,6 +682,7 @@ async function handleBDD(request, response) {
             let token;
             try {
                 const data = JSON.parse(body);
+                console.log(data);
                 await inviteFriend(data);
                 // await client.close();
                 response.end();
@@ -693,7 +693,6 @@ async function handleBDD(request, response) {
             }
         });
     }else if (request.method === "POST" && request.url === "/api/askInviteList") {
-        console.log("askInviteList");
         let body = "";
         request.on("data", chunk => {
             body += chunk.toString();
@@ -701,7 +700,6 @@ async function handleBDD(request, response) {
         request.on("end", async () => {
             try {
                 const data = JSON.parse(body);
-                console.log("data : ", data);
                 const players = await askInviteList(data);
                 // await client.close();
                 if (players != null) {
@@ -743,6 +741,7 @@ async function handleBDD(request, response) {
 
 async function inviteFriend(data) {
     try {
+        console.log("inviteFriend : ",data);
         const userTmp = await findUser({ username: data.emetteur });
         const inviteMap = {}; // Création de la carte pour stocker les invitations
 
@@ -847,7 +846,6 @@ async function sendMessageData(data, conversationID) {
             lu: false
         }, function (err, res) {
             if (err) throw err;
-            console.log("1 document inserted");
         });
         await client.db("kickoridor").collection("conversation").updateOne(
             {"_id": conversationID},
@@ -868,7 +866,6 @@ async function saveUser(data) {
 
         await client.db("kickoridor").collection("users").insertOne(data, function (err, res) {
             if (err) throw err;
-            console.log("1 document inserted");
         });
     } finally {
 
@@ -887,7 +884,6 @@ async function findUser(data) {
 }
 
 async function findUserById(data) {
-    console.log("findUserByID : " , data);
     try {
 
         var idTmp = new ObjectId(data._id);
@@ -904,7 +900,6 @@ async function saveGameState(data) {
         await client.connect();
         await client.db("kickoridor").collection("gameState").insertOne(data, function (err, res) {
             if (err) throw err;
-            console.log("1 document inserted");
         });
     } finally {
         // await client.close();
@@ -1009,7 +1004,6 @@ async function askInviteList(data) {
 
                 const invitedUser = await findUserById({_id : userId});
 
-                console.log("InvitedUser : " , invitedUser);
 
                 if (invitedUser) {
                     updatedInviteList.push({ user: invitedUser, room: roomId });

@@ -39,6 +39,7 @@ async function inviteListe(){
                         var username = data[i].user["username"];
 
                         var img = document.createElement("img");
+                        img.src = data[i].user["img"];
                         if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
                             img.style.width = '6.25vh';
                             img.style.height = '6.25vh';
@@ -68,7 +69,7 @@ async function inviteListe(){
                         elo.style.fontWeight = 'bold';
                         elo.classList.add("elo");
                         div.appendChild(elo);
-                        if(parseInt( data[i]["elo"]) > 1999){
+                        if(parseInt( data[i].user["elo"]) > 1999){
                             if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
                                 div.style.background ='url("images/ucl-modifie.png")';
                             }
@@ -76,7 +77,7 @@ async function inviteListe(){
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
-                        }else if(parseInt( data[i]["elo"])>1499){
+                        }else if(parseInt( data[i].user["elo"])>1499){
                             if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
                                 div.style.background ='url("images/europa-modifie.png")';
                             }
@@ -84,7 +85,7 @@ async function inviteListe(){
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
-                        }else if(parseInt( data[i]["elo"])>999){
+                        }else if(parseInt( data[i].user["elo"])>999){
                             if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
                                 div.style.background ='url("images/conference-modifie.png")';
                             }
@@ -92,7 +93,7 @@ async function inviteListe(){
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
-                        }else if(parseInt( data[i]["elo"])>499){
+                        }else if(parseInt( data[i].user["elo"])>499){
                             if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
                                 div.style.background ='url("images/ligue1-modifie.png")';
                             }
@@ -113,7 +114,7 @@ async function inviteListe(){
                         btnV.textContent = "ACCEPTER";
                         btnV.classList.add("addBTN");
 
-                        btn.style.backgroundColor = '#00b7c4';
+                        btnV.style.backgroundColor = '#00b7c4';
 
                         //hover
                         btnV.addEventListener('mouseover', function() {
