@@ -1767,12 +1767,35 @@ function handleCellClick(cellIndex, position) {
         });
     }
 }
+function annulerWallBack() {
+    if(murAPose[0] != undefined) {
+        const clickedCell = cells[murAPose[0]];
+        const rigthCell = cells[murAPose[1]];
+        const leftCell = cells[murAPose[2]];
+
+        clickedCell.classList.remove('wallTMP');
+        clickedCell.classList.remove('rotation');
+        rigthCell.classList.remove('wallTMP');
+        leftCell.classList.remove('wallTMP');
+        if (activePlayer === 'playerA') {
+            nbWallPlayerA++;
+            document.getElementById('nbWallPlayerA').textContent = `Murs restants : ${nbWallPlayerA}`;
+        } else {
+            nbWallPlayerB++;
+            document.getElementById('nbWallPlayerB').textContent = `Murs restants : ${nbWallPlayerB}`;
+        }
+
+        mettreAJourTableau(cellsGrid, cells);
+
+        hideValider();
+    }
+}
 
 function saveToBack() {
-    cellsTmp = getClassesAndAttributesFromDivs(cellsGrid);
     cells.forEach(cell => cell.classList.remove('possible-move'));
-    cells.forEach(cell => cell.classList.remove('wallTMP'));
-    cells.forEach(cell => cell.classList.remove('rotation'));
+    annulerWallBack();
+        cellsTmp = getClassesAndAttributesFromDivs(cellsGrid);
+
 
     socket.emit('saveToBackOnline', activePlayer, nbWallPlayerA, nbWallPlayerB, player1Position, player2Position, tour, cellsTmp, playerAWalls, playerBWalls, firstTurn, dernierTourB);
 }
