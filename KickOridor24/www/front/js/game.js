@@ -767,7 +767,29 @@ function victoire(txt) {
         supprimerAnciennePartie(getUsername());
    // window.location.href = 'index.html';
 }
+
+var src = "audio/sifflet.mp3";
+
+function playAudio() {
+    var media = new Audio(src,
+        // Succès
+        function () {
+            console.log("Lecture de l'audio réussie");
+        },
+        // Erreur
+        function (err) {
+            console.error("Erreur lors de la lecture de l'audio : " + err);
+        }
+    );
+
+    //baisser le volume
+    media.volume = 0.1;
+    // Lecture de l'audio
+    media.play();
+}
+
 function showVictoire(txt){
+    playAudio();
     document.querySelector('.finDePartie').style.display = 'flex';
     const divMid = document.getElementById("finMiddle");
     if(txt == "match nul !"){
