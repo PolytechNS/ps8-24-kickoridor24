@@ -37,7 +37,9 @@ function redirectToMenu() {
 }
 
 function redirectToProfil(){
-    window.location.href = "profil.html";
+    if(getCookie("username") == null){
+    }
+    else{window.location.href = "profil.html";}
 
 }
 

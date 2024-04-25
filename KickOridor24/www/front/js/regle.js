@@ -46,7 +46,7 @@ dropdowns.forEach(dropdown => {
     const selected = dropdown.querySelector('.selected');
 
     //si pas connecté, supprimer de la liste l'id "ligne"
-    if(getCookie("username") == null) {
+    if(getCookie("username") == null && document.getElementById("ligne2") != null){
         var ligne = document.getElementById("ligne2");
         ligne.getElementsByTagName('a')[0].style.color = "#B9C0C6";
         ligne.getElementsByTagName('a')[0].style.cursor = "default";

@@ -6,6 +6,19 @@ if(!window.location.href.includes("game.html") || !window.location.href.includes
             document.getElementById("se-deconnecter").style.display = "flex";
             document.getElementsByClassName("name")[0].innerHTML = getUsername();
             document.getElementsByClassName("name")[0].style.cursor = "pointer";
+            document.getElementsByClassName("name")[0].style.textOverflow = "ellipsis";
+            document.getElementsByClassName("name")[0].style.overflow = "hidden";
+
+            document.getElementById("petitePhoto").style.cursor = "pointer";
+            //rendre sombre un peu quand hover
+            document.getElementById("petitePhoto").onmouseover = function () {
+                document.getElementById("petitePhoto").style.filter = "brightness(80%)";
+            }
+            //rendre normal quand hover out
+            document.getElementById("petitePhoto").onmouseout = function () {
+                document.getElementById("petitePhoto").style.filter = "brightness(100%)";
+            }
+
             //make bold when hover
             document.getElementsByClassName("name")[0].onmouseover = function () {
                 document.getElementsByClassName("name")[0].style.fontWeight = "bold";

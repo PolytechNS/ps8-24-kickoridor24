@@ -26,7 +26,7 @@
             <div class="name" onclick="redirectToProfil()">
                 <p id="name"></p>
             </div>
-            <img id="petitePhoto" src="images/photoProfil/Mitroglu.png" alt="">
+            <img id="petitePhoto" src="images/photoProfil/Mitroglu.png" alt="" onclick="redirectToProfil()">
         </div>
     </div>
     <span id="triangle_fond"></span>
@@ -51,6 +51,27 @@
         <div id="achiev" class="topButton" onclick="showAchiev()">
             <a class="navButton">Accomplissements</a>
         </div>
+    </div>
+
+    <div class="navClass2">
+        <div class="select">
+            <span class="selected">Informations</span>
+            <div class="fleche"></div>
+        </div>
+        <ul class="menu">
+            <li onclick="showInfo()"><div id="info2" class="topButton">
+                    <a class="navButton">Informations</a>
+                </div></li>
+            <li onclick="showPhoto()"><div id="photo2" class="topButton">
+                    <a class="navButton">Photo de Profil</a>
+                </div></li>
+            <li onclick="showCeleb()"><div id="celeb2" class="topButton">
+                    <a class="navButton">Célébration</a>
+                </div></li>
+            <li onclick="showAchiev()"><div id="achiev2" class="topButton">
+                    <a class="navButton">Accomplissements</a>
+                </div></li>
+        </ul>
     </div>
 
     <div class="container">
@@ -119,22 +140,16 @@
             </div>
 
             <div class="contenuSearch">
-                <div class="rechercheDiv">
-                    <h2 class="searchTXT">Rechercher</h2>
-                    <img class="searchPNG" src="images/search.png">
-                    <input id="rechercheAchiev" type="text">
-                </div>
                 <div id="gridAchiev">
                     <div id="1f" class="lock">
-                        <img src="front/images/achievements/1.png" alt="" class="achievImg" id="achiev1">
                         <p>Ajouté 1 ami(e)</p>
                     </div>
                     <div id="2f" class="lock">
-                        <img src="front/images/achievements/2.png" alt="" class="achievImg" id="achiev2">
+
                         <p>Ajouté 5 ami(e)s</p>
                     </div>
                     <div id="3f" class="lock">
-                        <img src="front/images/achievements/2.png" alt="" class="achievImg" id="achiev3">
+
                         <p>Ajouté 10 ami(e)s</p>
                     </div>
 
@@ -213,3 +228,4 @@
 <script src="js/chat.js"></script>
 <script src="js/authentification.js"></script>
 <script src="js/profil.js"></script>
+<script src="js/regle.js"></script>

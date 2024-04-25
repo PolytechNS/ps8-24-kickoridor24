@@ -73,11 +73,9 @@
         color: #212121;
         display: flex;
         align-items: center;
-        justify-content: center;
-        margin-right: 1em;
-        margin-left: 1em;
+        justify-content: flex-start;
+        max-width: 14vh;
     }
-
 
     .se-connecter {
         font-family: 'Roboto Condensed', sans-serif;
