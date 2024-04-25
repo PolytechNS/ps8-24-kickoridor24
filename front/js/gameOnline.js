@@ -25,6 +25,17 @@ var cellsGrid = [];
 var stop = false;
 let win = false;
 
+const urlParams = new URLSearchParams(window.location.search);
+const nameUrl = urlParams.get('player');
+
+if(getCookie("player") == "1") {
+    document.getElementById('namePlayerA').innerText = getCookie("username");
+    document.getElementById('namePlayerB').innerText = nameUrl;
+}else{
+    document.getElementById('namePlayerA').innerText = nameUrl;
+    document.getElementById('namePlayerB').innerText = getCookie("username");
+}
+
 class cellule {
     constructor(id, classes, visibilite) {
         this.class = classes;
@@ -919,7 +930,7 @@ function showVictoire(txt, newElo, diffElo){
     else {
         divMid.getElementsByTagName('h2')[0].textContent = txt + " remporte la partie";
         if(newElo < 0){
-            divMid.getElementsByTagName('h3')[0].textContent = "Votre nouvel elo n'est pas calculé car vous jouez contre un(e) ami(e)";
+            divMid.getElementsByTagName('h3')[0].textContent = "Partie non classé";
         }else {
             divMid.getElementsByTagName('h3')[0].textContent = "Votre nouvel elo : " + newElo + " (" + diffElo + ")";
         }
