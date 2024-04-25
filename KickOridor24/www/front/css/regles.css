@@ -6,7 +6,7 @@
     /*changer couleur du texte*/
     color: #eb4f61;
     box-shadow: 0 3px 3px 0 #676767;
-    width: 100%;
+    width: 80%;
 }
 
 .btn{
@@ -324,6 +324,7 @@ display: none;
 
         .Play{
             font-size: 1em;
+            width: 100%;
         }
 
         .select{

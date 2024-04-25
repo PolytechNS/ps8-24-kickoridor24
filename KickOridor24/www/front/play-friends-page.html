@@ -1,13 +1,14 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kick'Oridor - Friends</title>
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
     <link rel="stylesheet" type="text/css" href="css/friends-page.css">
     <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
 </head>
 <body>
-<header>
+<div class="header">
     <div class="cnt-header">
         <div class="nav">
             <img id="home" src="images/home.png" onclick="redirectToMenu()">
@@ -16,6 +17,9 @@
             </div>
         </div>
         <div class="connection">
+            <div class="logoDeco" onclick="redirectToLogin()">
+                <img src="images/se-deconnecter.png" alt="">
+            </div>
             <div id="se-connecter" class="connexion" onclick="redirectToLogin()">
                 <p class="btn"> Se connecter</p>
             </div>
@@ -25,14 +29,11 @@
             <div class="name" onclick="redirectToProfil()">
                 <p id="name"></p>
             </div>
-            <img id="petitePhoto"src="images/photoProfil/Mitroglu.png" alt="">
+            <img id="petitePhoto" src="images/photoProfil/Mitroglu.png" alt="" onclick="redirectToProfil()">
         </div>
     </div>
-
-    <div>
-        <img src="images/header.png" alt="" class="bg-header">
-    </div>
-</header>
+    <span id="triangle_fond"></span>
+</div>
 
 <div class="retour">
     <img id="retour" src="images/retour.png" alt="" onclick="previewPage()">
@@ -49,6 +50,21 @@
 
         </div>
         <span class="notification-demandes"> </span>
+    </div>
+
+    <div class="navClass2">
+        <div class="select">
+            <span class="selected">Amis</span>
+            <div class="fleche"></div>
+        </div>
+        <ul class="menu">
+            <li id="amis" onclick="showPlayFriendsList()"><div id="amisBTN2" class="topButton">
+                    <a class="navButton">Amis</a>
+                </div></li>
+            <li id="demandes" onclick="showPlayFriendsDemands()"><div id="demandesBTN2" class="topButton">
+                    <a class="navButton">Invitations</a>
+                </div></li>
+        </ul>
     </div>
 
     <div class="container">
@@ -105,19 +121,26 @@
 </div>
 
 <div class="footer">
-    <img id="param" src="images/param.png">
+    <span id="triangle_inverse_fond"></span>
+
+    <div class="cnt-footer">
+        <img id="param" src="images/param.png">
 
 
-    <div id="amisDiv" onclick="redirectToFriendsPage()">
-        <img id="amisImg" src="images/friends.png">
-        <p id="amisTexte">AMIS</p>
-        <span class="notification-badge"> </span>
+        <div id="amisDiv" onclick="redirectToFriendsPage()">
+            <img id="amisImg" src="images/friends.png">
+            <p id="amisTexte">AMIS</p>
+            <span class="notification-badge"> </span>
+        </div>
+        <div id="chat" onclick="openChat()">
+            <img src="images/chat.png">
+            <p id="chatting">CHAT</p>
+            <span class="notification-badge"> </span>
+        </div>
     </div>
-    <div id="chat" onclick="openChat()">
-        <img src="images/chat.png">
-        <p id="chatting">CHAT</p>
-        <span class="notification-badge"> </span>
-    </div>
+
+
+
 
 </div>
 </body>
@@ -128,3 +151,5 @@
 <script src="js/chat.js"></script>
 <script src="js/play-friends-page.js"></script>
 <script src="js/authentification.js"></script>
+<script src="js/regle.js"></script>
+
