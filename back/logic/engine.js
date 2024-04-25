@@ -227,9 +227,9 @@ module.exports = function (io) {
                 });
             }
 
-            delete rooms[room];
+            /*delete rooms[room];
             delete clientReady[room];
-            gameNamespace.to(room).emit("FinDePartieOnline",txt);
+            gameNamespace.to(room).emit("FinDePartieOnline",txt);*/
 
         });
 
