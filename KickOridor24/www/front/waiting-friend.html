@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kick'oridor - Matchmaking</title>
     <link rel="stylesheet" type="text/css" href="css/menu.css">
     <link rel="stylesheet" type="text/css" href="css/header-footer.css">
+    <link rel="stylesheet" type="text/css" href="css/waiting.css">
+
 </head>
-<header>
+<body>
+
+<div class="header">
     <div class="cnt-header">
         <div class="nav">
             <img id="home" src="images/home.png" onclick="redirectToMenu()">
@@ -15,31 +20,34 @@
             </div>
         </div>
         <div class="connection">
+            <div class="logoDeco" onclick="redirectToLogin()">
+                <img src="images/se-deconnecter.png" alt="">
+            </div>
             <div id="se-connecter" class="connexion" onclick="redirectToLogin()">
                 <p class="btn"> Se connecter</p>
             </div>
             <div id="se-deconnecter" class="connexion" style="display: none" onclick="redirectToLogin()">
                 <p class="btn"> Se déconnecter</p>
             </div>
-            <div class="name">
+            <div class="name" onclick="redirectToProfil()">
                 <p id="name"></p>
             </div>
-            <img id="petitePhoto"src="images/photoProfil/Mitroglu.png" alt="">
-
+            <img id="petitePhoto" src="images/photoProfil/Mitroglu.png" alt="" onclick="redirectToProfil()">
         </div>
     </div>
+    <span id="triangle_fond"></span>
+</div>
 
-    <div>
-        <img src="images/header.png" alt="" class="bg-header">
+<div class="all">
+    <div class="container">
+        <h1 id="title">Attente de la réponse de</h1>
+        <p id="p1">En attente d'un adversaire pour jouer</p>
+        <p id="p2">Vous pouvez quitter la partie avant l'acceptation de votre ami(e)</p>
+        <img src="images/loading.gif">
+        <div id="quitterWaiting">
+            <button class="quitter" id="btnQuit" onclick="redirectToMenu()">Quitter</button>
+        </div>
     </div>
-</header>
-<body>
-
-<div id="corps">
-    <h1 id="title">Attente de la réponse de</h1>
-    <p id="p1">En attente que votre ami(e) accepte l'invitation</p>
-    <p id="p2">Vous pouvez quitter la partie avant l'acceptation de votre ami(e)</p>
-    <button onclick="redirectToMenu()" id="btnQuit">Quitter</button>
 </div>
 
 <div id="chatMenu" class="chatMenu">
@@ -79,23 +87,23 @@
     </div>
 </div>
 <div class="footer">
-    <img id="param" src="images/param.png">
+    <span id="triangle_inverse_fond"></span>
+
+    <div class="cnt-footer">
+        <img id="param" src="images/param.png">
 
 
-    <div id="amisDiv" onclick="redirectToFriendsPage()">
-        <img id="amisImg" src="images/friends.png">
-        <p id="amisTexte">AMIS</p>
-        <span class="notification-badge"> </span>
+        <div id="amisDiv" onclick="redirectToFriendsPage()">
+            <img id="amisImg" src="images/friends.png">
+            <p id="amisTexte">AMIS</p>
+            <span class="notification-badge"> </span>
+        </div>
+        <div id="chat" onclick="openChat()">
+            <img src="images/chat.png">
+            <p id="chatting">CHAT</p>
+            <span class="notification-badge"> </span>
+        </div>
     </div>
-    <div id="chat" onclick="openChat()">
-        <img src="images/chat.png">
-        <p id="chatting">CHAT</p>
-        <span class="notification-badge"> </span>
-    </div>
-
-
-
-
 </div>
 </body>
 </html>

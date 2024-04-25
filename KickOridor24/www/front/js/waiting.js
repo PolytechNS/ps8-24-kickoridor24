@@ -1,22 +1,22 @@
 
-setCookie("player", "0", -1);
 
+localStorage.removeItem("player");
 socket.emit('joinGame');
 socket.on('joinedGame', (room) => {
     console.log(room);
-    setCookie("option","",1);
+    localStorage.setItem("option","");
 
 });
 var gamePrete = false;
 socket.on('startGame', (room) => {
-    setCookie("typeDePartie", "enLigne", 1);
-    setCookie("room", room, 1);
-    if(!getCookie("player") == "1"){
+    localStorage.setItem("typeDePartie", "enLigne");
+    localStorage.setItem("room", room);
+    if(!localStorage.getItem("player") == "1"){
         console.log("ok");
-        setCookie("player", "2", 1);
+        localStorage.setItem("player", "2");
     }
-    console.log(getCookie("username"));
-    console.log(getCookie("player"));
+  //  console.log(getCookie("username"));
+   // console.log(getCookie("player"));
     gamePrete =true;
     socket.emit("changePage");
     window.location.href = "gameOnline.html?room=" + room;
@@ -24,13 +24,13 @@ socket.on('startGame', (room) => {
 
 socket.on('firstPlayer', () => {
     console.log('firstPlayer');
-    setCookie("player", "1", 1);
+    localStorage.setItem("player", "1");
 });
 
 
 function redirectToMenu() {
     socket.emit('quitRoom');
-    setCookie('typeDePartie','',-1);
+    localStorage.removeItem('typeDePartie');
     window.location.href = "play-page.html";
 }
 

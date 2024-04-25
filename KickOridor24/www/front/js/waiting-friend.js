@@ -1,3 +1,4 @@
+var gamePrete = false;
 document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     let roomId = urlParams.get('room');
@@ -6,13 +7,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const title = document.getElementById('title');
     title.innerHTML = "Attente de la réponse de " + friend;
 
-
-    if (getCookie("player") == "1") {
+    if (localStorage.getItem("player") == "1") {
         socket.emit('joinGame');
         socket.on('joinedGame', async (room) => {
-            console.log(room);
+            console.log("test : " , room);
             roomId = room;
-            await inviteFriend(getCookie("username"), friend, roomId);
+            await inviteFriend(localStorage.getItem("username"), friend, roomId);
         });
     } else {
         console.log("JE VEUX REJOINDRE LA ROOM : " + roomId);
@@ -25,12 +25,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         socket.emit('joinGameWithId', roomId);
         socket.on('joinedGameWithId', () => {
+            gamePrete = true;
             console.log(roomId);
         });
     }
 
-
     async function inviteFriend(emetteur, receveur, roomId) {
+        console.log("inviteFriend");
         const formDataJSON = {};
         formDataJSON["emetteur"] = emetteur;
         formDataJSON["receveur"] = receveur;
@@ -56,18 +57,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     socket.on('startGame', (room) => {
         console.log("startGame");
-        setCookie("typeDePartie", "enLigne", 1);
-        setCookie("option", "friend", 1);
-        setCookie("room", room, 1);
-        console.log(getCookie("username"));
-        console.log(getCookie("player"));
+        localStorage.setItem("typeDePartie", "enLigne");
+        localStorage.setItem("option", "friend");
+        localStorage.setItem("room", room);
+        //console.log(getCookie("username"));
+        //console.log(getCookie("player"));
         socket.emit("changePage");
         window.location.href = "gameOnline.html?room=" + room + "&player=" + friend;
     });
 
     function redirectToMenu() {
         socket.emit('quitRoom');
-        setCookie('typeDePartie','',-1);
+        localStorage.removeItem('typeDePartie');
         window.location.href = "play-page.html";
     }
 
@@ -75,3 +76,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+function redirectToMenu() {
+    socket.emit('quitRoom');
+    localStorage.removeItem('typeDePartie');
+    window.location.href = "play-page.html";
+}
+
+window.onbeforeunload = function() {
+    if(!gamePrete)
+        redirectToMenu();
+};

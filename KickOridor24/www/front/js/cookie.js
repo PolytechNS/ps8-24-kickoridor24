@@ -26,3 +26,15 @@ function getCookie(name){
     }
     return null;
 }
+
+function checkConnection() {
+    var networkState = navigator.connection.type;
+    if(networkState == "none"){
+        setCookie("username","",-1);
+    }
+
+
+    //alert('Connection type: ' + networkState);
+}
+
+checkConnection();

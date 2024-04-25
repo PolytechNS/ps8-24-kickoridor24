@@ -49,7 +49,7 @@ window.matchMedia("(max-aspect-ratio: 4/3.1)").addListener(updateStyle);
 
 //recuperer cookie username
 function getUsername(){
-    let username =getCookie("username");
+    let username =localStorage.getItem("username");
     if(username !== undefined){
         return username;
     }

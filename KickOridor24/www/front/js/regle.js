@@ -10,7 +10,7 @@ function showRegle(){
     document.getElementById("commande").style.backgroundColor = "#E4E5E7";
     document.getElementById("classement").style.backgroundColor = "#E4E5E7";
     document.getElementById("regle").style.backgroundColor = "#3EE4F0";
-    navigator.vibrate(1000)
+    navigator.vibrate(200)
 }
 
 function showCommandes(){
@@ -24,7 +24,7 @@ function showCommandes(){
     document.getElementById("commande").style.backgroundColor = "#3EE4F0";
     document.getElementById("classement").style.backgroundColor = "#E4E5E7";
     document.getElementById("regle").style.backgroundColor = "#E4E5E7";
-    navigator.vibrate(1000)
+    navigator.vibrate(200)
 }
 
 function showRangs(){
@@ -38,7 +38,7 @@ function showRangs(){
     document.getElementById("classement").style.backgroundColor = "#3EE4F0";
     document.getElementById("commande").style.backgroundColor = "#E4E5E7";
     document.getElementById("regle").style.backgroundColor = "#E4E5E7";
-    navigator.vibrate(1000)
+    navigator.vibrate(200)
 }
 
 const dropdowns = document.querySelectorAll('.navClass2');
@@ -50,7 +50,7 @@ dropdowns.forEach(dropdown => {
     const selected = dropdown.querySelector('.selected');
 
     //si pas connecté, supprimer de la liste l'id "ligne"
-    if(getCookie("username") == null && document.getElementById("ligne2") != null){
+    if(localStorage.getItem("username") == null && document.getElementById("ligne2") != null){
         var ligne = document.getElementById("ligne2");
         ligne.getElementsByTagName('a')[0].style.color = "#B9C0C6";
         ligne.getElementsByTagName('a')[0].style.cursor = "default";
@@ -70,7 +70,7 @@ dropdowns.forEach(dropdown => {
     options.forEach(option => {
     option.addEventListener('click', () =>{
 
-        if(getCookie("username") == null && option.id == "desac"){}
+        if(localStorage.getItem("username") == null && option.id == "desac"){}
 
         else{
             selected.innerText = option.innerText;

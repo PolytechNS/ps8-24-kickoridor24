@@ -5,6 +5,7 @@ document.getElementById('signupForm').addEventListener('submit', async (event) =
     const confirmPassword = document.getElementById('confirmPassword').value;
 
     if (password !== confirmPassword) {
+        navigator.vibrate([200,100,200]);
         showMessage("Les mots de passe ne correspondent pas");
         return;
     }
@@ -12,6 +13,7 @@ document.getElementById('signupForm').addEventListener('submit', async (event) =
     const username = document.getElementById('username').value; // supposons que votre champ d'inscription s'appelle "username"
 
     if (username.length > 12) {
+        navigator.vibrate([200,100,200]);
         showMessage("Le nom d'utilisateur ne peut pas dépasser 12 caractères");
         return;
     }
@@ -36,10 +38,11 @@ document.getElementById('signupForm').addEventListener('submit', async (event) =
             var err = await response.text();
             throw new Error('Une erreur est survenue lors de l\'inscription : ' + err);
         }
-        showMessage('Inscription réussie !');
+
         console.log('Inscription réussie !');
         window.location.href = 'login.html';
     } catch (error) {
+        navigator.vibrate([200,100,200]);
         showMessage("Un utilisateur possède déjà ce nom");
         console.log(error.message);
     }

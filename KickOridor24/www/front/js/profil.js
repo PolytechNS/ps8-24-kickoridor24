@@ -43,6 +43,7 @@ function showCeleb(){
     document.getElementById("info").style.backgroundColor = "#E4E5E7";
     document.getElementById("photo").style.backgroundColor = "#E4E5E7";
     document.getElementById("achiev").style.backgroundColor = "#E4E5E7";
+    navigator.vibrate(200);
     fillCelebration();
 }
 
@@ -59,6 +60,7 @@ function showInfo(){
     document.getElementById("photo").style.backgroundColor = "#E4E5E7";
     document.getElementById("info").style.backgroundColor = "#3EE4F0";
     document.getElementById("achiev").style.backgroundColor = "#E4E5E7";
+    navigator.vibrate(200);
 }
 
 function showPhoto(){
@@ -74,6 +76,7 @@ function showPhoto(){
     document.getElementById("info").style.backgroundColor = "#E4E5E7";
     document.getElementById("photo").style.backgroundColor = "#3EE4F0";
     document.getElementById("achiev").style.backgroundColor = "#E4E5E7";
+    navigator.vibrate(200);
     fillPhoto();
 }
 
@@ -90,6 +93,7 @@ function showAchiev(){
     document.getElementById("celeb").style.backgroundColor = "#E4E5E7";
     document.getElementById("info").style.backgroundColor = "#E4E5E7";
     document.getElementById("photo").style.backgroundColor = "#E4E5E7";
+    navigator.vibrate(200);
     checkAchiev();
 }
 
@@ -227,7 +231,7 @@ function fillCelebration(){
 
 async function recupInfoJoueur(){
     const formDataJSON = {};
-    formDataJSON["username"] = getCookie("username");
+    formDataJSON["username"] = localStorage.getItem("username");
     try {
         const response = await fetch('/api/retrieveUser', {
             method: 'POST',
@@ -308,7 +312,7 @@ async function  selectNewCeleb(){
     fillData();
 
     const formDataJSON = {};
-    formDataJSON["username"] = getCookie("username");
+    formDataJSON["username"] = localStorage.getItem("username");
     formDataJSON["celebration"] = celebration;
     try {
         const response = await fetch('/api/changeCelebration', {
@@ -333,7 +337,7 @@ async function  selectNewImg(){
     fillData();
 
     const formDataJSON = {};
-    formDataJSON["username"] = getCookie("username");
+    formDataJSON["username"] = localStorage.getItem("username");
     formDataJSON["img"] = img;
     try {
         const response = await fetch('/api/changeImg', {
@@ -360,7 +364,7 @@ async function  newName(){
     fillData();
 
     const formDataJSON = {};
-    formDataJSON["username"] = getCookie("username");
+    formDataJSON["username"] = localStorage.getItem("username");
     formDataJSON["name"] = nomDequipe;
     try {
         const response = await fetch('/api/changeName', {
@@ -373,8 +377,8 @@ async function  newName(){
             if (!response.ok) {
                 throw new Error('Une erreur est survenue lors du changement d\'image : ' + response.status);
             }
-            setCookie("username",nomDequipe,7);
-            socket.emit('login', getCookie("username"));
+            localStorage.setItem("username",nomDequipe);
+            socket.emit('login', localStorage.getItem("username"));
         });
 
 
@@ -387,7 +391,7 @@ async function  newMail(){
        fillData();
 
        const formDataJSON = {};
-       formDataJSON["username"] = getCookie("username");
+       formDataJSON["username"] = localStorage.getItem("username");
        formDataJSON["email"] = adresseMail;
        try {
            const response = await fetch('/api/changeMail', {
@@ -413,7 +417,7 @@ async function  newMDP(){
     fillData();
 
     const formDataJSON = {};
-    formDataJSON["username"] = getCookie("username");
+    formDataJSON["username"] = localStorage.getItem("username");
     formDataJSON["password"] = motDePasse;
     try {
         const response = await fetch('/api/changeMDP', {

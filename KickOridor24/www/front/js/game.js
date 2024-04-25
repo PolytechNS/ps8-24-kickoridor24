@@ -18,6 +18,25 @@ let n;
 var cellsString = [];
 var cellsGrid = [];
 
+if(getCookie("typeDePartie") == "1v1local"){
+    document.getElementById("namePlayerB").textContent = "Invité";
+}
+if(getCookie("username")){
+    document.getElementById("namePlayerA").textContent = getCookie("username");
+}else if(!getCookie("username")) {
+    document.getElementById("namePlayerA").textContent = "Invité";
+    if(getCookie("typeDePartie") == "1v1local"){
+        document.getElementById("namePlayerB").textContent = "Invité (2)";
+    }
+}
+if(getCookie("typeDePartie") == "bot_v2"){
+    document.getElementById("namePlayerB").textContent = "Bot Intelligent";
+}
+if(getCookie("typeDePartie") == "bot"){
+    document.getElementById("namePlayerB").textContent = "Bot Aléatoire";
+}
+
+
 class cellule {
     constructor(id, classes, visibilite) {
         this.class = classes;
@@ -148,7 +167,7 @@ socket.on('setupGame', () => {
 
     socket.on('setupTheGame', () => {
         if(stop) return;
-        if (getCookie("typeDePartie") === "resumeGame") {
+        if (localStorage.getItem("typeDePartie") === "resumeGame") {
             loadGame();
         } else {
             setUpGame();
@@ -251,7 +270,7 @@ function setUpGame() {
 
         hideValider();
 
-        if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null) {
+        if (localStorage.getItem("typeDePartie") === "enLigne" || localStorage.getItem("username") == null) {
             hideSauvegarder();
             document.getElementsByClassName("forfait")[0].classList.add("forfaitGrand");
             document.getElementsByClassName("forfait")[1].classList.add("forfaitGrand");
@@ -498,9 +517,9 @@ function validerWall() {
     changeVisibility(rightCell, leftCell, activePlayer, horizontale);
 
     saveToBack();
-
-    changeActivePlayer();
     hideValider();
+    changeActivePlayer();
+
 
 }
 
@@ -537,7 +556,7 @@ async function sauvegarderLaPartie() {
         annulerWall();
     cells.forEach(cell => cell.classList.remove('possible-move'));
     var tab = construireEtatPartie();
-    var etat = new gameBDD(getUsername(), tab, tour, getCookie("typeDePartie"));
+    var etat = new gameBDD(getUsername(), tab, tour, localStorage.getItem("typeDePartie"));
     const formDataJSON = {};
     formDataJSON["username"] = etat.username;
     formDataJSON["board"] = etat.board;
@@ -591,7 +610,7 @@ async function loadGame() {
     loadBoard(etatPartie["board"]);
 
 
-    setCookie("typeDePartie", etatPartie["typeDePartie"], 7);
+    localStorage.setItem("typeDePartie", etatPartie["typeDePartie"]);
 
     setUpGame();
     partieChargee = true;
@@ -684,7 +703,7 @@ function hideValider() {
         if (activePlayer == "playerA") {
             document.getElementsByClassName("profilA")[0].style.display = "grid";
             document.getElementById("nbWallPlayerA").style.display = "block";
-            if(!(getCookie("typeDePartie") === "enLigne" || getCookie("username") == null))
+            if(!(localStorage.getItem("typeDePartie") === "enLigne" || localStorage.getItem("username") == null))
                 document.getElementsByClassName("sauvegarder")[0].style.display = "block";
             document.getElementsByClassName("forfait")[0].style.display = "block";
         } else {
@@ -693,7 +712,7 @@ function hideValider() {
             document.getElementsByClassName("forfait")[1].style.display = "block";
         }
     }
-        document.querySelector('#validerA').style.display = 'none';
+    document.querySelector('#validerA').style.display = 'none';
     document.querySelector('#validerB').style.display = 'none';
     murAPose = new Array(3);
 }
@@ -705,7 +724,7 @@ function hideSauvegarder() {
 
 function hideForfaitA() {
     document.querySelector('#forfaitA').style.display = 'none';
-    if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null)
+    if ( localStorage.getItem("username") != null)
     document.getElementsByClassName("sauvegarder")[0].style.gridColumn ="span 2";
 }
 
@@ -716,12 +735,13 @@ function hideForfaitB() {
 
 function showForfaitA() {
     document.querySelector('#forfaitA').style.display = 'grid';
-    if (getCookie("typeDePartie") === "enLigne" || getCookie("username") == null)
+    if ( localStorage.getItem("username") != null)
     document.getElementsByClassName("sauvegarder")[0].style.gridColumn ="span 1";
 }
 
 function showForfaitB() {
     document.querySelector('#forfaitB').style.display = 'grid';
+    document.querySelector('#forfaitB').style.gridColumn = 'span 2';
 }
 
 function checkCrossing(playerAPosition, playerBPosition) {
@@ -761,12 +781,58 @@ function checkCrossing(playerAPosition, playerBPosition) {
 
 function victoire(txt) {
 
+    if(txt == "PlayerA"){
+        if(getCookie("username")){
+            txt = getCookie("username");
+        }else{
+            txt = "Invité";
+        }
+    }else if(txt == "PlayerB"){
+        if(getCookie("typeDePartie") == "bot_v2"){
+            txt = "Bot Intelligent";
+        }
+        if(getCookie("typeDePartie") == "bot"){
+            txt = "Bot Aléatoire";
+        }
+        if(getCookie("typeDePartie") == "1v1local"){
+            if (getCookie("username")){
+                txt = "Invité (2)";
+            }else{
+                txt = "Invité";
+            }
+        }
+    }
+
     showVictoire(txt);
     if (partieChargee)
         supprimerAnciennePartie(getUsername());
    // window.location.href = 'index.html';
 }
+
+var src = "audio/sifflet.mp3";
+
+function playAudio() {
+    var media = new Audio(src,
+        // Succès
+        function () {
+            console.log("Lecture de l'audio réussie");
+        },
+        // Erreur
+        function (err) {
+            console.error("Erreur lors de la lecture de l'audio : " + err);
+        }
+    );
+
+    //baisser le volume
+    media.volume = 0.1;
+    // Lecture de l'audio
+    media.play();
+}
+
 function showVictoire(txt){
+    navigator.vibrate(1000);
+    playAudio();
+
     document.querySelector('.finDePartie').style.display = 'flex';
     const divMid = document.getElementById("finMiddle");
     if(txt == "match nul !"){
@@ -777,8 +843,8 @@ function showVictoire(txt){
         divMid.getElementsByTagName('h2')[0].textContent = txt + " remporte la partie";
 
         if (txt == "playerA") {
-            if (getCookie("username") != null) {
-                divMid.getElementsByTagName('h2')[0].textContent = getCookie("username") + " remporte la partie";
+            if (localStorage.getItem("username") != null) {
+                divMid.getElementsByTagName('h2')[0].textContent = localStorage.getItem("username") + " remporte la partie";
             }
             if (celebrationBDD != null) {
                 divMid.getElementsByTagName('img')[0].src = celebrationBDD + '.gif';
@@ -1184,7 +1250,7 @@ function checkNoMove() {
     } else if (activePlayer === 'playerB') {
         const validMoves = getValidMoves(player2Position);
 
-        if (validMoves.length == 0 && (nbWallPlayerB === 0 || getCookie("typeDePartie") == "bot")) {
+        if (validMoves.length == 0 && (nbWallPlayerB === 0 || localStorage.getItem("typeDePartie") == "bot")) {
             showInformation("passage de tour");
             newMove.player = "playerB";
             newMove.type = "idle";
@@ -1244,7 +1310,7 @@ function getValidMoves(position) {
 }
 
 function changeActivePlayer() {
-    if (activePlayer == "playerB" && getCookie("typeDePartie") === "bot_v2") {
+    if (activePlayer == "playerB" && localStorage.getItem("typeDePartie") === "bot_v2") {
 
         activePlayer = activePlayer === 'playerA' ? 'playerB' : 'playerA';
         activateFog(cells);
@@ -1271,7 +1337,7 @@ function changeActivePlayer() {
     document.getElementById('currentPlayer').textContent = `Tour : ${activePlayer}`;
     if (tour <= 200)
         document.getElementById('nbTour').textContent = `Tour : n°${200 -(tour - 1)}`;
-    if(!getCookie("typeDePartie").includes("bot"))
+    if(!localStorage.getItem("typeDePartie").includes("bot"))
         showAntiCheat();
 
     tour--;
@@ -1288,7 +1354,7 @@ function changeActivePlayer() {
 
     murAPose = new Array(3);
     checkTour201();
-    if (activePlayer === "playerB" && getCookie("typeDePartie") === "bot") {
+    if (activePlayer === "playerB" && localStorage.getItem("typeDePartie") === "bot") {
 
         if (tour > 200) {
             return movePlyerFirstTurn(player2Position);
@@ -1298,7 +1364,7 @@ function changeActivePlayer() {
                 movePlayer(player2Position);
                 movePlayer(returnValue);
         }
-    } else if (activePlayer === "playerB" && getCookie("typeDePartie") === "bot_v2") {
+    } else if (activePlayer === "playerB" && localStorage.getItem("typeDePartie") === "bot_v2") {
 
         if (tour > 200) {
 

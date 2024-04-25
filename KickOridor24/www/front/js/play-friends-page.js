@@ -1,6 +1,6 @@
 async function inviteListe(){
     var formDataJSON = {};
-    var user = getCookie("username");
+    var user = localStorage.getItem("username");
     formDataJSON["username"] = user;
     try {
         const response = await fetch('/api/askInviteList', {
@@ -40,74 +40,82 @@ async function inviteListe(){
 
                         var img = document.createElement("img");
                         img.src = data[i].user["img"];
+                        if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                            img.style.width = '6.25vh';
+                            img.style.height = '6.25vh';
+                            //border
+                            img.style.border = '5px solid #E4E5E7';
+                            img.style.borderRadius = '50%';
+                            img.style.marginLeft = '-2vh';
+                        }
                         div.appendChild(img);
                         var nom = document.createElement("p");
 
                         nom.textContent = username;
-                        nom.style.width = '10vh';
+                        if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                            nom.style.textOverflow = 'ellipsis';
+                            nom.style.overflow = 'hidden';
+                            nom.style.maxWidth = '10vh';
+                        }
+                        else{
+                            nom.style.textOverflow = 'ellipsis';
+                            nom.style.overflow = 'hidden';
+                            nom.style.maxWidth = '15vh';
+                        }
                         div.appendChild(nom);
                         var elo = document.createElement("p");
                         elo.textContent = data[i].user["elo"];
                         elo.style.width = '8vh';
                         elo.style.fontWeight = 'bold';
+                        elo.classList.add("elo");
                         div.appendChild(elo);
                         if(parseInt( data[i].user["elo"]) > 1999){
-                            div.style.background ='url("images/uclTest.png")';
+                            if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ucl-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/uclTest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i].user["elo"])>1499){
-                            div.style.background ='url("images/europaTest.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/europa-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/europaTest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i].user["elo"])>999){
-                            div.style.background ='url("images/conferencetest.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/conference-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/conferencetest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i].user["elo"])>499){
-                            div.style.background ='url("images/ligue1.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ligue1-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/ligue1.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'repeat';
                             div.style.backgroundPosition = 'center';
                         }else{
-                            div.style.background ='url("images/ligue2.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ligue2-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/ligue2.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }
                         let btnV = document.createElement("button");
                         btnV.textContent = "ACCEPTER";
-                        btnV.style.marginLeft = '-5vw';
-                        btnV.style.appearance = 'none';
-                        btnV.style.backfaceVisibility = 'hidden';
-                        btnV.style.backgroundColor = '#38cfda';
-                        btnV.style.borderRadius = '8px';
-                        btnV.style.borderStyle = 'none';
-                        btnV.style.boxShadow = 'rgba(231, 76, 60, .15) 0 4px 9px';
-                        btnV.style.boxSizing = 'border-box';
-                        btnV.style.color = '#fff';
-                        btnV.style.cursor = 'pointer';
-                        btnV.style.display = 'inline-block';
-                        btnV.style.fontFamily = 'Inter,-apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif';
-                        btnV.style.fontSize = '11px';
-                        btnV.style.fontWeight = '600';
-                        btnV.style.letterSpacing = 'normal';
-                        btnV.style.lineHeight = '1.5';
-                        btnV.style.outline = 'none';
-                        btnV.style.overflow = 'hidden';
-                        btnV.style.padding = '4px 8px';
-                        btnV.style.position = 'relative';
-                        btnV.style.textAlign = 'center';
-                        btnV.style.textDecoration = 'none';
-                        btnV.style.transform = 'translate3d(0, 0, 0)';
-                        btnV.style.transition = 'all .3s';
-                        btnV.style.userSelect = 'none';
-                        btnV.style.webkitUserSelect = 'none';
-                        btnV.style.touchAction = 'manipulation';
-                        btnV.style.verticalAlign = 'top';
-                        btnV.style.whiteSpace = 'nowrap';
+                        btnV.classList.add("addBTN");
+
+                        btnV.style.backgroundColor = '#00b7c4';
+
                         //hover
                         btnV.addEventListener('mouseover', function() {
                                 btnV.style.backgroundColor = '#31a5ad';
@@ -119,7 +127,7 @@ async function inviteListe(){
                             }
                         );
                         btnV.addEventListener('mouseout', function() {
-                                btnV.style.backgroundColor = '#38cfda';
+                                btnV.style.backgroundColor = '#00b7c4';
                                 btnV.style.opacity = '1';
                                 btnV.style.transform = 'translateY(0)';
                                 btnV.style.transitionDuration = '.35s';
@@ -134,7 +142,7 @@ async function inviteListe(){
                         btnV.addEventListener('click', function() {
                             var usernameValue = username; // Capturer la valeur de username dans cette portée
                             return function() {
-                                setCookie("player", "2", 1);
+                                localStorage.setItem("player", "2");
                                 joinGame(usernameValue, data[0].room);
                                 //validateAskFriend(getCookie("username"), usernameValue);
                             };
@@ -157,7 +165,7 @@ async function inviteListe(){
 }
 
 async function joinGame(username, room) {
-    await refuseAskInvite(getCookie("username"));
+    await refuseAskInvite(localStorage.getItem("username"));
 
     window.location.href = "waiting-friend.html?room=" + room + "&friend=" + username;
 
@@ -217,7 +225,7 @@ async function validateAskInvite(emetteur,receveur){
 
 async function listeAmis(){
     const formDataJSON = {};
-    var user = getCookie("username");
+    var user = localStorage.getItem("username");
     formDataJSON["username"] = user;
 
     try {
@@ -256,6 +264,14 @@ async function listeAmis(){
 
                         var img = document.createElement("img");
                         img.src = data[i]["img"];
+                        if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                            img.style.width = '6.25vh';
+                            img.style.height = '6.25vh';
+                            //border
+                            img.style.border = '5px solid #E4E5E7';
+                            img.style.borderRadius = '50%';
+                            img.style.marginLeft = '-2vh';
+                        }
                         div.appendChild(img);
                         let nom = document.createElement("p");
 
@@ -264,31 +280,48 @@ async function listeAmis(){
                         div.appendChild(nom);
                         let elo = document.createElement("p");
                         elo.textContent = data[i]["elo"];
+                        elo.classList.add("elo");
                         div.appendChild(elo);
                         elo.style.width = '8vh';
                         elo.style.fontWeight = 'bold';
                         if(parseInt( data[i]["elo"]) > 1999){
-                            div.style.background ='url("images/uclTest.png")';
+                            if(window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ucl-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/uclTest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>1499){
-                            div.style.background ='url("images/europaTest.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/europa-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/europaTest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
                         }else if(parseInt( data[i]["elo"])>999){
-                            div.style.background ='url("images/conferencetest.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/conference-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/conferencetest.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
+                            div.appendChild(elo);
                         }else if(parseInt( data[i]["elo"])>499){
-                            div.style.background ='url("images/ligue1.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ligue1-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/ligue1.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'repeat';
                             div.style.backgroundPosition = 'center';
                         }else{
-                            div.style.background ='url("images/ligue2.png")';
+                            if (window.matchMedia("(max-aspect-ratio: 4/3.1)").matches){
+                                div.style.background ='url("images/ligue2-modifie.png")';
+                            }
+                            else{div.style.background ='url("images/ligue2.png")';}
                             div.style.backgroundSize = 'cover';
                             div.style.backgroundRepeat = 'no-repeat';
                             div.style.backgroundPosition = 'center';
@@ -296,35 +329,10 @@ async function listeAmis(){
 
                         let btn = document.createElement("button");
                         btn.textContent = "INVITE";
+                        btn.classList.add("addBTN");
 
-                        btn.style.appearance = 'none';
-                        btn.style.backfaceVisibility = 'hidden';
-                        btn.style.backgroundColor = '#38cfda';
-                        btn.style.borderRadius = '8px';
-                        btn.style.borderStyle = 'none';
-                        btn.style.boxShadow = 'rgba(231, 76, 60, .15) 0 4px 9px';
-                        btn.style.boxSizing = 'border-box';
-                        btn.style.color = '#fff';
-                        btn.style.cursor = 'pointer';
-                        btn.style.display = 'inline-block';
-                        btn.style.fontFamily = 'Inter,-apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif';
-                        btn.style.fontSize = '11px';
-                        btn.style.fontWeight = '600';
-                        btn.style.letterSpacing = 'normal';
-                        btn.style.lineHeight = '1.5';
-                        btn.style.outline = 'none';
-                        btn.style.overflow = 'hidden';
-                        btn.style.padding = '4px 8px';
-                        btn.style.position = 'relative';
-                        btn.style.textAlign = 'center';
-                        btn.style.textDecoration = 'none';
-                        btn.style.transform = 'translate3d(0, 0, 0)';
-                        btn.style.transition = 'all .3s';
-                        btn.style.userSelect = 'none';
-                        btn.style.webkitUserSelect = 'none';
-                        btn.style.touchAction = 'manipulation';
-                        btn.style.verticalAlign = 'top';
-                        btn.style.whiteSpace = 'nowrap';
+                        btn.style.backgroundColor = '#00b7c4';
+
                         //hover
                         btn.addEventListener('mouseover', function() {
                                 btn.style.backgroundColor = '#31a5ad';
@@ -335,7 +343,7 @@ async function listeAmis(){
                             }
                         );
                         btn.addEventListener('mouseout', function() {
-                                btn.style.backgroundColor = '#38cfda';
+                                btn.style.backgroundColor = '#00b7c4';
                                 btn.style.opacity = '1';
                                 btn.style.transform = 'translateY(0)';
                                 btn.style.transitionDuration = '.35s';
@@ -377,7 +385,7 @@ async function listeAmis(){
 
 
 function createRoom(receveur){
-    setCookie("player", "1", 1);
+    localStorage.setItem("player", "1");
     window.location.href = "waiting-friend.html?&friend=" + receveur;
 }
 
@@ -387,6 +395,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     await inviteListe();
     await notif();
 });
+window.addEventListener('resize', function() {
+    location.reload();
+}, false);
+
 
 
 

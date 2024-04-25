@@ -1,16 +1,16 @@
     const socket = io('/api/game');
-
+//console.log(localStorage.getItem("username"))
 var userID;
 
 var photoDeProfil ="images/photoProfil/Mitroglu.png";
 var celebrationBDD =null;
 function redirectToGame(name, value, days) {
-    setCookie(name,value,days);
+    localStorage.setItem(name,value);
     window.location.href = "game.html";
 }
 
 function redirectToLogin() {
-    setCookie("username","",-1);
+    localStorage.removeItem("username");
 
     window.location.href = "login.html";
 }
@@ -38,7 +38,7 @@ function redirectToMenu() {
 }
 
 function redirectToProfil(){
-    if(getCookie("username") == null){
+    if(localStorage.getItem("username") == null){
     }
     else{window.location.href = "profil.html";}
 
@@ -51,6 +51,7 @@ function showOnlinePlay(){
     document.getElementById("hors").style.borderBottom = "none";
     document.getElementById("hors").style.backgroundColor = "#E4E5E7";
     document.getElementById("ligne").style.backgroundColor = "#3EE4F0";
+    navigator.vibrate(200);
 }
 
 function showHorsLignePlay(){
@@ -60,6 +61,7 @@ function showHorsLignePlay(){
     document.getElementById("ligne").style.borderBottom = "none";
     document.getElementById("hors").style.backgroundColor = "#3EE4F0";
     document.getElementById("ligne").style.backgroundColor = "#E4E5E7";
+    navigator.vibrate(200);
 }
     if(window.location.href.includes("gameOnline.html")) {
         document.getElementById("matchChat").addEventListener('click', function () {
@@ -105,9 +107,9 @@ function scrollToBottMatch(){
 }
 async function checkResumegame(){
     var div =  document.getElementById("resumeGameButton");
-    if(getCookie("username") != null){
+    if(localStorage.getItem("username") != null){
         const formDataJSON = {};
-        formDataJSON["username"] = getCookie("username");
+        formDataJSON["username"] = localStorage.getItem("username");
         try {
             const response = await fetch('/api/gameRetrieve', {
                 method: 'POST',
@@ -141,6 +143,7 @@ function showFriendsList(){
     document.getElementById("demandesBTN").style.borderBottom = "none";
     document.getElementById("demandesBTN").style.backgroundColor = "#E4E5E7";
     document.getElementById("amisBTN").style.backgroundColor = "#3EE4F0";
+    navigator.vibrate(200);
 }
 
 function showFriendsAdd(){
@@ -153,6 +156,7 @@ function showFriendsAdd(){
     document.getElementById("demandesBTN").style.borderBottom = "none";
     document.getElementById("demandesBTN").style.backgroundColor = "#E4E5E7";
     document.getElementById("ajouterBTN").style.backgroundColor = "#3EE4F0";
+    navigator.vibrate(200);
 }
 
 function showFriendsDemands(){
@@ -165,6 +169,7 @@ function showFriendsDemands(){
     document.getElementById("ajouterBTN").style.borderBottom = "none";
     document.getElementById("ajouterBTN").style.backgroundColor = "#E4E5E7";
     document.getElementById("demandesBTN").style.backgroundColor = "#3EE4F0";
+    navigator.vibrate(200);
 }
 
     function showPlayFriendsList(){
@@ -174,7 +179,8 @@ function showFriendsDemands(){
         document.getElementById("demandesBTN").style.borderBottom = "none";
         document.getElementById("demandesBTN").style.backgroundColor = "#E4E5E7";
         document.getElementById("amisBTN").style.backgroundColor = "#3EE4F0";
-    }
+        navigator.vibrate(200);
+}
 
 
     function showPlayFriendsDemands(){
@@ -184,11 +190,12 @@ function showFriendsDemands(){
         document.getElementById("amisBTN").style.borderBottom = "none";
         document.getElementById("amisBTN").style.backgroundColor = "#E4E5E7";
         document.getElementById("demandesBTN").style.backgroundColor = "#3EE4F0";
+        navigator.vibrate(200);
     }
 
 async function checkFriends(){
 
-    if(getCookie("username") == null){
+    if(localStorage.getItem("username") == null){
         var amisDiv =   document.getElementById("amisDiv");
       amisDiv.style.display = 'none';
 
@@ -199,7 +206,7 @@ async function checkFriends(){
         amisDiv.style.display = 'flex';
     }
     const formDataJSON = {};
-    var user = getCookie("username");
+    var user = localStorage.getItem("username");
     formDataJSON["username"] = user;
     try {
         const response = await fetch('/api/askFriendsList', {
@@ -234,7 +241,7 @@ async function checkFriends(){
 }
 var affichageNotifChat = false;
 async function getConversationNotif(){
-    if(getCookie("username") == null){
+    if(localStorage.getItem("username") == null){
         var chat =   document.getElementById("chat");
         chat.style.display = 'none';
 
@@ -245,7 +252,7 @@ async function getConversationNotif(){
         chat.style.display = 'flex';
     }
     const formDataJSON = {};
-    var user = getCookie("username");
+    var user = localStorage.getItem("username");
     formDataJSON["username"] = user;
 
     try {
@@ -327,7 +334,7 @@ if(!window.location.href.includes("friends-page.html") &&!window.location.href.i
 }
 async function getId(){
     const formDataJSON = {};
-    formDataJSON["username"] = getCookie("username");
+    formDataJSON["username"] = localStorage.getItem("username");
     try {
         const response = await fetch('/api/retrieveUser', {
             method: 'POST',

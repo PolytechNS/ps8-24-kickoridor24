@@ -15,11 +15,12 @@ var dernierTourB;
 let rooms = {};
 let varRoom = '';
 const clients = {};
-let clientReady = {};
+let clientReady ={};
 module.exports = function (io) {
     gameNamespace = io.of('/api/game');
 
     gameNamespace.on('connection', (socket) => {
+
 
         setupGame();
         socket.emit('setupGame');
@@ -37,10 +38,7 @@ module.exports = function (io) {
 
             if (rooms[room].length === 2) {
                 gameNamespace.to(room).emit('startGame', room);
-
-
             } else {
-
                 gameNamespace.to(room).emit('firstPlayer');
             }
         });
@@ -77,7 +75,7 @@ module.exports = function (io) {
         socket.on("changePage", () => {
             const room = findRoomBySocketId(socket.id);
             socket.leave(room);
-            if (rooms[room])
+            if(rooms[room])
                 rooms[room].splice(socket.id, 1);
         });
         socket.on('joinGameWithRoom', (room) => {
@@ -87,13 +85,13 @@ module.exports = function (io) {
             varRoom = room;
 
             socket.join(roomId);
-            if (rooms[roomId]) {
+            if(rooms[roomId]) {
                 rooms[roomId].push(socket.id);
 
                 if (rooms[roomId].length === 2) {
 
                     gameNamespace.to(roomId).emit('gameStarted');
-                    clientReady[roomId] = 0;
+                    clientReady[roomId]= 0;
                     //gameNamespace.to(roomId).emit('setupGame');
 
                 }
@@ -107,13 +105,13 @@ module.exports = function (io) {
 
         });
         socket.on('message', (data) => {
-            const {senderId, ami, message} = data;
+            const { senderId, ami, message } = data;
             console.log(data);
             console.log('Message de', senderId, 'à', ami, ':', message);
 
             // Notifier le destinataire s'il est connecté
             if (clients[ami]) {
-                clients[ami].emit('newMessage', {senderId, message});
+                clients[ami].emit('newMessage', { senderId, message });
             }
         });
         socket.on('getPlayersPosition', () => {
@@ -182,13 +180,7 @@ module.exports = function (io) {
         socket.on('disconnect', () => {
 
         });
-        socket.on("VictoireOnline", (txt, player, socketId) => {
-
-            console.log('VictoireOnline : ', txt);
-            console.log('Player : ', player);
-            console.log('SocketId : ', socketId);
-
-
+        socket.on("VictoireOnline", (txt,player,socketId) => {
             const room = findRoomBySocketId(socket.id);
             const socketsInRoom = io.of("/api/game").adapter.rooms
 
@@ -205,36 +197,51 @@ module.exports = function (io) {
             let nameOtherplayer;
 
             idBDD.forEach(id => {
-                if (id != namePlayerSocket) {
+                if(id != namePlayerSocket){
                     nameOtherplayer = id;
                 }
             });
 
 
-            if (txt === 'match nul !') {
+            if(txt === 'match nul !' ){
+
                 socket.emit('MatchNul', namePlayerSocket, nameOtherplayer);
-            } else if (player == 1 && txt == 'PlayerA') {
+            }else if(player == 1 && txt == 'PlayerA'){
+
                 socket.emit('Victoire', namePlayerSocket, nameOtherplayer);
-            } else if (player == 2 && txt == 'PlayerA') {
+            }else if(player == 2 && txt == 'PlayerA'){
+
                 socket.emit('Defaite', namePlayerSocket, nameOtherplayer);
-            } else if (player == 1 && txt == 'PlayerB') {
+            }else if(player == 1 && txt == 'PlayerB'){
+
                 socket.emit('Defaite', namePlayerSocket, nameOtherplayer);
-            } else if (player == 2 && txt == 'PlayerB') {
+            }else if(player == 2 && txt == 'PlayerB'){
+
                 socket.emit('Victoire', namePlayerSocket, nameOtherplayer);
-            } else {
+            }else{
                 console.log('Erreur');
             }
 
-            delete rooms[room];
+            // Envoyer un événement à chaque socket dans la salle pour supprimer la salle
+            if (socketsInRoom) {
+                socketsInRoom.forEach(socketId => {
+                    io.to(socketId).emit("SupprimerRoom", room);
+                });
+            }
+
+            /*delete rooms[room];
             delete clientReady[room];
-            gameNamespace.to(room).emit("FinDePartieOnline", txt);
+            gameNamespace.to(room).emit("FinDePartieOnline",txt);*/
 
         });
 
-        socket.on("MessageMatch", (message, username) => {
+
+
+
+        socket.on("MessageMatch",(message,username) =>{
             console.log(message + " de " + username);
             const room = findRoomBySocketId(socket.id);
-            gameNamespace.to(room).emit("NewMatchMsg", message, username);
+            gameNamespace.to(room).emit("NewMatchMsg",message,username);
         });
     });
 
@@ -266,8 +273,8 @@ function findAvailableRoom() {
 }
 
 function findAvailableRoomWithId(roomId) {
-    for (let room in rooms) {
-        if (room === roomId) {
+    for (let room in rooms){
+        if (room === roomId){
             return room;
         }
     }
